@@ -1,0 +1,7 @@
+version: 1
+packages:
+  - path: "database"
+    # name: "toilerdb"
+    engine: "mysql"
+    schema: "schema.sql"
+    queries: "query.sql"
