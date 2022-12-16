@@ -7,222 +7,244 @@ package graph
 import (
 	"context"
 	"fmt"
+	"toiler-graphql/auth"
 	"toiler-graphql/database"
 	"toiler-graphql/graph/model"
 )
 
 // Assignees is the resolver for the assignees field.
 func (r *ganttActivityResolver) Assignees(ctx context.Context, obj *database.GanttActivity) ([]database.GanttAssigned, error) {
-	panic(fmt.Errorf("not implemented: Assignees - assignees"))
+	return r.Repository.GetActivityAssignees(ctx, obj.ID)
 }
 
-// Dependency is the resolver for the dependency field.
-func (r *ganttActivityResolver) Dependency(ctx context.Context, obj *database.GanttActivity) (*int, error) {
-	panic(fmt.Errorf("not implemented: Dependency - dependency"))
+// State is the resolver for the state field.
+func (r *ganttActivityResolver) State(ctx context.Context, obj *database.GanttActivity) (*database.GanttState, error) {
+	state, err := r.Repository.GetState(ctx, obj.StateID.Int64)
+	return &state, err
 }
 
-// GanttstateID is the resolver for the Ganttstate_id field.
-func (r *ganttActivityResolver) GanttstateID(ctx context.Context, obj *database.GanttActivity) (*int, error) {
-	panic(fmt.Errorf("not implemented: GanttstateID - Ganttstate_id"))
-}
-
-// Ganttstate is the resolver for the Ganttstate field.
-func (r *ganttActivityResolver) Ganttstate(ctx context.Context, obj *database.GanttActivity) (*database.GanttState, error) {
-	panic(fmt.Errorf("not implemented: Ganttstate - Ganttstate"))
-}
-
-// GantttaskID is the resolver for the Gantttask_id field.
-func (r *ganttActivityResolver) GantttaskID(ctx context.Context, obj *database.GanttActivity) (int, error) {
-	panic(fmt.Errorf("not implemented: GantttaskID - Gantttask_id"))
-}
-
-// Gantttask is the resolver for the Gantttask field.
-func (r *ganttActivityResolver) Gantttask(ctx context.Context, obj *database.GanttActivity) (*database.GanttTask, error) {
-	panic(fmt.Errorf("not implemented: Gantttask - Gantttask"))
-}
-
-// Ganttactivity is the resolver for the Ganttactivity field.
-func (r *ganttAssignedResolver) Ganttactivity(ctx context.Context, obj *database.GanttAssigned) (int, error) {
-	panic(fmt.Errorf("not implemented: Ganttactivity - Ganttactivity"))
+// Task is the resolver for the task field.
+func (r *ganttActivityResolver) Task(ctx context.Context, obj *database.GanttActivity) (*database.GanttTask, error) {
+	task, err := r.Repository.GetTask(ctx, obj.TaskID)
+	return &task, err
 }
 
 // User is the resolver for the user field.
-func (r *ganttAssignedResolver) User(ctx context.Context, obj *database.GanttAssigned) (*model.User, error) {
-	panic(fmt.Errorf("not implemented: User - user"))
+func (r *ganttAssignedResolver) User(ctx context.Context, obj *database.GanttAssigned) (*database.UserUser, error) {
+	user, err := r.Repository.GetUser(ctx, obj.UserID)
+	return &user, err
 }
 
-// Ganttactivity is the resolver for the Ganttactivity field.
-func (r *ganttCommentResolver) Ganttactivity(ctx context.Context, obj *database.GanttComment) (*int, error) {
-	panic(fmt.Errorf("not implemented: Ganttactivity - Ganttactivity"))
+// Activity is the resolver for the activity field.
+func (r *ganttAssignedResolver) Activity(ctx context.Context, obj *database.GanttAssigned) (*database.GanttActivity, error) {
+	activity, err := r.Repository.GetActivity(ctx, obj.ActivityID)
+	return &activity, err
 }
 
 // Author is the resolver for the author field.
-func (r *ganttCommentResolver) Author(ctx context.Context, obj *database.GanttComment) (*model.User, error) {
-	panic(fmt.Errorf("not implemented: Author - author"))
+func (r *ganttCommentResolver) Author(ctx context.Context, obj *database.GanttComment) (*database.UserUser, error) {
+	user, err := r.Repository.GetUser(ctx, obj.AuthorID)
+	return &user, err
 }
 
-// GanttprojectManagerID is the resolver for the GanttprojectManager_id field.
-func (r *ganttProjectResolver) GanttprojectManagerID(ctx context.Context, obj *database.GanttProject) (*int, error) {
-	panic(fmt.Errorf("not implemented: GanttprojectManagerID - GanttprojectManager_id"))
+// ProjectManager is the resolver for the projectManager field.
+func (r *ganttProjectResolver) ProjectManager(ctx context.Context, obj *database.GanttProject) (*database.UserUser, error) {
+	user, err := r.Repository.GetUser(ctx, obj.ProjectManagerID)
+	return &user, err
 }
 
-// GanttprojectManager is the resolver for the GanttprojectManager field.
-func (r *ganttProjectResolver) GanttprojectManager(ctx context.Context, obj *database.GanttProject) (*model.User, error) {
-	panic(fmt.Errorf("not implemented: GanttprojectManager - GanttprojectManager"))
+// Tasks is the resolver for the tasks field.
+func (r *ganttProjectResolver) Tasks(ctx context.Context, obj *database.GanttProject) ([]database.GanttTask, error) {
+	return r.Repository.GetProjectTasks(ctx, obj.ID)
 }
 
-// Gantttasks is the resolver for the Gantttasks field.
-func (r *ganttProjectResolver) Gantttasks(ctx context.Context, obj *database.GanttProject) ([]database.GanttTask, error) {
-	panic(fmt.Errorf("not implemented: Gantttasks - Gantttasks"))
+// Roles is the resolver for the roles field.
+func (r *ganttProjectResolver) Roles(ctx context.Context, obj *database.GanttProject) ([]database.GanttRole, error) {
+	return r.Repository.GetProjectRoles(ctx, obj.ID)
 }
 
-// Ganttroles is the resolver for the Ganttroles field.
-func (r *ganttProjectResolver) Ganttroles(ctx context.Context, obj *database.GanttProject) ([]database.GanttRole, error) {
-	panic(fmt.Errorf("not implemented: Ganttroles - Ganttroles"))
+// Teams is the resolver for the teams field.
+func (r *ganttProjectResolver) Teams(ctx context.Context, obj *database.GanttProject) ([]database.GanttTeam, error) {
+	return r.Repository.GetProjectTeams(ctx, obj.ID)
 }
 
-// Ganttteams is the resolver for the Ganttteams field.
-func (r *ganttProjectResolver) Ganttteams(ctx context.Context, obj *database.GanttProject) ([]database.GanttTeam, error) {
-	panic(fmt.Errorf("not implemented: Ganttteams - Ganttteams"))
+// States is the resolver for the states field.
+func (r *ganttProjectResolver) States(ctx context.Context, obj *database.GanttProject) ([]database.GanttState, error) {
+	return r.Repository.GetProjectStates(ctx, obj.ID)
 }
 
-// Ganttstates is the resolver for the Ganttstates field.
-func (r *ganttProjectResolver) Ganttstates(ctx context.Context, obj *database.GanttProject) ([]database.GanttState, error) {
-	panic(fmt.Errorf("not implemented: Ganttstates - Ganttstates"))
-}
+// Project is the resolver for the project field.
+func (r *ganttTaskResolver) Project(ctx context.Context, obj *database.GanttTask) (*database.GanttProject, error) {
+	project, err := r.Repository.GetProject(ctx, obj.ProjectID)
+	if err != nil {
+		return nil, err
+	}
 
-// GanttprojectID is the resolver for the Ganttproject_id field.
-func (r *ganttRoleResolver) GanttprojectID(ctx context.Context, obj *database.GanttRole) (int, error) {
-	panic(fmt.Errorf("not implemented: GanttprojectID - Ganttproject_id"))
-}
-
-// GanttprojectID is the resolver for the Ganttproject_id field.
-func (r *ganttStateResolver) GanttprojectID(ctx context.Context, obj *database.GanttState) (int, error) {
-	panic(fmt.Errorf("not implemented: GanttprojectID - Ganttproject_id"))
-}
-
-// GanttprojectID is the resolver for the Ganttproject_id field.
-func (r *ganttTaskResolver) GanttprojectID(ctx context.Context, obj *database.GanttTask) (int, error) {
-	panic(fmt.Errorf("not implemented: GanttprojectID - Ganttproject_id"))
-}
-
-// Ganttproject is the resolver for the Ganttproject field.
-func (r *ganttTaskResolver) Ganttproject(ctx context.Context, obj *database.GanttTask) (*database.GanttProject, error) {
-	panic(fmt.Errorf("not implemented: Ganttproject - Ganttproject"))
+	return &project, err
 }
 
 // Activities is the resolver for the activities field.
 func (r *ganttTaskResolver) Activities(ctx context.Context, obj *database.GanttTask) ([]database.GanttActivity, error) {
-	panic(fmt.Errorf("not implemented: Activities - activities"))
+	return r.Repository.GetTaskActivities(ctx, obj.ID)
 }
 
-// GanttprojectID is the resolver for the Ganttproject_id field.
-func (r *ganttTeamResolver) GanttprojectID(ctx context.Context, obj *database.GanttTeam) (int, error) {
-	panic(fmt.Errorf("not implemented: GanttprojectID - Ganttproject_id"))
-}
+// Project is the resolver for the project field.
+func (r *ganttTeamResolver) Project(ctx context.Context, obj *database.GanttTeam) (*database.GanttProject, error) {
+	project, err := r.Repository.GetProject(ctx, obj.ProjectID)
+	if err != nil {
+		return nil, err
+	}
 
-// Ganttproject is the resolver for the Ganttproject field.
-func (r *ganttTeamResolver) Ganttproject(ctx context.Context, obj *database.GanttTeam) (*database.GanttProject, error) {
-	panic(fmt.Errorf("not implemented: Ganttproject - Ganttproject"))
+	return &project, err
 }
 
 // Activity is the resolver for the Activity field.
 func (r *queryResolver) Activity(ctx context.Context, id int) (*database.GanttActivity, error) {
-	panic(fmt.Errorf("not implemented: Activity - Activity"))
+	activity, err := r.Repository.GetActivity(ctx, int64(id))
+	if err != nil {
+		return nil, err
+	}
+
+	return &activity, err
 }
 
-// Ganttassigned is the resolver for the Ganttassigned field.
-func (r *queryResolver) Ganttassigned(ctx context.Context, id int) (*database.GanttAssigned, error) {
-	panic(fmt.Errorf("not implemented: Ganttassigned - Ganttassigned"))
+// Assigned is the resolver for the assigned field.
+func (r *queryResolver) Assigned(ctx context.Context, id int) (*database.GanttAssigned, error) {
+	assigned, err := r.Repository.GetAssigned(ctx, int64(id))
+	if err != nil {
+		return nil, err
+	}
+
+	return &assigned, err
 }
 
-// GanttActivity is the resolver for the GanttActivity field.
-func (r *queryResolver) GanttActivity(ctx context.Context, projPk int) ([]database.GanttActivity, error) {
-	panic(fmt.Errorf("not implemented: GanttActivity - GanttActivity"))
+// ProjectActivities is the resolver for the projectActivities field.
+func (r *queryResolver) ProjectActivities(ctx context.Context, projPk int) ([]database.GanttActivity, error) {
+	return r.Repository.GetProjectActivities(ctx, int64(projPk))
 }
 
-// GanttGanttAssigned is the resolver for the ganttGanttAssigned field.
-func (r *queryResolver) GanttGanttAssigned(ctx context.Context, projPk int) ([]database.GanttAssigned, error) {
-	panic(fmt.Errorf("not implemented: GanttGanttAssigned - ganttGanttAssigned"))
+// ProjectAssigned is the resolver for the projectAssigned field.
+func (r *queryResolver) ProjectAssigned(ctx context.Context, projPk int) ([]database.GanttAssigned, error) {
+	return r.Repository.GetProjectAssignees(ctx, int64(projPk))
 }
 
-// GanttGanttAssignedToMe is the resolver for the ganttGanttAssignedToMe field.
-func (r *queryResolver) GanttGanttAssignedToMe(ctx context.Context) ([]model.GanttAssignedToMe, error) {
-	panic(fmt.Errorf("not implemented: GanttGanttAssignedToMe - ganttGanttAssignedToMe"))
+// AssignedToMe is the resolver for the assignedToMe field.
+func (r *queryResolver) AssignedToMe(ctx context.Context) ([]database.GanttAssigned, error) {
+	userId, err := auth.GetUserId(ctx)
+	if err != nil {
+		return nil, err
+	}
+	
+	return r.Repository.GetAssignedToUser(ctx, userId)
 }
 
-// GanttGanttComment is the resolver for the ganttGanttComment field.
-func (r *queryResolver) GanttGanttComment(ctx context.Context, ganttactivityPk int) ([]database.GanttComment, error) {
-	panic(fmt.Errorf("not implemented: GanttGanttComment - ganttGanttComment"))
+// ActivityComments is the resolver for the activityComments field.
+func (r *queryResolver) ActivityComments(ctx context.Context, activityPk int) ([]database.GanttComment, error) {
+	return r.Repository.GetActivityComments(ctx, int64(activityPk))
 }
 
-// GanttEmployee is the resolver for the ganttEmployee field.
-func (r *queryResolver) GanttEmployee(ctx context.Context, projPk int) ([]model.User, error) {
-	panic(fmt.Errorf("not implemented: GanttEmployee - ganttEmployee"))
+// ProjectEmployees is the resolver for the projectEmployees field.
+func (r *queryResolver) ProjectEmployees(ctx context.Context, projPk int) ([]database.UserUser, error) {
+	return r.Repository.GetProjectEmployees(ctx, int64(projPk))
 }
 
-// GanttGanttProject is the resolver for the ganttGanttProject field.
-func (r *queryResolver) GanttGanttProject(ctx context.Context) ([]database.GanttProject, error) {
-	panic(fmt.Errorf("not implemented: GanttGanttProject - ganttGanttProject"))
+// Projects is the resolver for the projects field.
+func (r *queryResolver) Projects(ctx context.Context) ([]database.GanttProject, error) {
+	userId, err := auth.GetUserId(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return r.Repository.ListProjects(ctx, database.ListProjectsParams{UserID: userId, ProjectManagerID: userId})
 }
 
-// GanttGanttRole is the resolver for the ganttGanttRole field.
-func (r *queryResolver) GanttGanttRole(ctx context.Context, ganttproject *int) ([]database.GanttRole, error) {
-	panic(fmt.Errorf("not implemented: GanttGanttRole - ganttGanttRole"))
+// ProjectRoles is the resolver for the projectRoles field.
+func (r *queryResolver) ProjectRoles(ctx context.Context, project int) ([]database.GanttRole, error) {
+	return r.Repository.GetProjectRoles(ctx, int64(project))
 }
 
-// GanttGanttState is the resolver for the ganttGanttState field.
-func (r *queryResolver) GanttGanttState(ctx context.Context, projPk int) ([]database.GanttState, error) {
-	panic(fmt.Errorf("not implemented: GanttGanttState - ganttGanttState"))
+// ProjectStates is the resolver for the projectStates field.
+func (r *queryResolver) ProjectStates(ctx context.Context, projPk int) ([]database.GanttState, error) {
+	return r.Repository.GetProjectStates(ctx, int64(projPk))
 }
 
-// GanttGanttTask is the resolver for the ganttGanttTask field.
-func (r *queryResolver) GanttGanttTask(ctx context.Context, projPk int) ([]database.GanttTask, error) {
-	panic(fmt.Errorf("not implemented: GanttGanttTask - ganttGanttTask"))
+// ProjectTasks is the resolver for the projectTasks field.
+func (r *queryResolver) ProjectTasks(ctx context.Context, projPk int) ([]database.GanttTask, error) {
+	return r.Repository.GetProjectTasks(ctx, int64(projPk))
 }
 
-// GanttGanttTeam is the resolver for the ganttGanttTeam field.
-func (r *queryResolver) GanttGanttTeam(ctx context.Context, ganttproject int) ([]database.GanttTeam, error) {
-	panic(fmt.Errorf("not implemented: GanttGanttTeam - ganttGanttTeam"))
+// ProjectTeams is the resolver for the projectTeams field.
+func (r *queryResolver) ProjectTeams(ctx context.Context, project int) ([]database.GanttTeam, error) {
+	return r.Repository.GetProjectTeams(ctx, int64(project))
 }
 
-// GanttGanttTeamMember is the resolver for the ganttGanttTeamMember field.
-func (r *queryResolver) GanttGanttTeamMember(ctx context.Context) ([]model.GanttTeamMember, error) {
-	panic(fmt.Errorf("not implemented: GanttGanttTeamMember - ganttGanttTeamMember"))
+// TeamMembers is the resolver for the teamMembers field.
+func (r *queryResolver) TeamMembers(ctx context.Context) ([]model.GanttTeamMember, error) {
+	panic(fmt.Errorf("not implemented: TeamMembers - teamMembers"))
 }
 
-// Ganttproject is the resolver for the Ganttproject field.
-func (r *queryResolver) Ganttproject(ctx context.Context, id int) (*database.GanttProject, error) {
-	panic(fmt.Errorf("not implemented: Ganttproject - Ganttproject"))
+// Project is the resolver for the project field.
+func (r *queryResolver) Project(ctx context.Context, id int) (*database.GanttProject, error) {
+	project, err := r.Repository.GetProject(ctx, int64(id))
+	if err != nil {
+		return nil, err
+	}
+
+	return &project, err
 }
 
-// Ganttrole is the resolver for the Ganttrole field.
-func (r *queryResolver) Ganttrole(ctx context.Context, id int) (*database.GanttRole, error) {
-	panic(fmt.Errorf("not implemented: Ganttrole - Ganttrole"))
+// Role is the resolver for the role field.
+func (r *queryResolver) Role(ctx context.Context, id int) (*database.GanttRole, error) {
+	role, err := r.Repository.GetRole(ctx, int64(id))
+	if err != nil {
+		return nil, err
+	}
+
+	return &role, err
 }
 
-// Ganttstate is the resolver for the Ganttstate field.
-func (r *queryResolver) Ganttstate(ctx context.Context, id string) (*database.GanttState, error) {
-	panic(fmt.Errorf("not implemented: Ganttstate - Ganttstate"))
+// State is the resolver for the state field.
+func (r *queryResolver) State(ctx context.Context, id int) (*database.GanttState, error) {
+	state, err := r.Repository.GetState(ctx, int64(id))
+	if err != nil {
+		return nil, err
+	}
+
+	return &state, err
 }
 
-// Gantttask is the resolver for the Gantttask field.
-func (r *queryResolver) Gantttask(ctx context.Context, id string) (*database.GanttTask, error) {
-	panic(fmt.Errorf("not implemented: Gantttask - Gantttask"))
+// Task is the resolver for the task field.
+func (r *queryResolver) Task(ctx context.Context, id int) (*database.GanttTask, error) {
+	task, err := r.Repository.GetTask(ctx, int64(id))
+	if err != nil {
+		return nil, err
+	}
+
+	return &task, err
 }
 
-// Ganttteam is the resolver for the Ganttteam field.
-func (r *queryResolver) Ganttteam(ctx context.Context, id string) (*database.GanttTeam, error) {
-	panic(fmt.Errorf("not implemented: Ganttteam - Ganttteam"))
+// Team is the resolver for the team field.
+func (r *queryResolver) Team(ctx context.Context, id int) (*database.GanttTeam, error) {
+	team, err := r.Repository.GetTeam(ctx, int64(id))
+	if err != nil {
+		return nil, err
+	}
+
+	return &team, err
 }
 
 // Me is the resolver for the me field.
-func (r *queryResolver) Me(ctx context.Context) (*model.User, error) {
-	panic(fmt.Errorf("not implemented: Me - me"))
+func (r *queryResolver) Me(ctx context.Context) (*database.UserUser, error) {
+	userId, err := auth.GetUserId(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	user, err := r.Repository.GetUser(ctx, userId)
+	return &user, err
 }
 
 // UserSearchUsers is the resolver for the userSearchUsers field.
-func (r *queryResolver) UserSearchUsers(ctx context.Context, search *string) ([]model.User, error) {
+func (r *queryResolver) UserSearchUsers(ctx context.Context, search *string) ([]database.UserUser, error) {
 	panic(fmt.Errorf("not implemented: UserSearchUsers - userSearchUsers"))
 }
 
@@ -238,12 +260,6 @@ func (r *Resolver) GanttComment() GanttCommentResolver { return &ganttCommentRes
 // GanttProject returns GanttProjectResolver implementation.
 func (r *Resolver) GanttProject() GanttProjectResolver { return &ganttProjectResolver{r} }
 
-// GanttRole returns GanttRoleResolver implementation.
-func (r *Resolver) GanttRole() GanttRoleResolver { return &ganttRoleResolver{r} }
-
-// GanttState returns GanttStateResolver implementation.
-func (r *Resolver) GanttState() GanttStateResolver { return &ganttStateResolver{r} }
-
 // GanttTask returns GanttTaskResolver implementation.
 func (r *Resolver) GanttTask() GanttTaskResolver { return &ganttTaskResolver{r} }
 
@@ -257,8 +273,6 @@ type ganttActivityResolver struct{ *Resolver }
 type ganttAssignedResolver struct{ *Resolver }
 type ganttCommentResolver struct{ *Resolver }
 type ganttProjectResolver struct{ *Resolver }
-type ganttRoleResolver struct{ *Resolver }
-type ganttStateResolver struct{ *Resolver }
 type ganttTaskResolver struct{ *Resolver }
 type ganttTeamResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }

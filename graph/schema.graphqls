@@ -1,59 +1,59 @@
 type Query {
 
-  Activity(id: Int!): GanttActivity
+  activity(id: Int!): GanttActivity
 
   
-  Ganttassigned(id: Int!): GanttAssigned
+  assigned(id: Int!): GanttAssigned
 
   
-  GanttActivity(projPk: Int!): [GanttActivity!]!
+  projectActivities(projPk: Int!): [GanttActivity!]!
 
   
-  ganttGanttAssigned(projPk: Int!): [GanttAssigned!]!
+  projectAssigned(projPk: Int!): [GanttAssigned!]!
 
   
-  ganttGanttAssignedToMe: [GanttAssignedToMe!]!
+  assignedToMe: [GanttAssigned!]!
 
   
-  ganttGanttComment(GanttactivityPk: Int!): [GanttComment!]!
+  activityComments(activityPk: Int!): [GanttComment!]!
 
   
-  ganttEmployee(projPk: Int!): [User!]!
+  projectEmployees(projPk: Int!): [UserUser!]!
 
   
-  ganttGanttProject: [GanttProject!]!
+  projects: [GanttProject!]!
 
   
-  ganttGanttRole(Ganttproject: Int): [GanttRole!]!
+  projectRoles(project: Int!): [GanttRole!]!
 
   
-  ganttGanttState(projPk: Int!): [GanttState!]!
+  projectStates(projPk: Int!): [GanttState!]!
 
   
-  ganttGanttTask(projPk: Int!): [GanttTask!]!
+  projectTasks(projPk: Int!): [GanttTask!]!
 
-  ganttGanttTeam(Ganttproject: Int!): [GanttTeam!]!
-
-  
-  ganttGanttTeamMember: [GanttTeamMember!]!
+  projectTeams(project: Int!): [GanttTeam!]!
 
   
-  Ganttproject(id: Int!): GanttProject
-  
-  Ganttrole(id: Int!): GanttRole
+  teamMembers: [GanttTeamMember!]!
 
   
-  Ganttstate(id: String!): GanttState
+  project(id: Int!): GanttProject
+  
+  role(id: Int!): GanttRole
 
   
-  Gantttask(id: String!): GanttTask
+  state(id: Int!): GanttState
 
   
-  Ganttteam(id: String!): GanttTeam
+  task(id: Int!): GanttTask
+
   
-  me: User
+  team(id: Int!): GanttTeam
   
-  userSearchUsers(search: String): [User!]!
+  me: UserUser
+  
+  userSearchUsers(search: String): [UserUser!]!
 }
 
 scalar DateTime
@@ -63,41 +63,31 @@ type GanttActivity {
   actualEndDate: DateTime
   actualStartDate: DateTime
   assignees: [GanttAssigned!]!
-  dependency: Int
+  dependencyId: Int
   description: String
   id: Int
   name: String!
   plannedBudget: String
   plannedEndDate: DateTime!
   plannedStartDate: DateTime!
-  Ganttstate_id: Int
-  Ganttstate: GanttState
-  Gantttask_id: Int!
-  Gantttask: GanttTask!
+  stateId: Int
+  state: GanttState
+  taskId: Int!
+  task: GanttTask!
 }
 
 
 type GanttAssigned {
-  Ganttactivity: Int!
+  activityId: Int!
   id: Int
-  user: User!
-}
-
-type GanttAssignedToMe {
-  actualStartDate: String
-  dependency: Int
-  id: Int
-  name: String!
-  plannedEndDate: String!
-  Ganttproject: String
-  GanttprojectId: Int
-  Ganttstate: Int
-  Gantttask: Int!
+  user: UserUser!
+  activity: GanttActivity!
 }
 
 type GanttComment {
-  Ganttactivity: Int
-  author: User!
+  activityId: Int
+  authorId: Int
+  author: UserUser!
   createdAt: DateTime
   id: Int
   text: String
@@ -112,12 +102,12 @@ type GanttProject {
   name: String!
   plannedEndDate: DateTime!
   plannedStartDate: DateTime!
-  GanttprojectManager_id: Int
-  GanttprojectManager: User!
-  Gantttasks: [GanttTask!]!
-  Ganttroles: [GanttRole!]!
-  Ganttteams: [GanttTeam!]!
-  Ganttstates: [GanttState!]!
+  projectManagerId: Int
+  projectManager: UserUser!
+  tasks: [GanttTask!]!
+  roles: [GanttRole!]!
+  teams: [GanttTeam!]!
+  states: [GanttState!]!
 }
 
 type GanttTask {
@@ -130,38 +120,38 @@ type GanttTask {
   plannedBudget: String
   plannedEndDate: DateTime!
   plannedStartDate: DateTime!
-  Ganttproject_id: Int!
-  Ganttproject: GanttProject!
+  projectId: Int!
+  project: GanttProject!
   activities: [GanttActivity!]!
 }
 
 type GanttRole {
   id: Int
   name: String!
-  Ganttproject_id: Int!
+  projectId: Int!
 }
 
 type GanttTeam {
   id: Int
   name: String!
-  Ganttproject_id: Int!
-  Ganttproject: GanttProject!
+  projectId: Int!
+  project: GanttProject!
 }
 
 type GanttTeamMember {
   id: Int
-  Ganttrole: Int!
-  Ganttteam: Int!
+  role: Int!
+  team: Int!
   user: Int!
 }
 
 type GanttState {
   id: Int
   name: String!
-  Ganttproject_id: Int!
+  projectId: Int!
 }
 
-type User {
+type UserUser {
   avatar: String
   firstName: String
   id: Int
@@ -169,157 +159,157 @@ type User {
   username: String
 }
 
-input GantActivityInput {
-  actualBudget: String
-  actualEndDate: String
-  actualStartDate: String
-  assignees: [GanttAssignedUpdateInput]
-  dependency: Int
-  description: String
-  id: Int
-  name: String!
-  plannedBudget: String
-  plannedEndDate: String!
-  plannedStartDate: String!
-  Ganttstate: Int
-  Gantttask: Int!
-}
+# input GantActivityInput {
+#   actualBudget: String
+#   actualEndDate: String
+#   actualStartDate: String
+#   assignees: [GanttAssignedUpdateInput]
+#   dependency: Int
+#   description: String
+#   id: Int
+#   name: String!
+#   plannedBudget: String
+#   plannedEndDate: String!
+#   plannedStartDate: String!
+#   Ganttstate: Int
+#   Gantttask: Int!
+# }
 
-input GanttAssignedUpdateInput {
-  Ganttactivity: Int
-  id: Int
-  user: Int!
-}
+# input GanttAssignedUpdateInput {
+#   Ganttactivity: Int
+#   id: Int
+#   user: Int!
+# }
 
-input GantActivityUpdateInput {
-  actualBudget: String
-  actualEndDate: String
-  actualStartDate: String
-  assignees: [GanttAssignedUpdateInput]
-  dependency: Int
-  description: String
-  id: Int
-  name: String!
-  plannedBudget: String
-  plannedEndDate: String!
-  plannedStartDate: String!
-  Ganttstate: Int
-  Gantttask: Int
-}
+# input GantActivityUpdateInput {
+#   actualBudget: String
+#   actualEndDate: String
+#   actualStartDate: String
+#   assignees: [GanttAssignedUpdateInput]
+#   dependency: Int
+#   description: String
+#   id: Int
+#   name: String!
+#   plannedBudget: String
+#   plannedEndDate: String!
+#   plannedStartDate: String!
+#   Ganttstate: Int
+#   Gantttask: Int
+# }
 
-input GanttAssignedInput {
-  Ganttactivity: Int!
-  id: Int
-  user: Int!
-}
+# input GanttAssignedInput {
+#   Ganttactivity: Int!
+#   id: Int
+#   user: Int!
+# }
 
 
 
-input GanttCommentInput {
-  Ganttactivity: Int!
-  author: Int
-  createdAt: String
-  id: Int
-  text: String!
-  updatedAt: String
-}
+# input GanttCommentInput {
+#   Ganttactivity: Int!
+#   author: Int
+#   createdAt: String
+#   id: Int
+#   text: String!
+#   updatedAt: String
+# }
 
-input GanttCommentOnlyChangeTextInput {
-  Ganttactivity: Int
-  author: Int
-  createdAt: String
-  id: Int
-  text: String!
-  updatedAt: String
-}
+# input GanttCommentOnlyChangeTextInput {
+#   Ganttactivity: Int
+#   author: Int
+#   createdAt: String
+#   id: Int
+#   text: String!
+#   updatedAt: String
+# }
 
-input GanttProjectInput {
-  actualEndDate: String
-  actualStartDate: String
-  description: String
-  id: Int
-  name: String!
-  plannedEndDate: String!
-  plannedStartDate: String!
-  GanttprojectManager: Int
-}
+# input GanttProjectInput {
+#   actualEndDate: String
+#   actualStartDate: String
+#   description: String
+#   id: Int
+#   name: String!
+#   plannedEndDate: String!
+#   plannedStartDate: String!
+#   GanttprojectManager: Int
+# }
 
-input GanttRoleInput {
-  id: Int
-  name: String!
-  Ganttproject: Int!
-}
+# input GanttRoleInput {
+#   id: Int
+#   name: String!
+#   Ganttproject: Int!
+# }
 
-input GanttStateInput {
-  id: Int
-  name: String!
-  Ganttproject: Int!
-}
+# input GanttStateInput {
+#   id: Int
+#   name: String!
+#   Ganttproject: Int!
+# }
 
-input GanttStateUpdateInput {
-  id: Int
-  name: String!
-  Ganttproject: Int
-}
+# input GanttStateUpdateInput {
+#   id: Int
+#   name: String!
+#   Ganttproject: Int
+# }
 
-input GanttTaskInput {
-  actualBudget: String
-  actualEndDate: String
-  actualStartDate: String
-  description: String
-  id: Int
-  name: String!
-  plannedBudget: String
-  plannedEndDate: String!
-  plannedStartDate: String!
-  Ganttproject: Int!
-}
+# input GanttTaskInput {
+#   actualBudget: String
+#   actualEndDate: String
+#   actualStartDate: String
+#   description: String
+#   id: Int
+#   name: String!
+#   plannedBudget: String
+#   plannedEndDate: String!
+#   plannedStartDate: String!
+#   Ganttproject: Int!
+# }
 
-input GanttTaskUpdateInput {
-  actualBudget: String
-  actualEndDate: String
-  actualStartDate: String
-  description: String
-  id: Int
-  name: String!
-  plannedBudget: String
-  plannedEndDate: String!
-  plannedStartDate: String!
-  Ganttproject: Int
-}
+# input GanttTaskUpdateInput {
+#   actualBudget: String
+#   actualEndDate: String
+#   actualStartDate: String
+#   description: String
+#   id: Int
+#   name: String!
+#   plannedBudget: String
+#   plannedEndDate: String!
+#   plannedStartDate: String!
+#   Ganttproject: Int
+# }
 
-input GanttTeamInput {
-  id: Int
-  name: String!
-  Ganttproject: Int!
-}
+# input GanttTeamInput {
+#   id: Int
+#   name: String!
+#   Ganttproject: Int!
+# }
 
-input GanttTeamMemberInput {
-  id: Int
-  Ganttrole: Int!
-  Ganttteam: Int!
-  user: Int!
-}
+# input GanttTeamMemberInput {
+#   id: Int
+#   Ganttrole: Int!
+#   Ganttteam: Int!
+#   user: Int!
+# }
 
-input GanttTeamMemberGetInput {
-  id: Int
-  Ganttrole: Int!
-  Ganttteam: Int!
-  user: Int
-}
+# input GanttTeamMemberGetInput {
+#   id: Int
+#   Ganttrole: Int!
+#   Ganttteam: Int!
+#   user: Int
+# }
 
-input UserInput {
-  avatar: String
-  email: String
-  firstName: String
-  id: Int
-  lastName: String
+# input UserInput {
+#   avatar: String
+#   email: String
+#   firstName: String
+#   id: Int
+#   lastName: String
 
-  """Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only."""
-  username: String
-}
+#   """Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only."""
+#   username: String
+# }
 
-type Avatar {
-  avatar: String
-}
+# type Avatar {
+#   avatar: String
+# }
 

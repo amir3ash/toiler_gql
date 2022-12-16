@@ -34,6 +34,34 @@ func (q *Queries) GetActivity(ctx context.Context, id int64) (GanttActivity, err
 	return i, err
 }
 
+const getActivityAssignees = `-- name: GetActivityAssignees :many
+SELECT a.id, a.activity_id, a.user_id FROM ` + "`" + `gantt_assigned` + "`" + ` a
+WHERE a.activity_id = ?
+`
+
+func (q *Queries) GetActivityAssignees(ctx context.Context, activityID int64) ([]GanttAssigned, error) {
+	rows, err := q.db.QueryContext(ctx, getActivityAssignees, activityID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []GanttAssigned
+	for rows.Next() {
+		var i GanttAssigned
+		if err := rows.Scan(&i.ID, &i.ActivityID, &i.UserID); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const getActivityComments = `-- name: GetActivityComments :many
 SELECT id, created_at, updated_at, text, activity_id, author_id FROM ` + "`" + `gantt_comment` + "`" + `
 WHERE activity_id = ?
@@ -69,6 +97,18 @@ func (q *Queries) GetActivityComments(ctx context.Context, activityID int64) ([]
 	return items, nil
 }
 
+const getAssigned = `-- name: GetAssigned :one
+SELECT id, activity_id, user_id FROM ` + "`" + `gantt_assigned` + "`" + `
+WHERE id = ?
+`
+
+func (q *Queries) GetAssigned(ctx context.Context, id int64) (GanttAssigned, error) {
+	row := q.db.QueryRowContext(ctx, getAssigned, id)
+	var i GanttAssigned
+	err := row.Scan(&i.ID, &i.ActivityID, &i.UserID)
+	return i, err
+}
+
 const getAssignedToUser = `-- name: GetAssignedToUser :many
 SELECT id, activity_id, user_id FROM ` + "`" + `gantt_assigned` + "`" + `
 WHERE user_id = ?
@@ -95,6 +135,27 @@ func (q *Queries) GetAssignedToUser(ctx context.Context, userID int32) ([]GanttA
 		return nil, err
 	}
 	return items, nil
+}
+
+const getProject = `-- name: GetProject :one
+SELECT id, name, planned_start_date, planned_end_date, actual_start_date, actual_end_date, description, project_manager_id FROM ` + "`" + `gantt_project` + "`" + `
+WHERE id = ?
+`
+
+func (q *Queries) GetProject(ctx context.Context, id int64) (GanttProject, error) {
+	row := q.db.QueryRowContext(ctx, getProject, id)
+	var i GanttProject
+	err := row.Scan(
+		&i.ID,
+		&i.Name,
+		&i.PlannedStartDate,
+		&i.PlannedEndDate,
+		&i.ActualStartDate,
+		&i.ActualEndDate,
+		&i.Description,
+		&i.ProjectManagerID,
+	)
+	return i, err
 }
 
 const getProjectActivities = `-- name: GetProjectActivities :many
@@ -170,7 +231,7 @@ func (q *Queries) GetProjectAssignees(ctx context.Context, projectID int64) ([]G
 }
 
 const getProjectEmployees = `-- name: GetProjectEmployees :many
-SELECT u.id, u.password, u.last_login, u.is_superuser, u.username, u.first_name, u.last_name, u.email, u.is_staff, u.is_active, u.date_joined, u.avatar FROM ` + "`" + `user_user` + "`" + ` u
+SELECT u.id, u.username, u.first_name, u.last_name, u.avatar FROM ` + "`" + `user_user` + "`" + ` u
 JOIN ` + "`" + `gantt_teammember` + "`" + ` tm ON tm.user_id = u.id
 JOIN ` + "`" + `gantt_team` + "`" + ` t ON t.id = tm.team_id
 WHERE t.project_id = ?
@@ -187,16 +248,9 @@ func (q *Queries) GetProjectEmployees(ctx context.Context, projectID int64) ([]U
 		var i UserUser
 		if err := rows.Scan(
 			&i.ID,
-			&i.Password,
-			&i.LastLogin,
-			&i.IsSuperuser,
 			&i.Username,
 			&i.FirstName,
 			&i.LastName,
-			&i.Email,
-			&i.IsStaff,
-			&i.IsActive,
-			&i.DateJoined,
 			&i.Avatar,
 		); err != nil {
 			return nil, err
@@ -212,13 +266,41 @@ func (q *Queries) GetProjectEmployees(ctx context.Context, projectID int64) ([]U
 	return items, nil
 }
 
-const getStates = `-- name: GetStates :many
+const getProjectRoles = `-- name: GetProjectRoles :many
+SELECT id, name, project_id FROM ` + "`" + `gantt_role` + "`" + `
+WHERE project_id = ?
+`
+
+func (q *Queries) GetProjectRoles(ctx context.Context, projectID int64) ([]GanttRole, error) {
+	rows, err := q.db.QueryContext(ctx, getProjectRoles, projectID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []GanttRole
+	for rows.Next() {
+		var i GanttRole
+		if err := rows.Scan(&i.ID, &i.Name, &i.ProjectID); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const getProjectStates = `-- name: GetProjectStates :many
 SELECT id, name, project_id FROM ` + "`" + `gantt_state` + "`" + `
 WHERE project_id = ?
 `
 
-func (q *Queries) GetStates(ctx context.Context, projectID int64) ([]GanttState, error) {
-	rows, err := q.db.QueryContext(ctx, getStates, projectID)
+func (q *Queries) GetProjectStates(ctx context.Context, projectID int64) ([]GanttState, error) {
+	rows, err := q.db.QueryContext(ctx, getProjectStates, projectID)
 	if err != nil {
 		return nil, err
 	}
@@ -238,6 +320,191 @@ func (q *Queries) GetStates(ctx context.Context, projectID int64) ([]GanttState,
 		return nil, err
 	}
 	return items, nil
+}
+
+const getProjectTasks = `-- name: GetProjectTasks :many
+SELECT id, name, planned_start_date, planned_end_date, planned_budget, actual_start_date, actual_end_date, actual_budget, description, project_id FROM ` + "`" + `gantt_task` + "`" + `
+WHERE project_id = ?
+`
+
+func (q *Queries) GetProjectTasks(ctx context.Context, projectID int64) ([]GanttTask, error) {
+	rows, err := q.db.QueryContext(ctx, getProjectTasks, projectID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []GanttTask
+	for rows.Next() {
+		var i GanttTask
+		if err := rows.Scan(
+			&i.ID,
+			&i.Name,
+			&i.PlannedStartDate,
+			&i.PlannedEndDate,
+			&i.PlannedBudget,
+			&i.ActualStartDate,
+			&i.ActualEndDate,
+			&i.ActualBudget,
+			&i.Description,
+			&i.ProjectID,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const getProjectTeams = `-- name: GetProjectTeams :many
+SELECT id, name, project_id FROM ` + "`" + `gantt_team` + "`" + `
+WHERE project_id = ?
+`
+
+func (q *Queries) GetProjectTeams(ctx context.Context, projectID int64) ([]GanttTeam, error) {
+	rows, err := q.db.QueryContext(ctx, getProjectTeams, projectID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []GanttTeam
+	for rows.Next() {
+		var i GanttTeam
+		if err := rows.Scan(&i.ID, &i.Name, &i.ProjectID); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const getRole = `-- name: GetRole :one
+SELECT id, name, project_id FROM ` + "`" + `gantt_role` + "`" + `
+WHERE id = ?
+`
+
+func (q *Queries) GetRole(ctx context.Context, id int64) (GanttRole, error) {
+	row := q.db.QueryRowContext(ctx, getRole, id)
+	var i GanttRole
+	err := row.Scan(&i.ID, &i.Name, &i.ProjectID)
+	return i, err
+}
+
+const getState = `-- name: GetState :one
+SELECT id, name, project_id FROM ` + "`" + `gantt_state` + "`" + `
+WHERE id = ?
+`
+
+func (q *Queries) GetState(ctx context.Context, id int64) (GanttState, error) {
+	row := q.db.QueryRowContext(ctx, getState, id)
+	var i GanttState
+	err := row.Scan(&i.ID, &i.Name, &i.ProjectID)
+	return i, err
+}
+
+const getTask = `-- name: GetTask :one
+SELECT id, name, planned_start_date, planned_end_date, planned_budget, actual_start_date, actual_end_date, actual_budget, description, project_id FROM ` + "`" + `gantt_task` + "`" + `
+WHERE id = ?
+`
+
+func (q *Queries) GetTask(ctx context.Context, id int64) (GanttTask, error) {
+	row := q.db.QueryRowContext(ctx, getTask, id)
+	var i GanttTask
+	err := row.Scan(
+		&i.ID,
+		&i.Name,
+		&i.PlannedStartDate,
+		&i.PlannedEndDate,
+		&i.PlannedBudget,
+		&i.ActualStartDate,
+		&i.ActualEndDate,
+		&i.ActualBudget,
+		&i.Description,
+		&i.ProjectID,
+	)
+	return i, err
+}
+
+const getTaskActivities = `-- name: GetTaskActivities :many
+SELECT id, name, description, planned_start_date, planned_end_date, planned_budget, actual_start_date, actual_end_date, actual_budget, dependency_id, state_id, task_id FROM ` + "`" + `gantt_activity` + "`" + `
+WHERE task_id = ?
+`
+
+func (q *Queries) GetTaskActivities(ctx context.Context, taskID int64) ([]GanttActivity, error) {
+	rows, err := q.db.QueryContext(ctx, getTaskActivities, taskID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []GanttActivity
+	for rows.Next() {
+		var i GanttActivity
+		if err := rows.Scan(
+			&i.ID,
+			&i.Name,
+			&i.Description,
+			&i.PlannedStartDate,
+			&i.PlannedEndDate,
+			&i.PlannedBudget,
+			&i.ActualStartDate,
+			&i.ActualEndDate,
+			&i.ActualBudget,
+			&i.DependencyID,
+			&i.StateID,
+			&i.TaskID,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const getTeam = `-- name: GetTeam :one
+SELECT id, name, project_id FROM ` + "`" + `gantt_team` + "`" + `
+WHERE id = ?
+`
+
+func (q *Queries) GetTeam(ctx context.Context, id int64) (GanttTeam, error) {
+	row := q.db.QueryRowContext(ctx, getTeam, id)
+	var i GanttTeam
+	err := row.Scan(&i.ID, &i.Name, &i.ProjectID)
+	return i, err
+}
+
+const getUser = `-- name: GetUser :one
+SELECT id, username, first_name, last_name, avatar FROM ` + "`" + `user_user` + "`" + `
+WHERE id = ?
+`
+
+func (q *Queries) GetUser(ctx context.Context, id int32) (UserUser, error) {
+	row := q.db.QueryRowContext(ctx, getUser, id)
+	var i UserUser
+	err := row.Scan(
+		&i.ID,
+		&i.Username,
+		&i.FirstName,
+		&i.LastName,
+		&i.Avatar,
+	)
+	return i, err
 }
 
 const listProjects = `-- name: ListProjects :many

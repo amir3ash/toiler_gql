@@ -176,18 +176,11 @@ type UserTempuser struct {
 }
 
 type UserUser struct {
-	ID          int32
-	Password    string
-	LastLogin   sql.NullTime
-	IsSuperuser bool
-	Username    string
-	FirstName   string
-	LastName    string
-	Email       string
-	IsStaff     bool
-	IsActive    bool
-	DateJoined  time.Time
-	Avatar      sql.NullString
+	ID        int32
+	Username  string
+	FirstName string
+	LastName  string
+	Avatar    sql.NullString
 }
 
 type UserUserGroup struct {

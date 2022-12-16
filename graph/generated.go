@@ -45,8 +45,6 @@ type ResolverRoot interface {
 	GanttAssigned() GanttAssignedResolver
 	GanttComment() GanttCommentResolver
 	GanttProject() GanttProjectResolver
-	GanttRole() GanttRoleResolver
-	GanttState() GanttStateResolver
 	GanttTask() GanttTaskResolver
 	GanttTeam() GanttTeamResolver
 	Query() QueryResolver
@@ -56,81 +54,67 @@ type DirectiveRoot struct {
 }
 
 type ComplexityRoot struct {
-	Avatar struct {
-		Avatar func(childComplexity int) int
-	}
-
 	GanttActivity struct {
 		ActualBudget     func(childComplexity int) int
 		ActualEndDate    func(childComplexity int) int
 		ActualStartDate  func(childComplexity int) int
 		Assignees        func(childComplexity int) int
-		Dependency       func(childComplexity int) int
+		DependencyID     func(childComplexity int) int
 		Description      func(childComplexity int) int
-		Ganttstate       func(childComplexity int) int
-		GanttstateID     func(childComplexity int) int
-		Gantttask        func(childComplexity int) int
-		GantttaskID      func(childComplexity int) int
 		ID               func(childComplexity int) int
 		Name             func(childComplexity int) int
 		PlannedBudget    func(childComplexity int) int
 		PlannedEndDate   func(childComplexity int) int
 		PlannedStartDate func(childComplexity int) int
+		State            func(childComplexity int) int
+		StateID          func(childComplexity int) int
+		Task             func(childComplexity int) int
+		TaskID           func(childComplexity int) int
 	}
 
 	GanttAssigned struct {
-		Ganttactivity func(childComplexity int) int
-		ID            func(childComplexity int) int
-		User          func(childComplexity int) int
-	}
-
-	GanttAssignedToMe struct {
-		ActualStartDate func(childComplexity int) int
-		Dependency      func(childComplexity int) int
-		Ganttproject    func(childComplexity int) int
-		GanttprojectID  func(childComplexity int) int
-		Ganttstate      func(childComplexity int) int
-		Gantttask       func(childComplexity int) int
-		ID              func(childComplexity int) int
-		Name            func(childComplexity int) int
-		PlannedEndDate  func(childComplexity int) int
+		Activity   func(childComplexity int) int
+		ActivityID func(childComplexity int) int
+		ID         func(childComplexity int) int
+		User       func(childComplexity int) int
 	}
 
 	GanttComment struct {
-		Author        func(childComplexity int) int
-		CreatedAt     func(childComplexity int) int
-		Ganttactivity func(childComplexity int) int
-		ID            func(childComplexity int) int
-		Text          func(childComplexity int) int
-		UpdatedAt     func(childComplexity int) int
+		ActivityID func(childComplexity int) int
+		Author     func(childComplexity int) int
+		AuthorID   func(childComplexity int) int
+		CreatedAt  func(childComplexity int) int
+		ID         func(childComplexity int) int
+		Text       func(childComplexity int) int
+		UpdatedAt  func(childComplexity int) int
 	}
 
 	GanttProject struct {
-		ActualEndDate         func(childComplexity int) int
-		ActualStartDate       func(childComplexity int) int
-		Description           func(childComplexity int) int
-		GanttprojectManager   func(childComplexity int) int
-		GanttprojectManagerID func(childComplexity int) int
-		Ganttroles            func(childComplexity int) int
-		Ganttstates           func(childComplexity int) int
-		Gantttasks            func(childComplexity int) int
-		Ganttteams            func(childComplexity int) int
-		ID                    func(childComplexity int) int
-		Name                  func(childComplexity int) int
-		PlannedEndDate        func(childComplexity int) int
-		PlannedStartDate      func(childComplexity int) int
+		ActualEndDate    func(childComplexity int) int
+		ActualStartDate  func(childComplexity int) int
+		Description      func(childComplexity int) int
+		ID               func(childComplexity int) int
+		Name             func(childComplexity int) int
+		PlannedEndDate   func(childComplexity int) int
+		PlannedStartDate func(childComplexity int) int
+		ProjectManager   func(childComplexity int) int
+		ProjectManagerID func(childComplexity int) int
+		Roles            func(childComplexity int) int
+		States           func(childComplexity int) int
+		Tasks            func(childComplexity int) int
+		Teams            func(childComplexity int) int
 	}
 
 	GanttRole struct {
-		GanttprojectID func(childComplexity int) int
-		ID             func(childComplexity int) int
-		Name           func(childComplexity int) int
+		ID        func(childComplexity int) int
+		Name      func(childComplexity int) int
+		ProjectID func(childComplexity int) int
 	}
 
 	GanttState struct {
-		GanttprojectID func(childComplexity int) int
-		ID             func(childComplexity int) int
-		Name           func(childComplexity int) int
+		ID        func(childComplexity int) int
+		Name      func(childComplexity int) int
+		ProjectID func(childComplexity int) int
 	}
 
 	GanttTask struct {
@@ -139,53 +123,53 @@ type ComplexityRoot struct {
 		ActualEndDate    func(childComplexity int) int
 		ActualStartDate  func(childComplexity int) int
 		Description      func(childComplexity int) int
-		Ganttproject     func(childComplexity int) int
-		GanttprojectID   func(childComplexity int) int
 		ID               func(childComplexity int) int
 		Name             func(childComplexity int) int
 		PlannedBudget    func(childComplexity int) int
 		PlannedEndDate   func(childComplexity int) int
 		PlannedStartDate func(childComplexity int) int
+		Project          func(childComplexity int) int
+		ProjectID        func(childComplexity int) int
 	}
 
 	GanttTeam struct {
-		Ganttproject   func(childComplexity int) int
-		GanttprojectID func(childComplexity int) int
-		ID             func(childComplexity int) int
-		Name           func(childComplexity int) int
+		ID        func(childComplexity int) int
+		Name      func(childComplexity int) int
+		Project   func(childComplexity int) int
+		ProjectID func(childComplexity int) int
 	}
 
 	GanttTeamMember struct {
-		Ganttrole func(childComplexity int) int
-		Ganttteam func(childComplexity int) int
-		ID        func(childComplexity int) int
-		User      func(childComplexity int) int
+		ID   func(childComplexity int) int
+		Role func(childComplexity int) int
+		Team func(childComplexity int) int
+		User func(childComplexity int) int
 	}
 
 	Query struct {
-		Activity               func(childComplexity int, id int) int
-		GanttActivity          func(childComplexity int, projPk int) int
-		GanttEmployee          func(childComplexity int, projPk int) int
-		GanttGanttAssigned     func(childComplexity int, projPk int) int
-		GanttGanttAssignedToMe func(childComplexity int) int
-		GanttGanttComment      func(childComplexity int, ganttactivityPk int) int
-		GanttGanttProject      func(childComplexity int) int
-		GanttGanttRole         func(childComplexity int, ganttproject *int) int
-		GanttGanttState        func(childComplexity int, projPk int) int
-		GanttGanttTask         func(childComplexity int, projPk int) int
-		GanttGanttTeam         func(childComplexity int, ganttproject int) int
-		GanttGanttTeamMember   func(childComplexity int) int
-		Ganttassigned          func(childComplexity int, id int) int
-		Ganttproject           func(childComplexity int, id int) int
-		Ganttrole              func(childComplexity int, id int) int
-		Ganttstate             func(childComplexity int, id string) int
-		Gantttask              func(childComplexity int, id string) int
-		Ganttteam              func(childComplexity int, id string) int
-		Me                     func(childComplexity int) int
-		UserSearchUsers        func(childComplexity int, search *string) int
+		Activity          func(childComplexity int, id int) int
+		ActivityComments  func(childComplexity int, activityPk int) int
+		Assigned          func(childComplexity int, id int) int
+		AssignedToMe      func(childComplexity int) int
+		Me                func(childComplexity int) int
+		Project           func(childComplexity int, id int) int
+		ProjectActivities func(childComplexity int, projPk int) int
+		ProjectAssigned   func(childComplexity int, projPk int) int
+		ProjectEmployees  func(childComplexity int, projPk int) int
+		ProjectRoles      func(childComplexity int, project int) int
+		ProjectStates     func(childComplexity int, projPk int) int
+		ProjectTasks      func(childComplexity int, projPk int) int
+		ProjectTeams      func(childComplexity int, project int) int
+		Projects          func(childComplexity int) int
+		Role              func(childComplexity int, id int) int
+		State             func(childComplexity int, id int) int
+		Task              func(childComplexity int, id int) int
+		Team              func(childComplexity int, id int) int
+		TeamMembers       func(childComplexity int) int
+		UserSearchUsers   func(childComplexity int, search *string) int
 	}
 
-	User struct {
+	UserUser struct {
 		Avatar    func(childComplexity int) int
 		FirstName func(childComplexity int) int
 		ID        func(childComplexity int) int
@@ -196,66 +180,53 @@ type ComplexityRoot struct {
 
 type GanttActivityResolver interface {
 	Assignees(ctx context.Context, obj *database.GanttActivity) ([]database.GanttAssigned, error)
-	Dependency(ctx context.Context, obj *database.GanttActivity) (*int, error)
 
-	GanttstateID(ctx context.Context, obj *database.GanttActivity) (*int, error)
-	Ganttstate(ctx context.Context, obj *database.GanttActivity) (*database.GanttState, error)
-	GantttaskID(ctx context.Context, obj *database.GanttActivity) (int, error)
-	Gantttask(ctx context.Context, obj *database.GanttActivity) (*database.GanttTask, error)
+	State(ctx context.Context, obj *database.GanttActivity) (*database.GanttState, error)
+
+	Task(ctx context.Context, obj *database.GanttActivity) (*database.GanttTask, error)
 }
 type GanttAssignedResolver interface {
-	Ganttactivity(ctx context.Context, obj *database.GanttAssigned) (int, error)
-
-	User(ctx context.Context, obj *database.GanttAssigned) (*model.User, error)
+	User(ctx context.Context, obj *database.GanttAssigned) (*database.UserUser, error)
+	Activity(ctx context.Context, obj *database.GanttAssigned) (*database.GanttActivity, error)
 }
 type GanttCommentResolver interface {
-	Ganttactivity(ctx context.Context, obj *database.GanttComment) (*int, error)
-	Author(ctx context.Context, obj *database.GanttComment) (*model.User, error)
+	Author(ctx context.Context, obj *database.GanttComment) (*database.UserUser, error)
 }
 type GanttProjectResolver interface {
-	GanttprojectManagerID(ctx context.Context, obj *database.GanttProject) (*int, error)
-	GanttprojectManager(ctx context.Context, obj *database.GanttProject) (*model.User, error)
-	Gantttasks(ctx context.Context, obj *database.GanttProject) ([]database.GanttTask, error)
-	Ganttroles(ctx context.Context, obj *database.GanttProject) ([]database.GanttRole, error)
-	Ganttteams(ctx context.Context, obj *database.GanttProject) ([]database.GanttTeam, error)
-	Ganttstates(ctx context.Context, obj *database.GanttProject) ([]database.GanttState, error)
-}
-type GanttRoleResolver interface {
-	GanttprojectID(ctx context.Context, obj *database.GanttRole) (int, error)
-}
-type GanttStateResolver interface {
-	GanttprojectID(ctx context.Context, obj *database.GanttState) (int, error)
+	ProjectManager(ctx context.Context, obj *database.GanttProject) (*database.UserUser, error)
+	Tasks(ctx context.Context, obj *database.GanttProject) ([]database.GanttTask, error)
+	Roles(ctx context.Context, obj *database.GanttProject) ([]database.GanttRole, error)
+	Teams(ctx context.Context, obj *database.GanttProject) ([]database.GanttTeam, error)
+	States(ctx context.Context, obj *database.GanttProject) ([]database.GanttState, error)
 }
 type GanttTaskResolver interface {
-	GanttprojectID(ctx context.Context, obj *database.GanttTask) (int, error)
-	Ganttproject(ctx context.Context, obj *database.GanttTask) (*database.GanttProject, error)
+	Project(ctx context.Context, obj *database.GanttTask) (*database.GanttProject, error)
 	Activities(ctx context.Context, obj *database.GanttTask) ([]database.GanttActivity, error)
 }
 type GanttTeamResolver interface {
-	GanttprojectID(ctx context.Context, obj *database.GanttTeam) (int, error)
-	Ganttproject(ctx context.Context, obj *database.GanttTeam) (*database.GanttProject, error)
+	Project(ctx context.Context, obj *database.GanttTeam) (*database.GanttProject, error)
 }
 type QueryResolver interface {
 	Activity(ctx context.Context, id int) (*database.GanttActivity, error)
-	Ganttassigned(ctx context.Context, id int) (*database.GanttAssigned, error)
-	GanttActivity(ctx context.Context, projPk int) ([]database.GanttActivity, error)
-	GanttGanttAssigned(ctx context.Context, projPk int) ([]database.GanttAssigned, error)
-	GanttGanttAssignedToMe(ctx context.Context) ([]model.GanttAssignedToMe, error)
-	GanttGanttComment(ctx context.Context, ganttactivityPk int) ([]database.GanttComment, error)
-	GanttEmployee(ctx context.Context, projPk int) ([]model.User, error)
-	GanttGanttProject(ctx context.Context) ([]database.GanttProject, error)
-	GanttGanttRole(ctx context.Context, ganttproject *int) ([]database.GanttRole, error)
-	GanttGanttState(ctx context.Context, projPk int) ([]database.GanttState, error)
-	GanttGanttTask(ctx context.Context, projPk int) ([]database.GanttTask, error)
-	GanttGanttTeam(ctx context.Context, ganttproject int) ([]database.GanttTeam, error)
-	GanttGanttTeamMember(ctx context.Context) ([]model.GanttTeamMember, error)
-	Ganttproject(ctx context.Context, id int) (*database.GanttProject, error)
-	Ganttrole(ctx context.Context, id int) (*database.GanttRole, error)
-	Ganttstate(ctx context.Context, id string) (*database.GanttState, error)
-	Gantttask(ctx context.Context, id string) (*database.GanttTask, error)
-	Ganttteam(ctx context.Context, id string) (*database.GanttTeam, error)
-	Me(ctx context.Context) (*model.User, error)
-	UserSearchUsers(ctx context.Context, search *string) ([]model.User, error)
+	Assigned(ctx context.Context, id int) (*database.GanttAssigned, error)
+	ProjectActivities(ctx context.Context, projPk int) ([]database.GanttActivity, error)
+	ProjectAssigned(ctx context.Context, projPk int) ([]database.GanttAssigned, error)
+	AssignedToMe(ctx context.Context) ([]database.GanttAssigned, error)
+	ActivityComments(ctx context.Context, activityPk int) ([]database.GanttComment, error)
+	ProjectEmployees(ctx context.Context, projPk int) ([]database.UserUser, error)
+	Projects(ctx context.Context) ([]database.GanttProject, error)
+	ProjectRoles(ctx context.Context, project int) ([]database.GanttRole, error)
+	ProjectStates(ctx context.Context, projPk int) ([]database.GanttState, error)
+	ProjectTasks(ctx context.Context, projPk int) ([]database.GanttTask, error)
+	ProjectTeams(ctx context.Context, project int) ([]database.GanttTeam, error)
+	TeamMembers(ctx context.Context) ([]model.GanttTeamMember, error)
+	Project(ctx context.Context, id int) (*database.GanttProject, error)
+	Role(ctx context.Context, id int) (*database.GanttRole, error)
+	State(ctx context.Context, id int) (*database.GanttState, error)
+	Task(ctx context.Context, id int) (*database.GanttTask, error)
+	Team(ctx context.Context, id int) (*database.GanttTeam, error)
+	Me(ctx context.Context) (*database.UserUser, error)
+	UserSearchUsers(ctx context.Context, search *string) ([]database.UserUser, error)
 }
 
 type executableSchema struct {
@@ -272,13 +243,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 	ec := executionContext{nil, e}
 	_ = ec
 	switch typeName + "." + field {
-
-	case "Avatar.avatar":
-		if e.complexity.Avatar.Avatar == nil {
-			break
-		}
-
-		return e.complexity.Avatar.Avatar(childComplexity), true
 
 	case "GanttActivity.actualBudget":
 		if e.complexity.GanttActivity.ActualBudget == nil {
@@ -308,12 +272,12 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.GanttActivity.Assignees(childComplexity), true
 
-	case "GanttActivity.dependency":
-		if e.complexity.GanttActivity.Dependency == nil {
+	case "GanttActivity.dependencyId":
+		if e.complexity.GanttActivity.DependencyID == nil {
 			break
 		}
 
-		return e.complexity.GanttActivity.Dependency(childComplexity), true
+		return e.complexity.GanttActivity.DependencyID(childComplexity), true
 
 	case "GanttActivity.description":
 		if e.complexity.GanttActivity.Description == nil {
@@ -321,34 +285,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.GanttActivity.Description(childComplexity), true
-
-	case "GanttActivity.Ganttstate":
-		if e.complexity.GanttActivity.Ganttstate == nil {
-			break
-		}
-
-		return e.complexity.GanttActivity.Ganttstate(childComplexity), true
-
-	case "GanttActivity.Ganttstate_id":
-		if e.complexity.GanttActivity.GanttstateID == nil {
-			break
-		}
-
-		return e.complexity.GanttActivity.GanttstateID(childComplexity), true
-
-	case "GanttActivity.Gantttask":
-		if e.complexity.GanttActivity.Gantttask == nil {
-			break
-		}
-
-		return e.complexity.GanttActivity.Gantttask(childComplexity), true
-
-	case "GanttActivity.Gantttask_id":
-		if e.complexity.GanttActivity.GantttaskID == nil {
-			break
-		}
-
-		return e.complexity.GanttActivity.GantttaskID(childComplexity), true
 
 	case "GanttActivity.id":
 		if e.complexity.GanttActivity.ID == nil {
@@ -385,12 +321,47 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.GanttActivity.PlannedStartDate(childComplexity), true
 
-	case "GanttAssigned.Ganttactivity":
-		if e.complexity.GanttAssigned.Ganttactivity == nil {
+	case "GanttActivity.state":
+		if e.complexity.GanttActivity.State == nil {
 			break
 		}
 
-		return e.complexity.GanttAssigned.Ganttactivity(childComplexity), true
+		return e.complexity.GanttActivity.State(childComplexity), true
+
+	case "GanttActivity.stateId":
+		if e.complexity.GanttActivity.StateID == nil {
+			break
+		}
+
+		return e.complexity.GanttActivity.StateID(childComplexity), true
+
+	case "GanttActivity.task":
+		if e.complexity.GanttActivity.Task == nil {
+			break
+		}
+
+		return e.complexity.GanttActivity.Task(childComplexity), true
+
+	case "GanttActivity.taskId":
+		if e.complexity.GanttActivity.TaskID == nil {
+			break
+		}
+
+		return e.complexity.GanttActivity.TaskID(childComplexity), true
+
+	case "GanttAssigned.activity":
+		if e.complexity.GanttAssigned.Activity == nil {
+			break
+		}
+
+		return e.complexity.GanttAssigned.Activity(childComplexity), true
+
+	case "GanttAssigned.activityId":
+		if e.complexity.GanttAssigned.ActivityID == nil {
+			break
+		}
+
+		return e.complexity.GanttAssigned.ActivityID(childComplexity), true
 
 	case "GanttAssigned.id":
 		if e.complexity.GanttAssigned.ID == nil {
@@ -406,68 +377,12 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.GanttAssigned.User(childComplexity), true
 
-	case "GanttAssignedToMe.actualStartDate":
-		if e.complexity.GanttAssignedToMe.ActualStartDate == nil {
+	case "GanttComment.activityId":
+		if e.complexity.GanttComment.ActivityID == nil {
 			break
 		}
 
-		return e.complexity.GanttAssignedToMe.ActualStartDate(childComplexity), true
-
-	case "GanttAssignedToMe.dependency":
-		if e.complexity.GanttAssignedToMe.Dependency == nil {
-			break
-		}
-
-		return e.complexity.GanttAssignedToMe.Dependency(childComplexity), true
-
-	case "GanttAssignedToMe.Ganttproject":
-		if e.complexity.GanttAssignedToMe.Ganttproject == nil {
-			break
-		}
-
-		return e.complexity.GanttAssignedToMe.Ganttproject(childComplexity), true
-
-	case "GanttAssignedToMe.GanttprojectId":
-		if e.complexity.GanttAssignedToMe.GanttprojectID == nil {
-			break
-		}
-
-		return e.complexity.GanttAssignedToMe.GanttprojectID(childComplexity), true
-
-	case "GanttAssignedToMe.Ganttstate":
-		if e.complexity.GanttAssignedToMe.Ganttstate == nil {
-			break
-		}
-
-		return e.complexity.GanttAssignedToMe.Ganttstate(childComplexity), true
-
-	case "GanttAssignedToMe.Gantttask":
-		if e.complexity.GanttAssignedToMe.Gantttask == nil {
-			break
-		}
-
-		return e.complexity.GanttAssignedToMe.Gantttask(childComplexity), true
-
-	case "GanttAssignedToMe.id":
-		if e.complexity.GanttAssignedToMe.ID == nil {
-			break
-		}
-
-		return e.complexity.GanttAssignedToMe.ID(childComplexity), true
-
-	case "GanttAssignedToMe.name":
-		if e.complexity.GanttAssignedToMe.Name == nil {
-			break
-		}
-
-		return e.complexity.GanttAssignedToMe.Name(childComplexity), true
-
-	case "GanttAssignedToMe.plannedEndDate":
-		if e.complexity.GanttAssignedToMe.PlannedEndDate == nil {
-			break
-		}
-
-		return e.complexity.GanttAssignedToMe.PlannedEndDate(childComplexity), true
+		return e.complexity.GanttComment.ActivityID(childComplexity), true
 
 	case "GanttComment.author":
 		if e.complexity.GanttComment.Author == nil {
@@ -476,19 +391,19 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.GanttComment.Author(childComplexity), true
 
+	case "GanttComment.authorId":
+		if e.complexity.GanttComment.AuthorID == nil {
+			break
+		}
+
+		return e.complexity.GanttComment.AuthorID(childComplexity), true
+
 	case "GanttComment.createdAt":
 		if e.complexity.GanttComment.CreatedAt == nil {
 			break
 		}
 
 		return e.complexity.GanttComment.CreatedAt(childComplexity), true
-
-	case "GanttComment.Ganttactivity":
-		if e.complexity.GanttComment.Ganttactivity == nil {
-			break
-		}
-
-		return e.complexity.GanttComment.Ganttactivity(childComplexity), true
 
 	case "GanttComment.id":
 		if e.complexity.GanttComment.ID == nil {
@@ -532,48 +447,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.GanttProject.Description(childComplexity), true
 
-	case "GanttProject.GanttprojectManager":
-		if e.complexity.GanttProject.GanttprojectManager == nil {
-			break
-		}
-
-		return e.complexity.GanttProject.GanttprojectManager(childComplexity), true
-
-	case "GanttProject.GanttprojectManager_id":
-		if e.complexity.GanttProject.GanttprojectManagerID == nil {
-			break
-		}
-
-		return e.complexity.GanttProject.GanttprojectManagerID(childComplexity), true
-
-	case "GanttProject.Ganttroles":
-		if e.complexity.GanttProject.Ganttroles == nil {
-			break
-		}
-
-		return e.complexity.GanttProject.Ganttroles(childComplexity), true
-
-	case "GanttProject.Ganttstates":
-		if e.complexity.GanttProject.Ganttstates == nil {
-			break
-		}
-
-		return e.complexity.GanttProject.Ganttstates(childComplexity), true
-
-	case "GanttProject.Gantttasks":
-		if e.complexity.GanttProject.Gantttasks == nil {
-			break
-		}
-
-		return e.complexity.GanttProject.Gantttasks(childComplexity), true
-
-	case "GanttProject.Ganttteams":
-		if e.complexity.GanttProject.Ganttteams == nil {
-			break
-		}
-
-		return e.complexity.GanttProject.Ganttteams(childComplexity), true
-
 	case "GanttProject.id":
 		if e.complexity.GanttProject.ID == nil {
 			break
@@ -602,12 +475,47 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.GanttProject.PlannedStartDate(childComplexity), true
 
-	case "GanttRole.Ganttproject_id":
-		if e.complexity.GanttRole.GanttprojectID == nil {
+	case "GanttProject.projectManager":
+		if e.complexity.GanttProject.ProjectManager == nil {
 			break
 		}
 
-		return e.complexity.GanttRole.GanttprojectID(childComplexity), true
+		return e.complexity.GanttProject.ProjectManager(childComplexity), true
+
+	case "GanttProject.projectManagerId":
+		if e.complexity.GanttProject.ProjectManagerID == nil {
+			break
+		}
+
+		return e.complexity.GanttProject.ProjectManagerID(childComplexity), true
+
+	case "GanttProject.roles":
+		if e.complexity.GanttProject.Roles == nil {
+			break
+		}
+
+		return e.complexity.GanttProject.Roles(childComplexity), true
+
+	case "GanttProject.states":
+		if e.complexity.GanttProject.States == nil {
+			break
+		}
+
+		return e.complexity.GanttProject.States(childComplexity), true
+
+	case "GanttProject.tasks":
+		if e.complexity.GanttProject.Tasks == nil {
+			break
+		}
+
+		return e.complexity.GanttProject.Tasks(childComplexity), true
+
+	case "GanttProject.teams":
+		if e.complexity.GanttProject.Teams == nil {
+			break
+		}
+
+		return e.complexity.GanttProject.Teams(childComplexity), true
 
 	case "GanttRole.id":
 		if e.complexity.GanttRole.ID == nil {
@@ -623,12 +531,12 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.GanttRole.Name(childComplexity), true
 
-	case "GanttState.Ganttproject_id":
-		if e.complexity.GanttState.GanttprojectID == nil {
+	case "GanttRole.projectId":
+		if e.complexity.GanttRole.ProjectID == nil {
 			break
 		}
 
-		return e.complexity.GanttState.GanttprojectID(childComplexity), true
+		return e.complexity.GanttRole.ProjectID(childComplexity), true
 
 	case "GanttState.id":
 		if e.complexity.GanttState.ID == nil {
@@ -643,6 +551,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.GanttState.Name(childComplexity), true
+
+	case "GanttState.projectId":
+		if e.complexity.GanttState.ProjectID == nil {
+			break
+		}
+
+		return e.complexity.GanttState.ProjectID(childComplexity), true
 
 	case "GanttTask.activities":
 		if e.complexity.GanttTask.Activities == nil {
@@ -679,20 +594,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.GanttTask.Description(childComplexity), true
 
-	case "GanttTask.Ganttproject":
-		if e.complexity.GanttTask.Ganttproject == nil {
-			break
-		}
-
-		return e.complexity.GanttTask.Ganttproject(childComplexity), true
-
-	case "GanttTask.Ganttproject_id":
-		if e.complexity.GanttTask.GanttprojectID == nil {
-			break
-		}
-
-		return e.complexity.GanttTask.GanttprojectID(childComplexity), true
-
 	case "GanttTask.id":
 		if e.complexity.GanttTask.ID == nil {
 			break
@@ -728,19 +629,19 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.GanttTask.PlannedStartDate(childComplexity), true
 
-	case "GanttTeam.Ganttproject":
-		if e.complexity.GanttTeam.Ganttproject == nil {
+	case "GanttTask.project":
+		if e.complexity.GanttTask.Project == nil {
 			break
 		}
 
-		return e.complexity.GanttTeam.Ganttproject(childComplexity), true
+		return e.complexity.GanttTask.Project(childComplexity), true
 
-	case "GanttTeam.Ganttproject_id":
-		if e.complexity.GanttTeam.GanttprojectID == nil {
+	case "GanttTask.projectId":
+		if e.complexity.GanttTask.ProjectID == nil {
 			break
 		}
 
-		return e.complexity.GanttTeam.GanttprojectID(childComplexity), true
+		return e.complexity.GanttTask.ProjectID(childComplexity), true
 
 	case "GanttTeam.id":
 		if e.complexity.GanttTeam.ID == nil {
@@ -756,19 +657,19 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.GanttTeam.Name(childComplexity), true
 
-	case "GanttTeamMember.Ganttrole":
-		if e.complexity.GanttTeamMember.Ganttrole == nil {
+	case "GanttTeam.project":
+		if e.complexity.GanttTeam.Project == nil {
 			break
 		}
 
-		return e.complexity.GanttTeamMember.Ganttrole(childComplexity), true
+		return e.complexity.GanttTeam.Project(childComplexity), true
 
-	case "GanttTeamMember.Ganttteam":
-		if e.complexity.GanttTeamMember.Ganttteam == nil {
+	case "GanttTeam.projectId":
+		if e.complexity.GanttTeam.ProjectID == nil {
 			break
 		}
 
-		return e.complexity.GanttTeamMember.Ganttteam(childComplexity), true
+		return e.complexity.GanttTeam.ProjectID(childComplexity), true
 
 	case "GanttTeamMember.id":
 		if e.complexity.GanttTeamMember.ID == nil {
@@ -777,6 +678,20 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.GanttTeamMember.ID(childComplexity), true
 
+	case "GanttTeamMember.role":
+		if e.complexity.GanttTeamMember.Role == nil {
+			break
+		}
+
+		return e.complexity.GanttTeamMember.Role(childComplexity), true
+
+	case "GanttTeamMember.team":
+		if e.complexity.GanttTeamMember.Team == nil {
+			break
+		}
+
+		return e.complexity.GanttTeamMember.Team(childComplexity), true
+
 	case "GanttTeamMember.user":
 		if e.complexity.GanttTeamMember.User == nil {
 			break
@@ -784,206 +699,48 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.GanttTeamMember.User(childComplexity), true
 
-	case "Query.Activity":
+	case "Query.activity":
 		if e.complexity.Query.Activity == nil {
 			break
 		}
 
-		args, err := ec.field_Query_Activity_args(context.TODO(), rawArgs)
+		args, err := ec.field_Query_activity_args(context.TODO(), rawArgs)
 		if err != nil {
 			return 0, false
 		}
 
 		return e.complexity.Query.Activity(childComplexity, args["id"].(int)), true
 
-	case "Query.GanttActivity":
-		if e.complexity.Query.GanttActivity == nil {
+	case "Query.activityComments":
+		if e.complexity.Query.ActivityComments == nil {
 			break
 		}
 
-		args, err := ec.field_Query_GanttActivity_args(context.TODO(), rawArgs)
+		args, err := ec.field_Query_activityComments_args(context.TODO(), rawArgs)
 		if err != nil {
 			return 0, false
 		}
 
-		return e.complexity.Query.GanttActivity(childComplexity, args["projPk"].(int)), true
+		return e.complexity.Query.ActivityComments(childComplexity, args["activityPk"].(int)), true
 
-	case "Query.ganttEmployee":
-		if e.complexity.Query.GanttEmployee == nil {
+	case "Query.assigned":
+		if e.complexity.Query.Assigned == nil {
 			break
 		}
 
-		args, err := ec.field_Query_ganttEmployee_args(context.TODO(), rawArgs)
+		args, err := ec.field_Query_assigned_args(context.TODO(), rawArgs)
 		if err != nil {
 			return 0, false
 		}
 
-		return e.complexity.Query.GanttEmployee(childComplexity, args["projPk"].(int)), true
+		return e.complexity.Query.Assigned(childComplexity, args["id"].(int)), true
 
-	case "Query.ganttGanttAssigned":
-		if e.complexity.Query.GanttGanttAssigned == nil {
+	case "Query.assignedToMe":
+		if e.complexity.Query.AssignedToMe == nil {
 			break
 		}
 
-		args, err := ec.field_Query_ganttGanttAssigned_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Query.GanttGanttAssigned(childComplexity, args["projPk"].(int)), true
-
-	case "Query.ganttGanttAssignedToMe":
-		if e.complexity.Query.GanttGanttAssignedToMe == nil {
-			break
-		}
-
-		return e.complexity.Query.GanttGanttAssignedToMe(childComplexity), true
-
-	case "Query.ganttGanttComment":
-		if e.complexity.Query.GanttGanttComment == nil {
-			break
-		}
-
-		args, err := ec.field_Query_ganttGanttComment_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Query.GanttGanttComment(childComplexity, args["GanttactivityPk"].(int)), true
-
-	case "Query.ganttGanttProject":
-		if e.complexity.Query.GanttGanttProject == nil {
-			break
-		}
-
-		return e.complexity.Query.GanttGanttProject(childComplexity), true
-
-	case "Query.ganttGanttRole":
-		if e.complexity.Query.GanttGanttRole == nil {
-			break
-		}
-
-		args, err := ec.field_Query_ganttGanttRole_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Query.GanttGanttRole(childComplexity, args["Ganttproject"].(*int)), true
-
-	case "Query.ganttGanttState":
-		if e.complexity.Query.GanttGanttState == nil {
-			break
-		}
-
-		args, err := ec.field_Query_ganttGanttState_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Query.GanttGanttState(childComplexity, args["projPk"].(int)), true
-
-	case "Query.ganttGanttTask":
-		if e.complexity.Query.GanttGanttTask == nil {
-			break
-		}
-
-		args, err := ec.field_Query_ganttGanttTask_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Query.GanttGanttTask(childComplexity, args["projPk"].(int)), true
-
-	case "Query.ganttGanttTeam":
-		if e.complexity.Query.GanttGanttTeam == nil {
-			break
-		}
-
-		args, err := ec.field_Query_ganttGanttTeam_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Query.GanttGanttTeam(childComplexity, args["Ganttproject"].(int)), true
-
-	case "Query.ganttGanttTeamMember":
-		if e.complexity.Query.GanttGanttTeamMember == nil {
-			break
-		}
-
-		return e.complexity.Query.GanttGanttTeamMember(childComplexity), true
-
-	case "Query.Ganttassigned":
-		if e.complexity.Query.Ganttassigned == nil {
-			break
-		}
-
-		args, err := ec.field_Query_Ganttassigned_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Query.Ganttassigned(childComplexity, args["id"].(int)), true
-
-	case "Query.Ganttproject":
-		if e.complexity.Query.Ganttproject == nil {
-			break
-		}
-
-		args, err := ec.field_Query_Ganttproject_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Query.Ganttproject(childComplexity, args["id"].(int)), true
-
-	case "Query.Ganttrole":
-		if e.complexity.Query.Ganttrole == nil {
-			break
-		}
-
-		args, err := ec.field_Query_Ganttrole_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Query.Ganttrole(childComplexity, args["id"].(int)), true
-
-	case "Query.Ganttstate":
-		if e.complexity.Query.Ganttstate == nil {
-			break
-		}
-
-		args, err := ec.field_Query_Ganttstate_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Query.Ganttstate(childComplexity, args["id"].(string)), true
-
-	case "Query.Gantttask":
-		if e.complexity.Query.Gantttask == nil {
-			break
-		}
-
-		args, err := ec.field_Query_Gantttask_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Query.Gantttask(childComplexity, args["id"].(string)), true
-
-	case "Query.Ganttteam":
-		if e.complexity.Query.Ganttteam == nil {
-			break
-		}
-
-		args, err := ec.field_Query_Ganttteam_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Query.Ganttteam(childComplexity, args["id"].(string)), true
+		return e.complexity.Query.AssignedToMe(childComplexity), true
 
 	case "Query.me":
 		if e.complexity.Query.Me == nil {
@@ -991,6 +748,164 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Query.Me(childComplexity), true
+
+	case "Query.project":
+		if e.complexity.Query.Project == nil {
+			break
+		}
+
+		args, err := ec.field_Query_project_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.Project(childComplexity, args["id"].(int)), true
+
+	case "Query.projectActivities":
+		if e.complexity.Query.ProjectActivities == nil {
+			break
+		}
+
+		args, err := ec.field_Query_projectActivities_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.ProjectActivities(childComplexity, args["projPk"].(int)), true
+
+	case "Query.projectAssigned":
+		if e.complexity.Query.ProjectAssigned == nil {
+			break
+		}
+
+		args, err := ec.field_Query_projectAssigned_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.ProjectAssigned(childComplexity, args["projPk"].(int)), true
+
+	case "Query.projectEmployees":
+		if e.complexity.Query.ProjectEmployees == nil {
+			break
+		}
+
+		args, err := ec.field_Query_projectEmployees_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.ProjectEmployees(childComplexity, args["projPk"].(int)), true
+
+	case "Query.projectRoles":
+		if e.complexity.Query.ProjectRoles == nil {
+			break
+		}
+
+		args, err := ec.field_Query_projectRoles_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.ProjectRoles(childComplexity, args["project"].(int)), true
+
+	case "Query.projectStates":
+		if e.complexity.Query.ProjectStates == nil {
+			break
+		}
+
+		args, err := ec.field_Query_projectStates_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.ProjectStates(childComplexity, args["projPk"].(int)), true
+
+	case "Query.projectTasks":
+		if e.complexity.Query.ProjectTasks == nil {
+			break
+		}
+
+		args, err := ec.field_Query_projectTasks_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.ProjectTasks(childComplexity, args["projPk"].(int)), true
+
+	case "Query.projectTeams":
+		if e.complexity.Query.ProjectTeams == nil {
+			break
+		}
+
+		args, err := ec.field_Query_projectTeams_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.ProjectTeams(childComplexity, args["project"].(int)), true
+
+	case "Query.projects":
+		if e.complexity.Query.Projects == nil {
+			break
+		}
+
+		return e.complexity.Query.Projects(childComplexity), true
+
+	case "Query.role":
+		if e.complexity.Query.Role == nil {
+			break
+		}
+
+		args, err := ec.field_Query_role_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.Role(childComplexity, args["id"].(int)), true
+
+	case "Query.state":
+		if e.complexity.Query.State == nil {
+			break
+		}
+
+		args, err := ec.field_Query_state_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.State(childComplexity, args["id"].(int)), true
+
+	case "Query.task":
+		if e.complexity.Query.Task == nil {
+			break
+		}
+
+		args, err := ec.field_Query_task_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.Task(childComplexity, args["id"].(int)), true
+
+	case "Query.team":
+		if e.complexity.Query.Team == nil {
+			break
+		}
+
+		args, err := ec.field_Query_team_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.Team(childComplexity, args["id"].(int)), true
+
+	case "Query.teamMembers":
+		if e.complexity.Query.TeamMembers == nil {
+			break
+		}
+
+		return e.complexity.Query.TeamMembers(childComplexity), true
 
 	case "Query.userSearchUsers":
 		if e.complexity.Query.UserSearchUsers == nil {
@@ -1004,40 +919,40 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Query.UserSearchUsers(childComplexity, args["search"].(*string)), true
 
-	case "User.avatar":
-		if e.complexity.User.Avatar == nil {
+	case "UserUser.avatar":
+		if e.complexity.UserUser.Avatar == nil {
 			break
 		}
 
-		return e.complexity.User.Avatar(childComplexity), true
+		return e.complexity.UserUser.Avatar(childComplexity), true
 
-	case "User.firstName":
-		if e.complexity.User.FirstName == nil {
+	case "UserUser.firstName":
+		if e.complexity.UserUser.FirstName == nil {
 			break
 		}
 
-		return e.complexity.User.FirstName(childComplexity), true
+		return e.complexity.UserUser.FirstName(childComplexity), true
 
-	case "User.id":
-		if e.complexity.User.ID == nil {
+	case "UserUser.id":
+		if e.complexity.UserUser.ID == nil {
 			break
 		}
 
-		return e.complexity.User.ID(childComplexity), true
+		return e.complexity.UserUser.ID(childComplexity), true
 
-	case "User.lastName":
-		if e.complexity.User.LastName == nil {
+	case "UserUser.lastName":
+		if e.complexity.UserUser.LastName == nil {
 			break
 		}
 
-		return e.complexity.User.LastName(childComplexity), true
+		return e.complexity.UserUser.LastName(childComplexity), true
 
-	case "User.username":
-		if e.complexity.User.Username == nil {
+	case "UserUser.username":
+		if e.complexity.UserUser.Username == nil {
 			break
 		}
 
-		return e.complexity.User.Username(childComplexity), true
+		return e.complexity.UserUser.Username(childComplexity), true
 
 	}
 	return 0, false
@@ -1046,24 +961,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 	rc := graphql.GetOperationContext(ctx)
 	ec := executionContext{rc, e}
-	inputUnmarshalMap := graphql.BuildUnmarshalerMap(
-		ec.unmarshalInputGantActivityInput,
-		ec.unmarshalInputGantActivityUpdateInput,
-		ec.unmarshalInputGanttAssignedInput,
-		ec.unmarshalInputGanttAssignedUpdateInput,
-		ec.unmarshalInputGanttCommentInput,
-		ec.unmarshalInputGanttCommentOnlyChangeTextInput,
-		ec.unmarshalInputGanttProjectInput,
-		ec.unmarshalInputGanttRoleInput,
-		ec.unmarshalInputGanttStateInput,
-		ec.unmarshalInputGanttStateUpdateInput,
-		ec.unmarshalInputGanttTaskInput,
-		ec.unmarshalInputGanttTaskUpdateInput,
-		ec.unmarshalInputGanttTeamInput,
-		ec.unmarshalInputGanttTeamMemberGetInput,
-		ec.unmarshalInputGanttTeamMemberInput,
-		ec.unmarshalInputUserInput,
-	)
+	inputUnmarshalMap := graphql.BuildUnmarshalerMap()
 	first := true
 
 	switch rc.Operation.Operation {
@@ -1127,126 +1025,6 @@ var parsedSchema = gqlparser.MustLoadSchema(sources...)
 
 // region    ***************************** args.gotpl *****************************
 
-func (ec *executionContext) field_Query_Activity_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
-	var err error
-	args := map[string]interface{}{}
-	var arg0 int
-	if tmp, ok := rawArgs["id"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
-		arg0, err = ec.unmarshalNInt2int(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["id"] = arg0
-	return args, nil
-}
-
-func (ec *executionContext) field_Query_GanttActivity_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
-	var err error
-	args := map[string]interface{}{}
-	var arg0 int
-	if tmp, ok := rawArgs["projPk"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("projPk"))
-		arg0, err = ec.unmarshalNInt2int(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["projPk"] = arg0
-	return args, nil
-}
-
-func (ec *executionContext) field_Query_Ganttassigned_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
-	var err error
-	args := map[string]interface{}{}
-	var arg0 int
-	if tmp, ok := rawArgs["id"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
-		arg0, err = ec.unmarshalNInt2int(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["id"] = arg0
-	return args, nil
-}
-
-func (ec *executionContext) field_Query_Ganttproject_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
-	var err error
-	args := map[string]interface{}{}
-	var arg0 int
-	if tmp, ok := rawArgs["id"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
-		arg0, err = ec.unmarshalNInt2int(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["id"] = arg0
-	return args, nil
-}
-
-func (ec *executionContext) field_Query_Ganttrole_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
-	var err error
-	args := map[string]interface{}{}
-	var arg0 int
-	if tmp, ok := rawArgs["id"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
-		arg0, err = ec.unmarshalNInt2int(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["id"] = arg0
-	return args, nil
-}
-
-func (ec *executionContext) field_Query_Ganttstate_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
-	var err error
-	args := map[string]interface{}{}
-	var arg0 string
-	if tmp, ok := rawArgs["id"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
-		arg0, err = ec.unmarshalNString2string(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["id"] = arg0
-	return args, nil
-}
-
-func (ec *executionContext) field_Query_Gantttask_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
-	var err error
-	args := map[string]interface{}{}
-	var arg0 string
-	if tmp, ok := rawArgs["id"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
-		arg0, err = ec.unmarshalNString2string(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["id"] = arg0
-	return args, nil
-}
-
-func (ec *executionContext) field_Query_Ganttteam_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
-	var err error
-	args := map[string]interface{}{}
-	var arg0 string
-	if tmp, ok := rawArgs["id"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
-		arg0, err = ec.unmarshalNString2string(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["id"] = arg0
-	return args, nil
-}
-
 func (ec *executionContext) field_Query___type_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -1262,7 +1040,52 @@ func (ec *executionContext) field_Query___type_args(ctx context.Context, rawArgs
 	return args, nil
 }
 
-func (ec *executionContext) field_Query_ganttEmployee_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+func (ec *executionContext) field_Query_activityComments_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 int
+	if tmp, ok := rawArgs["activityPk"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("activityPk"))
+		arg0, err = ec.unmarshalNInt2int(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["activityPk"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_activity_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 int
+	if tmp, ok := rawArgs["id"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+		arg0, err = ec.unmarshalNInt2int(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["id"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_assigned_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 int
+	if tmp, ok := rawArgs["id"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+		arg0, err = ec.unmarshalNInt2int(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["id"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_projectActivities_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
 	var arg0 int
@@ -1277,7 +1100,7 @@ func (ec *executionContext) field_Query_ganttEmployee_args(ctx context.Context, 
 	return args, nil
 }
 
-func (ec *executionContext) field_Query_ganttGanttAssigned_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+func (ec *executionContext) field_Query_projectAssigned_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
 	var arg0 int
@@ -1292,37 +1115,7 @@ func (ec *executionContext) field_Query_ganttGanttAssigned_args(ctx context.Cont
 	return args, nil
 }
 
-func (ec *executionContext) field_Query_ganttGanttComment_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
-	var err error
-	args := map[string]interface{}{}
-	var arg0 int
-	if tmp, ok := rawArgs["GanttactivityPk"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("GanttactivityPk"))
-		arg0, err = ec.unmarshalNInt2int(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["GanttactivityPk"] = arg0
-	return args, nil
-}
-
-func (ec *executionContext) field_Query_ganttGanttRole_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
-	var err error
-	args := map[string]interface{}{}
-	var arg0 *int
-	if tmp, ok := rawArgs["Ganttproject"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("Ganttproject"))
-		arg0, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["Ganttproject"] = arg0
-	return args, nil
-}
-
-func (ec *executionContext) field_Query_ganttGanttState_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+func (ec *executionContext) field_Query_projectEmployees_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
 	var arg0 int
@@ -1337,7 +1130,22 @@ func (ec *executionContext) field_Query_ganttGanttState_args(ctx context.Context
 	return args, nil
 }
 
-func (ec *executionContext) field_Query_ganttGanttTask_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+func (ec *executionContext) field_Query_projectRoles_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 int
+	if tmp, ok := rawArgs["project"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("project"))
+		arg0, err = ec.unmarshalNInt2int(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["project"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_projectStates_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
 	var arg0 int
@@ -1352,18 +1160,108 @@ func (ec *executionContext) field_Query_ganttGanttTask_args(ctx context.Context,
 	return args, nil
 }
 
-func (ec *executionContext) field_Query_ganttGanttTeam_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+func (ec *executionContext) field_Query_projectTasks_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
 	var arg0 int
-	if tmp, ok := rawArgs["Ganttproject"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("Ganttproject"))
+	if tmp, ok := rawArgs["projPk"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("projPk"))
 		arg0, err = ec.unmarshalNInt2int(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["Ganttproject"] = arg0
+	args["projPk"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_projectTeams_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 int
+	if tmp, ok := rawArgs["project"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("project"))
+		arg0, err = ec.unmarshalNInt2int(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["project"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_project_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 int
+	if tmp, ok := rawArgs["id"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+		arg0, err = ec.unmarshalNInt2int(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["id"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_role_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 int
+	if tmp, ok := rawArgs["id"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+		arg0, err = ec.unmarshalNInt2int(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["id"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_state_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 int
+	if tmp, ok := rawArgs["id"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+		arg0, err = ec.unmarshalNInt2int(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["id"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_task_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 int
+	if tmp, ok := rawArgs["id"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+		arg0, err = ec.unmarshalNInt2int(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["id"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_team_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 int
+	if tmp, ok := rawArgs["id"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+		arg0, err = ec.unmarshalNInt2int(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["id"] = arg0
 	return args, nil
 }
 
@@ -1419,47 +1317,6 @@ func (ec *executionContext) field___Type_fields_args(ctx context.Context, rawArg
 // endregion ************************** directives.gotpl **************************
 
 // region    **************************** field.gotpl *****************************
-
-func (ec *executionContext) _Avatar_avatar(ctx context.Context, field graphql.CollectedField, obj *model.Avatar) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Avatar_avatar(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Avatar, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*string)
-	fc.Result = res
-	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_Avatar_avatar(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "Avatar",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
-		},
-	}
-	return fc, nil
-}
 
 func (ec *executionContext) _GanttActivity_actualBudget(ctx context.Context, field graphql.CollectedField, obj *database.GanttActivity) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_GanttActivity_actualBudget(ctx, field)
@@ -1623,12 +1480,14 @@ func (ec *executionContext) fieldContext_GanttActivity_assignees(ctx context.Con
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
-			case "Ganttactivity":
-				return ec.fieldContext_GanttAssigned_Ganttactivity(ctx, field)
+			case "activityId":
+				return ec.fieldContext_GanttAssigned_activityId(ctx, field)
 			case "id":
 				return ec.fieldContext_GanttAssigned_id(ctx, field)
 			case "user":
 				return ec.fieldContext_GanttAssigned_user(ctx, field)
+			case "activity":
+				return ec.fieldContext_GanttAssigned_activity(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type GanttAssigned", field.Name)
 		},
@@ -1636,8 +1495,8 @@ func (ec *executionContext) fieldContext_GanttActivity_assignees(ctx context.Con
 	return fc, nil
 }
 
-func (ec *executionContext) _GanttActivity_dependency(ctx context.Context, field graphql.CollectedField, obj *database.GanttActivity) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_GanttActivity_dependency(ctx, field)
+func (ec *executionContext) _GanttActivity_dependencyId(ctx context.Context, field graphql.CollectedField, obj *database.GanttActivity) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_GanttActivity_dependencyId(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -1650,7 +1509,7 @@ func (ec *executionContext) _GanttActivity_dependency(ctx context.Context, field
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.GanttActivity().Dependency(rctx, obj)
+		return obj.DependencyID, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -1659,17 +1518,17 @@ func (ec *executionContext) _GanttActivity_dependency(ctx context.Context, field
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*int)
+	res := resTmp.(sql.NullInt64)
 	fc.Result = res
-	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
+	return ec.marshalOInt2databaseᚋsqlᚐNullInt64(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_GanttActivity_dependency(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_GanttActivity_dependencyId(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "GanttActivity",
 		Field:      field,
-		IsMethod:   true,
-		IsResolver: true,
+		IsMethod:   false,
+		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type Int does not have child fields")
 		},
@@ -1932,8 +1791,8 @@ func (ec *executionContext) fieldContext_GanttActivity_plannedStartDate(ctx cont
 	return fc, nil
 }
 
-func (ec *executionContext) _GanttActivity_Ganttstate_id(ctx context.Context, field graphql.CollectedField, obj *database.GanttActivity) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_GanttActivity_Ganttstate_id(ctx, field)
+func (ec *executionContext) _GanttActivity_stateId(ctx context.Context, field graphql.CollectedField, obj *database.GanttActivity) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_GanttActivity_stateId(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -1946,7 +1805,7 @@ func (ec *executionContext) _GanttActivity_Ganttstate_id(ctx context.Context, fi
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.GanttActivity().GanttstateID(rctx, obj)
+		return obj.StateID, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -1955,17 +1814,17 @@ func (ec *executionContext) _GanttActivity_Ganttstate_id(ctx context.Context, fi
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*int)
+	res := resTmp.(sql.NullInt64)
 	fc.Result = res
-	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
+	return ec.marshalOInt2databaseᚋsqlᚐNullInt64(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_GanttActivity_Ganttstate_id(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_GanttActivity_stateId(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "GanttActivity",
 		Field:      field,
-		IsMethod:   true,
-		IsResolver: true,
+		IsMethod:   false,
+		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type Int does not have child fields")
 		},
@@ -1973,8 +1832,8 @@ func (ec *executionContext) fieldContext_GanttActivity_Ganttstate_id(ctx context
 	return fc, nil
 }
 
-func (ec *executionContext) _GanttActivity_Ganttstate(ctx context.Context, field graphql.CollectedField, obj *database.GanttActivity) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_GanttActivity_Ganttstate(ctx, field)
+func (ec *executionContext) _GanttActivity_state(ctx context.Context, field graphql.CollectedField, obj *database.GanttActivity) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_GanttActivity_state(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -1987,7 +1846,7 @@ func (ec *executionContext) _GanttActivity_Ganttstate(ctx context.Context, field
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.GanttActivity().Ganttstate(rctx, obj)
+		return ec.resolvers.GanttActivity().State(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -2001,7 +1860,7 @@ func (ec *executionContext) _GanttActivity_Ganttstate(ctx context.Context, field
 	return ec.marshalOGanttState2ᚖtoilerᚑgraphqlᚋdatabaseᚐGanttState(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_GanttActivity_Ganttstate(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_GanttActivity_state(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "GanttActivity",
 		Field:      field,
@@ -2013,8 +1872,8 @@ func (ec *executionContext) fieldContext_GanttActivity_Ganttstate(ctx context.Co
 				return ec.fieldContext_GanttState_id(ctx, field)
 			case "name":
 				return ec.fieldContext_GanttState_name(ctx, field)
-			case "Ganttproject_id":
-				return ec.fieldContext_GanttState_Ganttproject_id(ctx, field)
+			case "projectId":
+				return ec.fieldContext_GanttState_projectId(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type GanttState", field.Name)
 		},
@@ -2022,8 +1881,8 @@ func (ec *executionContext) fieldContext_GanttActivity_Ganttstate(ctx context.Co
 	return fc, nil
 }
 
-func (ec *executionContext) _GanttActivity_Gantttask_id(ctx context.Context, field graphql.CollectedField, obj *database.GanttActivity) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_GanttActivity_Gantttask_id(ctx, field)
+func (ec *executionContext) _GanttActivity_taskId(ctx context.Context, field graphql.CollectedField, obj *database.GanttActivity) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_GanttActivity_taskId(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -2036,7 +1895,7 @@ func (ec *executionContext) _GanttActivity_Gantttask_id(ctx context.Context, fie
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.GanttActivity().GantttaskID(rctx, obj)
+		return obj.TaskID, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -2048,17 +1907,17 @@ func (ec *executionContext) _GanttActivity_Gantttask_id(ctx context.Context, fie
 		}
 		return graphql.Null
 	}
-	res := resTmp.(int)
+	res := resTmp.(int64)
 	fc.Result = res
-	return ec.marshalNInt2int(ctx, field.Selections, res)
+	return ec.marshalNInt2int64(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_GanttActivity_Gantttask_id(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_GanttActivity_taskId(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "GanttActivity",
 		Field:      field,
-		IsMethod:   true,
-		IsResolver: true,
+		IsMethod:   false,
+		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type Int does not have child fields")
 		},
@@ -2066,8 +1925,8 @@ func (ec *executionContext) fieldContext_GanttActivity_Gantttask_id(ctx context.
 	return fc, nil
 }
 
-func (ec *executionContext) _GanttActivity_Gantttask(ctx context.Context, field graphql.CollectedField, obj *database.GanttActivity) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_GanttActivity_Gantttask(ctx, field)
+func (ec *executionContext) _GanttActivity_task(ctx context.Context, field graphql.CollectedField, obj *database.GanttActivity) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_GanttActivity_task(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -2080,7 +1939,7 @@ func (ec *executionContext) _GanttActivity_Gantttask(ctx context.Context, field 
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.GanttActivity().Gantttask(rctx, obj)
+		return ec.resolvers.GanttActivity().Task(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -2097,7 +1956,7 @@ func (ec *executionContext) _GanttActivity_Gantttask(ctx context.Context, field 
 	return ec.marshalNGanttTask2ᚖtoilerᚑgraphqlᚋdatabaseᚐGanttTask(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_GanttActivity_Gantttask(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_GanttActivity_task(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "GanttActivity",
 		Field:      field,
@@ -2123,10 +1982,10 @@ func (ec *executionContext) fieldContext_GanttActivity_Gantttask(ctx context.Con
 				return ec.fieldContext_GanttTask_plannedEndDate(ctx, field)
 			case "plannedStartDate":
 				return ec.fieldContext_GanttTask_plannedStartDate(ctx, field)
-			case "Ganttproject_id":
-				return ec.fieldContext_GanttTask_Ganttproject_id(ctx, field)
-			case "Ganttproject":
-				return ec.fieldContext_GanttTask_Ganttproject(ctx, field)
+			case "projectId":
+				return ec.fieldContext_GanttTask_projectId(ctx, field)
+			case "project":
+				return ec.fieldContext_GanttTask_project(ctx, field)
 			case "activities":
 				return ec.fieldContext_GanttTask_activities(ctx, field)
 			}
@@ -2136,8 +1995,8 @@ func (ec *executionContext) fieldContext_GanttActivity_Gantttask(ctx context.Con
 	return fc, nil
 }
 
-func (ec *executionContext) _GanttAssigned_Ganttactivity(ctx context.Context, field graphql.CollectedField, obj *database.GanttAssigned) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_GanttAssigned_Ganttactivity(ctx, field)
+func (ec *executionContext) _GanttAssigned_activityId(ctx context.Context, field graphql.CollectedField, obj *database.GanttAssigned) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_GanttAssigned_activityId(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -2150,7 +2009,7 @@ func (ec *executionContext) _GanttAssigned_Ganttactivity(ctx context.Context, fi
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.GanttAssigned().Ganttactivity(rctx, obj)
+		return obj.ActivityID, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -2162,17 +2021,17 @@ func (ec *executionContext) _GanttAssigned_Ganttactivity(ctx context.Context, fi
 		}
 		return graphql.Null
 	}
-	res := resTmp.(int)
+	res := resTmp.(int64)
 	fc.Result = res
-	return ec.marshalNInt2int(ctx, field.Selections, res)
+	return ec.marshalNInt2int64(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_GanttAssigned_Ganttactivity(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_GanttAssigned_activityId(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "GanttAssigned",
 		Field:      field,
-		IsMethod:   true,
-		IsResolver: true,
+		IsMethod:   false,
+		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type Int does not have child fields")
 		},
@@ -2247,9 +2106,9 @@ func (ec *executionContext) _GanttAssigned_user(ctx context.Context, field graph
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*model.User)
+	res := resTmp.(*database.UserUser)
 	fc.Result = res
-	return ec.marshalNUser2ᚖtoilerᚑgraphqlᚋgraphᚋmodelᚐUser(ctx, field.Selections, res)
+	return ec.marshalNUserUser2ᚖtoilerᚑgraphqlᚋdatabaseᚐUserUser(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_GanttAssigned_user(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -2261,24 +2120,24 @@ func (ec *executionContext) fieldContext_GanttAssigned_user(ctx context.Context,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
 			case "avatar":
-				return ec.fieldContext_User_avatar(ctx, field)
+				return ec.fieldContext_UserUser_avatar(ctx, field)
 			case "firstName":
-				return ec.fieldContext_User_firstName(ctx, field)
+				return ec.fieldContext_UserUser_firstName(ctx, field)
 			case "id":
-				return ec.fieldContext_User_id(ctx, field)
+				return ec.fieldContext_UserUser_id(ctx, field)
 			case "lastName":
-				return ec.fieldContext_User_lastName(ctx, field)
+				return ec.fieldContext_UserUser_lastName(ctx, field)
 			case "username":
-				return ec.fieldContext_User_username(ctx, field)
+				return ec.fieldContext_UserUser_username(ctx, field)
 			}
-			return nil, fmt.Errorf("no field named %q was found under type User", field.Name)
+			return nil, fmt.Errorf("no field named %q was found under type UserUser", field.Name)
 		},
 	}
 	return fc, nil
 }
 
-func (ec *executionContext) _GanttAssignedToMe_actualStartDate(ctx context.Context, field graphql.CollectedField, obj *model.GanttAssignedToMe) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_GanttAssignedToMe_actualStartDate(ctx, field)
+func (ec *executionContext) _GanttAssigned_activity(ctx context.Context, field graphql.CollectedField, obj *database.GanttAssigned) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_GanttAssigned_activity(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -2291,130 +2150,7 @@ func (ec *executionContext) _GanttAssignedToMe_actualStartDate(ctx context.Conte
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.ActualStartDate, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*string)
-	fc.Result = res
-	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_GanttAssignedToMe_actualStartDate(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "GanttAssignedToMe",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _GanttAssignedToMe_dependency(ctx context.Context, field graphql.CollectedField, obj *model.GanttAssignedToMe) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_GanttAssignedToMe_dependency(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Dependency, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*int)
-	fc.Result = res
-	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_GanttAssignedToMe_dependency(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "GanttAssignedToMe",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type Int does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _GanttAssignedToMe_id(ctx context.Context, field graphql.CollectedField, obj *model.GanttAssignedToMe) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_GanttAssignedToMe_id(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.ID, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*int)
-	fc.Result = res
-	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_GanttAssignedToMe_id(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "GanttAssignedToMe",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type Int does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _GanttAssignedToMe_name(ctx context.Context, field graphql.CollectedField, obj *model.GanttAssignedToMe) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_GanttAssignedToMe_name(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Name, nil
+		return ec.resolvers.GanttAssigned().Activity(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -2426,269 +2162,131 @@ func (ec *executionContext) _GanttAssignedToMe_name(ctx context.Context, field g
 		}
 		return graphql.Null
 	}
-	res := resTmp.(string)
+	res := resTmp.(*database.GanttActivity)
 	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
+	return ec.marshalNGanttActivity2ᚖtoilerᚑgraphqlᚋdatabaseᚐGanttActivity(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_GanttAssignedToMe_name(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_GanttAssigned_activity(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
-		Object:     "GanttAssignedToMe",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _GanttAssignedToMe_plannedEndDate(ctx context.Context, field graphql.CollectedField, obj *model.GanttAssignedToMe) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_GanttAssignedToMe_plannedEndDate(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.PlannedEndDate, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(string)
-	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_GanttAssignedToMe_plannedEndDate(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "GanttAssignedToMe",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _GanttAssignedToMe_Ganttproject(ctx context.Context, field graphql.CollectedField, obj *model.GanttAssignedToMe) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_GanttAssignedToMe_Ganttproject(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Ganttproject, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*string)
-	fc.Result = res
-	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_GanttAssignedToMe_Ganttproject(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "GanttAssignedToMe",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _GanttAssignedToMe_GanttprojectId(ctx context.Context, field graphql.CollectedField, obj *model.GanttAssignedToMe) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_GanttAssignedToMe_GanttprojectId(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.GanttprojectID, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*int)
-	fc.Result = res
-	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_GanttAssignedToMe_GanttprojectId(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "GanttAssignedToMe",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type Int does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _GanttAssignedToMe_Ganttstate(ctx context.Context, field graphql.CollectedField, obj *model.GanttAssignedToMe) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_GanttAssignedToMe_Ganttstate(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Ganttstate, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*int)
-	fc.Result = res
-	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_GanttAssignedToMe_Ganttstate(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "GanttAssignedToMe",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type Int does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _GanttAssignedToMe_Gantttask(ctx context.Context, field graphql.CollectedField, obj *model.GanttAssignedToMe) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_GanttAssignedToMe_Gantttask(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Gantttask, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(int)
-	fc.Result = res
-	return ec.marshalNInt2int(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_GanttAssignedToMe_Gantttask(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "GanttAssignedToMe",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type Int does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _GanttComment_Ganttactivity(ctx context.Context, field graphql.CollectedField, obj *database.GanttComment) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_GanttComment_Ganttactivity(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.GanttComment().Ganttactivity(rctx, obj)
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*int)
-	fc.Result = res
-	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_GanttComment_Ganttactivity(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "GanttComment",
+		Object:     "GanttAssigned",
 		Field:      field,
 		IsMethod:   true,
 		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "actualBudget":
+				return ec.fieldContext_GanttActivity_actualBudget(ctx, field)
+			case "actualEndDate":
+				return ec.fieldContext_GanttActivity_actualEndDate(ctx, field)
+			case "actualStartDate":
+				return ec.fieldContext_GanttActivity_actualStartDate(ctx, field)
+			case "assignees":
+				return ec.fieldContext_GanttActivity_assignees(ctx, field)
+			case "dependencyId":
+				return ec.fieldContext_GanttActivity_dependencyId(ctx, field)
+			case "description":
+				return ec.fieldContext_GanttActivity_description(ctx, field)
+			case "id":
+				return ec.fieldContext_GanttActivity_id(ctx, field)
+			case "name":
+				return ec.fieldContext_GanttActivity_name(ctx, field)
+			case "plannedBudget":
+				return ec.fieldContext_GanttActivity_plannedBudget(ctx, field)
+			case "plannedEndDate":
+				return ec.fieldContext_GanttActivity_plannedEndDate(ctx, field)
+			case "plannedStartDate":
+				return ec.fieldContext_GanttActivity_plannedStartDate(ctx, field)
+			case "stateId":
+				return ec.fieldContext_GanttActivity_stateId(ctx, field)
+			case "state":
+				return ec.fieldContext_GanttActivity_state(ctx, field)
+			case "taskId":
+				return ec.fieldContext_GanttActivity_taskId(ctx, field)
+			case "task":
+				return ec.fieldContext_GanttActivity_task(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type GanttActivity", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _GanttComment_activityId(ctx context.Context, field graphql.CollectedField, obj *database.GanttComment) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_GanttComment_activityId(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ActivityID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(int64)
+	fc.Result = res
+	return ec.marshalOInt2int64(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_GanttComment_activityId(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "GanttComment",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Int does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _GanttComment_authorId(ctx context.Context, field graphql.CollectedField, obj *database.GanttComment) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_GanttComment_authorId(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.AuthorID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(int32)
+	fc.Result = res
+	return ec.marshalOInt2int32(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_GanttComment_authorId(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "GanttComment",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type Int does not have child fields")
 		},
@@ -2722,9 +2320,9 @@ func (ec *executionContext) _GanttComment_author(ctx context.Context, field grap
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*model.User)
+	res := resTmp.(*database.UserUser)
 	fc.Result = res
-	return ec.marshalNUser2ᚖtoilerᚑgraphqlᚋgraphᚋmodelᚐUser(ctx, field.Selections, res)
+	return ec.marshalNUserUser2ᚖtoilerᚑgraphqlᚋdatabaseᚐUserUser(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_GanttComment_author(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -2736,17 +2334,17 @@ func (ec *executionContext) fieldContext_GanttComment_author(ctx context.Context
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
 			case "avatar":
-				return ec.fieldContext_User_avatar(ctx, field)
+				return ec.fieldContext_UserUser_avatar(ctx, field)
 			case "firstName":
-				return ec.fieldContext_User_firstName(ctx, field)
+				return ec.fieldContext_UserUser_firstName(ctx, field)
 			case "id":
-				return ec.fieldContext_User_id(ctx, field)
+				return ec.fieldContext_UserUser_id(ctx, field)
 			case "lastName":
-				return ec.fieldContext_User_lastName(ctx, field)
+				return ec.fieldContext_UserUser_lastName(ctx, field)
 			case "username":
-				return ec.fieldContext_User_username(ctx, field)
+				return ec.fieldContext_UserUser_username(ctx, field)
 			}
-			return nil, fmt.Errorf("no field named %q was found under type User", field.Name)
+			return nil, fmt.Errorf("no field named %q was found under type UserUser", field.Name)
 		},
 	}
 	return fc, nil
@@ -3212,8 +2810,8 @@ func (ec *executionContext) fieldContext_GanttProject_plannedStartDate(ctx conte
 	return fc, nil
 }
 
-func (ec *executionContext) _GanttProject_GanttprojectManager_id(ctx context.Context, field graphql.CollectedField, obj *database.GanttProject) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_GanttProject_GanttprojectManager_id(ctx, field)
+func (ec *executionContext) _GanttProject_projectManagerId(ctx context.Context, field graphql.CollectedField, obj *database.GanttProject) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_GanttProject_projectManagerId(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -3226,7 +2824,7 @@ func (ec *executionContext) _GanttProject_GanttprojectManager_id(ctx context.Con
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.GanttProject().GanttprojectManagerID(rctx, obj)
+		return obj.ProjectManagerID, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -3235,17 +2833,17 @@ func (ec *executionContext) _GanttProject_GanttprojectManager_id(ctx context.Con
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*int)
+	res := resTmp.(int32)
 	fc.Result = res
-	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
+	return ec.marshalOInt2int32(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_GanttProject_GanttprojectManager_id(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_GanttProject_projectManagerId(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "GanttProject",
 		Field:      field,
-		IsMethod:   true,
-		IsResolver: true,
+		IsMethod:   false,
+		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type Int does not have child fields")
 		},
@@ -3253,8 +2851,8 @@ func (ec *executionContext) fieldContext_GanttProject_GanttprojectManager_id(ctx
 	return fc, nil
 }
 
-func (ec *executionContext) _GanttProject_GanttprojectManager(ctx context.Context, field graphql.CollectedField, obj *database.GanttProject) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_GanttProject_GanttprojectManager(ctx, field)
+func (ec *executionContext) _GanttProject_projectManager(ctx context.Context, field graphql.CollectedField, obj *database.GanttProject) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_GanttProject_projectManager(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -3267,7 +2865,7 @@ func (ec *executionContext) _GanttProject_GanttprojectManager(ctx context.Contex
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.GanttProject().GanttprojectManager(rctx, obj)
+		return ec.resolvers.GanttProject().ProjectManager(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -3279,12 +2877,12 @@ func (ec *executionContext) _GanttProject_GanttprojectManager(ctx context.Contex
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*model.User)
+	res := resTmp.(*database.UserUser)
 	fc.Result = res
-	return ec.marshalNUser2ᚖtoilerᚑgraphqlᚋgraphᚋmodelᚐUser(ctx, field.Selections, res)
+	return ec.marshalNUserUser2ᚖtoilerᚑgraphqlᚋdatabaseᚐUserUser(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_GanttProject_GanttprojectManager(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_GanttProject_projectManager(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "GanttProject",
 		Field:      field,
@@ -3293,24 +2891,24 @@ func (ec *executionContext) fieldContext_GanttProject_GanttprojectManager(ctx co
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
 			case "avatar":
-				return ec.fieldContext_User_avatar(ctx, field)
+				return ec.fieldContext_UserUser_avatar(ctx, field)
 			case "firstName":
-				return ec.fieldContext_User_firstName(ctx, field)
+				return ec.fieldContext_UserUser_firstName(ctx, field)
 			case "id":
-				return ec.fieldContext_User_id(ctx, field)
+				return ec.fieldContext_UserUser_id(ctx, field)
 			case "lastName":
-				return ec.fieldContext_User_lastName(ctx, field)
+				return ec.fieldContext_UserUser_lastName(ctx, field)
 			case "username":
-				return ec.fieldContext_User_username(ctx, field)
+				return ec.fieldContext_UserUser_username(ctx, field)
 			}
-			return nil, fmt.Errorf("no field named %q was found under type User", field.Name)
+			return nil, fmt.Errorf("no field named %q was found under type UserUser", field.Name)
 		},
 	}
 	return fc, nil
 }
 
-func (ec *executionContext) _GanttProject_Gantttasks(ctx context.Context, field graphql.CollectedField, obj *database.GanttProject) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_GanttProject_Gantttasks(ctx, field)
+func (ec *executionContext) _GanttProject_tasks(ctx context.Context, field graphql.CollectedField, obj *database.GanttProject) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_GanttProject_tasks(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -3323,7 +2921,7 @@ func (ec *executionContext) _GanttProject_Gantttasks(ctx context.Context, field 
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.GanttProject().Gantttasks(rctx, obj)
+		return ec.resolvers.GanttProject().Tasks(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -3340,7 +2938,7 @@ func (ec *executionContext) _GanttProject_Gantttasks(ctx context.Context, field 
 	return ec.marshalNGanttTask2ᚕtoilerᚑgraphqlᚋdatabaseᚐGanttTaskᚄ(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_GanttProject_Gantttasks(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_GanttProject_tasks(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "GanttProject",
 		Field:      field,
@@ -3366,10 +2964,10 @@ func (ec *executionContext) fieldContext_GanttProject_Gantttasks(ctx context.Con
 				return ec.fieldContext_GanttTask_plannedEndDate(ctx, field)
 			case "plannedStartDate":
 				return ec.fieldContext_GanttTask_plannedStartDate(ctx, field)
-			case "Ganttproject_id":
-				return ec.fieldContext_GanttTask_Ganttproject_id(ctx, field)
-			case "Ganttproject":
-				return ec.fieldContext_GanttTask_Ganttproject(ctx, field)
+			case "projectId":
+				return ec.fieldContext_GanttTask_projectId(ctx, field)
+			case "project":
+				return ec.fieldContext_GanttTask_project(ctx, field)
 			case "activities":
 				return ec.fieldContext_GanttTask_activities(ctx, field)
 			}
@@ -3379,8 +2977,8 @@ func (ec *executionContext) fieldContext_GanttProject_Gantttasks(ctx context.Con
 	return fc, nil
 }
 
-func (ec *executionContext) _GanttProject_Ganttroles(ctx context.Context, field graphql.CollectedField, obj *database.GanttProject) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_GanttProject_Ganttroles(ctx, field)
+func (ec *executionContext) _GanttProject_roles(ctx context.Context, field graphql.CollectedField, obj *database.GanttProject) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_GanttProject_roles(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -3393,7 +2991,7 @@ func (ec *executionContext) _GanttProject_Ganttroles(ctx context.Context, field 
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.GanttProject().Ganttroles(rctx, obj)
+		return ec.resolvers.GanttProject().Roles(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -3410,7 +3008,7 @@ func (ec *executionContext) _GanttProject_Ganttroles(ctx context.Context, field 
 	return ec.marshalNGanttRole2ᚕtoilerᚑgraphqlᚋdatabaseᚐGanttRoleᚄ(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_GanttProject_Ganttroles(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_GanttProject_roles(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "GanttProject",
 		Field:      field,
@@ -3422,8 +3020,8 @@ func (ec *executionContext) fieldContext_GanttProject_Ganttroles(ctx context.Con
 				return ec.fieldContext_GanttRole_id(ctx, field)
 			case "name":
 				return ec.fieldContext_GanttRole_name(ctx, field)
-			case "Ganttproject_id":
-				return ec.fieldContext_GanttRole_Ganttproject_id(ctx, field)
+			case "projectId":
+				return ec.fieldContext_GanttRole_projectId(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type GanttRole", field.Name)
 		},
@@ -3431,8 +3029,8 @@ func (ec *executionContext) fieldContext_GanttProject_Ganttroles(ctx context.Con
 	return fc, nil
 }
 
-func (ec *executionContext) _GanttProject_Ganttteams(ctx context.Context, field graphql.CollectedField, obj *database.GanttProject) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_GanttProject_Ganttteams(ctx, field)
+func (ec *executionContext) _GanttProject_teams(ctx context.Context, field graphql.CollectedField, obj *database.GanttProject) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_GanttProject_teams(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -3445,7 +3043,7 @@ func (ec *executionContext) _GanttProject_Ganttteams(ctx context.Context, field 
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.GanttProject().Ganttteams(rctx, obj)
+		return ec.resolvers.GanttProject().Teams(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -3462,7 +3060,7 @@ func (ec *executionContext) _GanttProject_Ganttteams(ctx context.Context, field 
 	return ec.marshalNGanttTeam2ᚕtoilerᚑgraphqlᚋdatabaseᚐGanttTeamᚄ(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_GanttProject_Ganttteams(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_GanttProject_teams(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "GanttProject",
 		Field:      field,
@@ -3474,10 +3072,10 @@ func (ec *executionContext) fieldContext_GanttProject_Ganttteams(ctx context.Con
 				return ec.fieldContext_GanttTeam_id(ctx, field)
 			case "name":
 				return ec.fieldContext_GanttTeam_name(ctx, field)
-			case "Ganttproject_id":
-				return ec.fieldContext_GanttTeam_Ganttproject_id(ctx, field)
-			case "Ganttproject":
-				return ec.fieldContext_GanttTeam_Ganttproject(ctx, field)
+			case "projectId":
+				return ec.fieldContext_GanttTeam_projectId(ctx, field)
+			case "project":
+				return ec.fieldContext_GanttTeam_project(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type GanttTeam", field.Name)
 		},
@@ -3485,8 +3083,8 @@ func (ec *executionContext) fieldContext_GanttProject_Ganttteams(ctx context.Con
 	return fc, nil
 }
 
-func (ec *executionContext) _GanttProject_Ganttstates(ctx context.Context, field graphql.CollectedField, obj *database.GanttProject) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_GanttProject_Ganttstates(ctx, field)
+func (ec *executionContext) _GanttProject_states(ctx context.Context, field graphql.CollectedField, obj *database.GanttProject) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_GanttProject_states(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -3499,7 +3097,7 @@ func (ec *executionContext) _GanttProject_Ganttstates(ctx context.Context, field
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.GanttProject().Ganttstates(rctx, obj)
+		return ec.resolvers.GanttProject().States(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -3516,7 +3114,7 @@ func (ec *executionContext) _GanttProject_Ganttstates(ctx context.Context, field
 	return ec.marshalNGanttState2ᚕtoilerᚑgraphqlᚋdatabaseᚐGanttStateᚄ(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_GanttProject_Ganttstates(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_GanttProject_states(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "GanttProject",
 		Field:      field,
@@ -3528,8 +3126,8 @@ func (ec *executionContext) fieldContext_GanttProject_Ganttstates(ctx context.Co
 				return ec.fieldContext_GanttState_id(ctx, field)
 			case "name":
 				return ec.fieldContext_GanttState_name(ctx, field)
-			case "Ganttproject_id":
-				return ec.fieldContext_GanttState_Ganttproject_id(ctx, field)
+			case "projectId":
+				return ec.fieldContext_GanttState_projectId(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type GanttState", field.Name)
 		},
@@ -3622,8 +3220,8 @@ func (ec *executionContext) fieldContext_GanttRole_name(ctx context.Context, fie
 	return fc, nil
 }
 
-func (ec *executionContext) _GanttRole_Ganttproject_id(ctx context.Context, field graphql.CollectedField, obj *database.GanttRole) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_GanttRole_Ganttproject_id(ctx, field)
+func (ec *executionContext) _GanttRole_projectId(ctx context.Context, field graphql.CollectedField, obj *database.GanttRole) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_GanttRole_projectId(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -3636,7 +3234,7 @@ func (ec *executionContext) _GanttRole_Ganttproject_id(ctx context.Context, fiel
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.GanttRole().GanttprojectID(rctx, obj)
+		return obj.ProjectID, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -3648,17 +3246,17 @@ func (ec *executionContext) _GanttRole_Ganttproject_id(ctx context.Context, fiel
 		}
 		return graphql.Null
 	}
-	res := resTmp.(int)
+	res := resTmp.(int64)
 	fc.Result = res
-	return ec.marshalNInt2int(ctx, field.Selections, res)
+	return ec.marshalNInt2int64(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_GanttRole_Ganttproject_id(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_GanttRole_projectId(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "GanttRole",
 		Field:      field,
-		IsMethod:   true,
-		IsResolver: true,
+		IsMethod:   false,
+		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type Int does not have child fields")
 		},
@@ -3751,8 +3349,8 @@ func (ec *executionContext) fieldContext_GanttState_name(ctx context.Context, fi
 	return fc, nil
 }
 
-func (ec *executionContext) _GanttState_Ganttproject_id(ctx context.Context, field graphql.CollectedField, obj *database.GanttState) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_GanttState_Ganttproject_id(ctx, field)
+func (ec *executionContext) _GanttState_projectId(ctx context.Context, field graphql.CollectedField, obj *database.GanttState) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_GanttState_projectId(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -3765,7 +3363,7 @@ func (ec *executionContext) _GanttState_Ganttproject_id(ctx context.Context, fie
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.GanttState().GanttprojectID(rctx, obj)
+		return obj.ProjectID, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -3777,17 +3375,17 @@ func (ec *executionContext) _GanttState_Ganttproject_id(ctx context.Context, fie
 		}
 		return graphql.Null
 	}
-	res := resTmp.(int)
+	res := resTmp.(int64)
 	fc.Result = res
-	return ec.marshalNInt2int(ctx, field.Selections, res)
+	return ec.marshalNInt2int64(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_GanttState_Ganttproject_id(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_GanttState_projectId(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "GanttState",
 		Field:      field,
-		IsMethod:   true,
-		IsResolver: true,
+		IsMethod:   false,
+		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type Int does not have child fields")
 		},
@@ -4173,8 +3771,8 @@ func (ec *executionContext) fieldContext_GanttTask_plannedStartDate(ctx context.
 	return fc, nil
 }
 
-func (ec *executionContext) _GanttTask_Ganttproject_id(ctx context.Context, field graphql.CollectedField, obj *database.GanttTask) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_GanttTask_Ganttproject_id(ctx, field)
+func (ec *executionContext) _GanttTask_projectId(ctx context.Context, field graphql.CollectedField, obj *database.GanttTask) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_GanttTask_projectId(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -4187,7 +3785,7 @@ func (ec *executionContext) _GanttTask_Ganttproject_id(ctx context.Context, fiel
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.GanttTask().GanttprojectID(rctx, obj)
+		return obj.ProjectID, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -4199,17 +3797,17 @@ func (ec *executionContext) _GanttTask_Ganttproject_id(ctx context.Context, fiel
 		}
 		return graphql.Null
 	}
-	res := resTmp.(int)
+	res := resTmp.(int64)
 	fc.Result = res
-	return ec.marshalNInt2int(ctx, field.Selections, res)
+	return ec.marshalNInt2int64(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_GanttTask_Ganttproject_id(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_GanttTask_projectId(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "GanttTask",
 		Field:      field,
-		IsMethod:   true,
-		IsResolver: true,
+		IsMethod:   false,
+		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type Int does not have child fields")
 		},
@@ -4217,8 +3815,8 @@ func (ec *executionContext) fieldContext_GanttTask_Ganttproject_id(ctx context.C
 	return fc, nil
 }
 
-func (ec *executionContext) _GanttTask_Ganttproject(ctx context.Context, field graphql.CollectedField, obj *database.GanttTask) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_GanttTask_Ganttproject(ctx, field)
+func (ec *executionContext) _GanttTask_project(ctx context.Context, field graphql.CollectedField, obj *database.GanttTask) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_GanttTask_project(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -4231,7 +3829,7 @@ func (ec *executionContext) _GanttTask_Ganttproject(ctx context.Context, field g
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.GanttTask().Ganttproject(rctx, obj)
+		return ec.resolvers.GanttTask().Project(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -4248,7 +3846,7 @@ func (ec *executionContext) _GanttTask_Ganttproject(ctx context.Context, field g
 	return ec.marshalNGanttProject2ᚖtoilerᚑgraphqlᚋdatabaseᚐGanttProject(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_GanttTask_Ganttproject(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_GanttTask_project(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "GanttTask",
 		Field:      field,
@@ -4270,18 +3868,18 @@ func (ec *executionContext) fieldContext_GanttTask_Ganttproject(ctx context.Cont
 				return ec.fieldContext_GanttProject_plannedEndDate(ctx, field)
 			case "plannedStartDate":
 				return ec.fieldContext_GanttProject_plannedStartDate(ctx, field)
-			case "GanttprojectManager_id":
-				return ec.fieldContext_GanttProject_GanttprojectManager_id(ctx, field)
-			case "GanttprojectManager":
-				return ec.fieldContext_GanttProject_GanttprojectManager(ctx, field)
-			case "Gantttasks":
-				return ec.fieldContext_GanttProject_Gantttasks(ctx, field)
-			case "Ganttroles":
-				return ec.fieldContext_GanttProject_Ganttroles(ctx, field)
-			case "Ganttteams":
-				return ec.fieldContext_GanttProject_Ganttteams(ctx, field)
-			case "Ganttstates":
-				return ec.fieldContext_GanttProject_Ganttstates(ctx, field)
+			case "projectManagerId":
+				return ec.fieldContext_GanttProject_projectManagerId(ctx, field)
+			case "projectManager":
+				return ec.fieldContext_GanttProject_projectManager(ctx, field)
+			case "tasks":
+				return ec.fieldContext_GanttProject_tasks(ctx, field)
+			case "roles":
+				return ec.fieldContext_GanttProject_roles(ctx, field)
+			case "teams":
+				return ec.fieldContext_GanttProject_teams(ctx, field)
+			case "states":
+				return ec.fieldContext_GanttProject_states(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type GanttProject", field.Name)
 		},
@@ -4336,8 +3934,8 @@ func (ec *executionContext) fieldContext_GanttTask_activities(ctx context.Contex
 				return ec.fieldContext_GanttActivity_actualStartDate(ctx, field)
 			case "assignees":
 				return ec.fieldContext_GanttActivity_assignees(ctx, field)
-			case "dependency":
-				return ec.fieldContext_GanttActivity_dependency(ctx, field)
+			case "dependencyId":
+				return ec.fieldContext_GanttActivity_dependencyId(ctx, field)
 			case "description":
 				return ec.fieldContext_GanttActivity_description(ctx, field)
 			case "id":
@@ -4350,14 +3948,14 @@ func (ec *executionContext) fieldContext_GanttTask_activities(ctx context.Contex
 				return ec.fieldContext_GanttActivity_plannedEndDate(ctx, field)
 			case "plannedStartDate":
 				return ec.fieldContext_GanttActivity_plannedStartDate(ctx, field)
-			case "Ganttstate_id":
-				return ec.fieldContext_GanttActivity_Ganttstate_id(ctx, field)
-			case "Ganttstate":
-				return ec.fieldContext_GanttActivity_Ganttstate(ctx, field)
-			case "Gantttask_id":
-				return ec.fieldContext_GanttActivity_Gantttask_id(ctx, field)
-			case "Gantttask":
-				return ec.fieldContext_GanttActivity_Gantttask(ctx, field)
+			case "stateId":
+				return ec.fieldContext_GanttActivity_stateId(ctx, field)
+			case "state":
+				return ec.fieldContext_GanttActivity_state(ctx, field)
+			case "taskId":
+				return ec.fieldContext_GanttActivity_taskId(ctx, field)
+			case "task":
+				return ec.fieldContext_GanttActivity_task(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type GanttActivity", field.Name)
 		},
@@ -4450,8 +4048,8 @@ func (ec *executionContext) fieldContext_GanttTeam_name(ctx context.Context, fie
 	return fc, nil
 }
 
-func (ec *executionContext) _GanttTeam_Ganttproject_id(ctx context.Context, field graphql.CollectedField, obj *database.GanttTeam) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_GanttTeam_Ganttproject_id(ctx, field)
+func (ec *executionContext) _GanttTeam_projectId(ctx context.Context, field graphql.CollectedField, obj *database.GanttTeam) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_GanttTeam_projectId(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -4464,7 +4062,7 @@ func (ec *executionContext) _GanttTeam_Ganttproject_id(ctx context.Context, fiel
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.GanttTeam().GanttprojectID(rctx, obj)
+		return obj.ProjectID, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -4476,17 +4074,17 @@ func (ec *executionContext) _GanttTeam_Ganttproject_id(ctx context.Context, fiel
 		}
 		return graphql.Null
 	}
-	res := resTmp.(int)
+	res := resTmp.(int64)
 	fc.Result = res
-	return ec.marshalNInt2int(ctx, field.Selections, res)
+	return ec.marshalNInt2int64(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_GanttTeam_Ganttproject_id(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_GanttTeam_projectId(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "GanttTeam",
 		Field:      field,
-		IsMethod:   true,
-		IsResolver: true,
+		IsMethod:   false,
+		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type Int does not have child fields")
 		},
@@ -4494,8 +4092,8 @@ func (ec *executionContext) fieldContext_GanttTeam_Ganttproject_id(ctx context.C
 	return fc, nil
 }
 
-func (ec *executionContext) _GanttTeam_Ganttproject(ctx context.Context, field graphql.CollectedField, obj *database.GanttTeam) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_GanttTeam_Ganttproject(ctx, field)
+func (ec *executionContext) _GanttTeam_project(ctx context.Context, field graphql.CollectedField, obj *database.GanttTeam) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_GanttTeam_project(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -4508,7 +4106,7 @@ func (ec *executionContext) _GanttTeam_Ganttproject(ctx context.Context, field g
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.GanttTeam().Ganttproject(rctx, obj)
+		return ec.resolvers.GanttTeam().Project(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -4525,7 +4123,7 @@ func (ec *executionContext) _GanttTeam_Ganttproject(ctx context.Context, field g
 	return ec.marshalNGanttProject2ᚖtoilerᚑgraphqlᚋdatabaseᚐGanttProject(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_GanttTeam_Ganttproject(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_GanttTeam_project(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "GanttTeam",
 		Field:      field,
@@ -4547,18 +4145,18 @@ func (ec *executionContext) fieldContext_GanttTeam_Ganttproject(ctx context.Cont
 				return ec.fieldContext_GanttProject_plannedEndDate(ctx, field)
 			case "plannedStartDate":
 				return ec.fieldContext_GanttProject_plannedStartDate(ctx, field)
-			case "GanttprojectManager_id":
-				return ec.fieldContext_GanttProject_GanttprojectManager_id(ctx, field)
-			case "GanttprojectManager":
-				return ec.fieldContext_GanttProject_GanttprojectManager(ctx, field)
-			case "Gantttasks":
-				return ec.fieldContext_GanttProject_Gantttasks(ctx, field)
-			case "Ganttroles":
-				return ec.fieldContext_GanttProject_Ganttroles(ctx, field)
-			case "Ganttteams":
-				return ec.fieldContext_GanttProject_Ganttteams(ctx, field)
-			case "Ganttstates":
-				return ec.fieldContext_GanttProject_Ganttstates(ctx, field)
+			case "projectManagerId":
+				return ec.fieldContext_GanttProject_projectManagerId(ctx, field)
+			case "projectManager":
+				return ec.fieldContext_GanttProject_projectManager(ctx, field)
+			case "tasks":
+				return ec.fieldContext_GanttProject_tasks(ctx, field)
+			case "roles":
+				return ec.fieldContext_GanttProject_roles(ctx, field)
+			case "teams":
+				return ec.fieldContext_GanttProject_teams(ctx, field)
+			case "states":
+				return ec.fieldContext_GanttProject_states(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type GanttProject", field.Name)
 		},
@@ -4607,8 +4205,8 @@ func (ec *executionContext) fieldContext_GanttTeamMember_id(ctx context.Context,
 	return fc, nil
 }
 
-func (ec *executionContext) _GanttTeamMember_Ganttrole(ctx context.Context, field graphql.CollectedField, obj *model.GanttTeamMember) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_GanttTeamMember_Ganttrole(ctx, field)
+func (ec *executionContext) _GanttTeamMember_role(ctx context.Context, field graphql.CollectedField, obj *model.GanttTeamMember) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_GanttTeamMember_role(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -4621,7 +4219,7 @@ func (ec *executionContext) _GanttTeamMember_Ganttrole(ctx context.Context, fiel
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Ganttrole, nil
+		return obj.Role, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -4638,7 +4236,7 @@ func (ec *executionContext) _GanttTeamMember_Ganttrole(ctx context.Context, fiel
 	return ec.marshalNInt2int(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_GanttTeamMember_Ganttrole(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_GanttTeamMember_role(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "GanttTeamMember",
 		Field:      field,
@@ -4651,8 +4249,8 @@ func (ec *executionContext) fieldContext_GanttTeamMember_Ganttrole(ctx context.C
 	return fc, nil
 }
 
-func (ec *executionContext) _GanttTeamMember_Ganttteam(ctx context.Context, field graphql.CollectedField, obj *model.GanttTeamMember) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_GanttTeamMember_Ganttteam(ctx, field)
+func (ec *executionContext) _GanttTeamMember_team(ctx context.Context, field graphql.CollectedField, obj *model.GanttTeamMember) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_GanttTeamMember_team(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -4665,7 +4263,7 @@ func (ec *executionContext) _GanttTeamMember_Ganttteam(ctx context.Context, fiel
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Ganttteam, nil
+		return obj.Team, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -4682,7 +4280,7 @@ func (ec *executionContext) _GanttTeamMember_Ganttteam(ctx context.Context, fiel
 	return ec.marshalNInt2int(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_GanttTeamMember_Ganttteam(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_GanttTeamMember_team(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "GanttTeamMember",
 		Field:      field,
@@ -4739,8 +4337,8 @@ func (ec *executionContext) fieldContext_GanttTeamMember_user(ctx context.Contex
 	return fc, nil
 }
 
-func (ec *executionContext) _Query_Activity(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Query_Activity(ctx, field)
+func (ec *executionContext) _Query_activity(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Query_activity(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -4767,7 +4365,7 @@ func (ec *executionContext) _Query_Activity(ctx context.Context, field graphql.C
 	return ec.marshalOGanttActivity2ᚖtoilerᚑgraphqlᚋdatabaseᚐGanttActivity(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Query_Activity(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Query_activity(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Query",
 		Field:      field,
@@ -4783,8 +4381,8 @@ func (ec *executionContext) fieldContext_Query_Activity(ctx context.Context, fie
 				return ec.fieldContext_GanttActivity_actualStartDate(ctx, field)
 			case "assignees":
 				return ec.fieldContext_GanttActivity_assignees(ctx, field)
-			case "dependency":
-				return ec.fieldContext_GanttActivity_dependency(ctx, field)
+			case "dependencyId":
+				return ec.fieldContext_GanttActivity_dependencyId(ctx, field)
 			case "description":
 				return ec.fieldContext_GanttActivity_description(ctx, field)
 			case "id":
@@ -4797,14 +4395,14 @@ func (ec *executionContext) fieldContext_Query_Activity(ctx context.Context, fie
 				return ec.fieldContext_GanttActivity_plannedEndDate(ctx, field)
 			case "plannedStartDate":
 				return ec.fieldContext_GanttActivity_plannedStartDate(ctx, field)
-			case "Ganttstate_id":
-				return ec.fieldContext_GanttActivity_Ganttstate_id(ctx, field)
-			case "Ganttstate":
-				return ec.fieldContext_GanttActivity_Ganttstate(ctx, field)
-			case "Gantttask_id":
-				return ec.fieldContext_GanttActivity_Gantttask_id(ctx, field)
-			case "Gantttask":
-				return ec.fieldContext_GanttActivity_Gantttask(ctx, field)
+			case "stateId":
+				return ec.fieldContext_GanttActivity_stateId(ctx, field)
+			case "state":
+				return ec.fieldContext_GanttActivity_state(ctx, field)
+			case "taskId":
+				return ec.fieldContext_GanttActivity_taskId(ctx, field)
+			case "task":
+				return ec.fieldContext_GanttActivity_task(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type GanttActivity", field.Name)
 		},
@@ -4816,15 +4414,15 @@ func (ec *executionContext) fieldContext_Query_Activity(ctx context.Context, fie
 		}
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
-	if fc.Args, err = ec.field_Query_Activity_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+	if fc.Args, err = ec.field_Query_activity_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return
 	}
 	return fc, nil
 }
 
-func (ec *executionContext) _Query_Ganttassigned(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Query_Ganttassigned(ctx, field)
+func (ec *executionContext) _Query_assigned(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Query_assigned(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -4837,7 +4435,7 @@ func (ec *executionContext) _Query_Ganttassigned(ctx context.Context, field grap
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().Ganttassigned(rctx, fc.Args["id"].(int))
+		return ec.resolvers.Query().Assigned(rctx, fc.Args["id"].(int))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -4851,7 +4449,7 @@ func (ec *executionContext) _Query_Ganttassigned(ctx context.Context, field grap
 	return ec.marshalOGanttAssigned2ᚖtoilerᚑgraphqlᚋdatabaseᚐGanttAssigned(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Query_Ganttassigned(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Query_assigned(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Query",
 		Field:      field,
@@ -4859,12 +4457,14 @@ func (ec *executionContext) fieldContext_Query_Ganttassigned(ctx context.Context
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
-			case "Ganttactivity":
-				return ec.fieldContext_GanttAssigned_Ganttactivity(ctx, field)
+			case "activityId":
+				return ec.fieldContext_GanttAssigned_activityId(ctx, field)
 			case "id":
 				return ec.fieldContext_GanttAssigned_id(ctx, field)
 			case "user":
 				return ec.fieldContext_GanttAssigned_user(ctx, field)
+			case "activity":
+				return ec.fieldContext_GanttAssigned_activity(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type GanttAssigned", field.Name)
 		},
@@ -4876,15 +4476,15 @@ func (ec *executionContext) fieldContext_Query_Ganttassigned(ctx context.Context
 		}
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
-	if fc.Args, err = ec.field_Query_Ganttassigned_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+	if fc.Args, err = ec.field_Query_assigned_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return
 	}
 	return fc, nil
 }
 
-func (ec *executionContext) _Query_GanttActivity(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Query_GanttActivity(ctx, field)
+func (ec *executionContext) _Query_projectActivities(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Query_projectActivities(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -4897,7 +4497,7 @@ func (ec *executionContext) _Query_GanttActivity(ctx context.Context, field grap
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().GanttActivity(rctx, fc.Args["projPk"].(int))
+		return ec.resolvers.Query().ProjectActivities(rctx, fc.Args["projPk"].(int))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -4914,7 +4514,7 @@ func (ec *executionContext) _Query_GanttActivity(ctx context.Context, field grap
 	return ec.marshalNGanttActivity2ᚕtoilerᚑgraphqlᚋdatabaseᚐGanttActivityᚄ(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Query_GanttActivity(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Query_projectActivities(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Query",
 		Field:      field,
@@ -4930,8 +4530,8 @@ func (ec *executionContext) fieldContext_Query_GanttActivity(ctx context.Context
 				return ec.fieldContext_GanttActivity_actualStartDate(ctx, field)
 			case "assignees":
 				return ec.fieldContext_GanttActivity_assignees(ctx, field)
-			case "dependency":
-				return ec.fieldContext_GanttActivity_dependency(ctx, field)
+			case "dependencyId":
+				return ec.fieldContext_GanttActivity_dependencyId(ctx, field)
 			case "description":
 				return ec.fieldContext_GanttActivity_description(ctx, field)
 			case "id":
@@ -4944,14 +4544,14 @@ func (ec *executionContext) fieldContext_Query_GanttActivity(ctx context.Context
 				return ec.fieldContext_GanttActivity_plannedEndDate(ctx, field)
 			case "plannedStartDate":
 				return ec.fieldContext_GanttActivity_plannedStartDate(ctx, field)
-			case "Ganttstate_id":
-				return ec.fieldContext_GanttActivity_Ganttstate_id(ctx, field)
-			case "Ganttstate":
-				return ec.fieldContext_GanttActivity_Ganttstate(ctx, field)
-			case "Gantttask_id":
-				return ec.fieldContext_GanttActivity_Gantttask_id(ctx, field)
-			case "Gantttask":
-				return ec.fieldContext_GanttActivity_Gantttask(ctx, field)
+			case "stateId":
+				return ec.fieldContext_GanttActivity_stateId(ctx, field)
+			case "state":
+				return ec.fieldContext_GanttActivity_state(ctx, field)
+			case "taskId":
+				return ec.fieldContext_GanttActivity_taskId(ctx, field)
+			case "task":
+				return ec.fieldContext_GanttActivity_task(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type GanttActivity", field.Name)
 		},
@@ -4963,15 +4563,15 @@ func (ec *executionContext) fieldContext_Query_GanttActivity(ctx context.Context
 		}
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
-	if fc.Args, err = ec.field_Query_GanttActivity_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+	if fc.Args, err = ec.field_Query_projectActivities_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return
 	}
 	return fc, nil
 }
 
-func (ec *executionContext) _Query_ganttGanttAssigned(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Query_ganttGanttAssigned(ctx, field)
+func (ec *executionContext) _Query_projectAssigned(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Query_projectAssigned(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -4984,7 +4584,7 @@ func (ec *executionContext) _Query_ganttGanttAssigned(ctx context.Context, field
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().GanttGanttAssigned(rctx, fc.Args["projPk"].(int))
+		return ec.resolvers.Query().ProjectAssigned(rctx, fc.Args["projPk"].(int))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -5001,7 +4601,7 @@ func (ec *executionContext) _Query_ganttGanttAssigned(ctx context.Context, field
 	return ec.marshalNGanttAssigned2ᚕtoilerᚑgraphqlᚋdatabaseᚐGanttAssignedᚄ(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Query_ganttGanttAssigned(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Query_projectAssigned(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Query",
 		Field:      field,
@@ -5009,12 +4609,14 @@ func (ec *executionContext) fieldContext_Query_ganttGanttAssigned(ctx context.Co
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
-			case "Ganttactivity":
-				return ec.fieldContext_GanttAssigned_Ganttactivity(ctx, field)
+			case "activityId":
+				return ec.fieldContext_GanttAssigned_activityId(ctx, field)
 			case "id":
 				return ec.fieldContext_GanttAssigned_id(ctx, field)
 			case "user":
 				return ec.fieldContext_GanttAssigned_user(ctx, field)
+			case "activity":
+				return ec.fieldContext_GanttAssigned_activity(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type GanttAssigned", field.Name)
 		},
@@ -5026,15 +4628,15 @@ func (ec *executionContext) fieldContext_Query_ganttGanttAssigned(ctx context.Co
 		}
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
-	if fc.Args, err = ec.field_Query_ganttGanttAssigned_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+	if fc.Args, err = ec.field_Query_projectAssigned_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return
 	}
 	return fc, nil
 }
 
-func (ec *executionContext) _Query_ganttGanttAssignedToMe(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Query_ganttGanttAssignedToMe(ctx, field)
+func (ec *executionContext) _Query_assignedToMe(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Query_assignedToMe(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -5047,7 +4649,7 @@ func (ec *executionContext) _Query_ganttGanttAssignedToMe(ctx context.Context, f
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().GanttGanttAssignedToMe(rctx)
+		return ec.resolvers.Query().AssignedToMe(rctx)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -5059,12 +4661,12 @@ func (ec *executionContext) _Query_ganttGanttAssignedToMe(ctx context.Context, f
 		}
 		return graphql.Null
 	}
-	res := resTmp.([]model.GanttAssignedToMe)
+	res := resTmp.([]database.GanttAssigned)
 	fc.Result = res
-	return ec.marshalNGanttAssignedToMe2ᚕtoilerᚑgraphqlᚋgraphᚋmodelᚐGanttAssignedToMeᚄ(ctx, field.Selections, res)
+	return ec.marshalNGanttAssigned2ᚕtoilerᚑgraphqlᚋdatabaseᚐGanttAssignedᚄ(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Query_ganttGanttAssignedToMe(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Query_assignedToMe(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Query",
 		Field:      field,
@@ -5072,33 +4674,23 @@ func (ec *executionContext) fieldContext_Query_ganttGanttAssignedToMe(ctx contex
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
-			case "actualStartDate":
-				return ec.fieldContext_GanttAssignedToMe_actualStartDate(ctx, field)
-			case "dependency":
-				return ec.fieldContext_GanttAssignedToMe_dependency(ctx, field)
+			case "activityId":
+				return ec.fieldContext_GanttAssigned_activityId(ctx, field)
 			case "id":
-				return ec.fieldContext_GanttAssignedToMe_id(ctx, field)
-			case "name":
-				return ec.fieldContext_GanttAssignedToMe_name(ctx, field)
-			case "plannedEndDate":
-				return ec.fieldContext_GanttAssignedToMe_plannedEndDate(ctx, field)
-			case "Ganttproject":
-				return ec.fieldContext_GanttAssignedToMe_Ganttproject(ctx, field)
-			case "GanttprojectId":
-				return ec.fieldContext_GanttAssignedToMe_GanttprojectId(ctx, field)
-			case "Ganttstate":
-				return ec.fieldContext_GanttAssignedToMe_Ganttstate(ctx, field)
-			case "Gantttask":
-				return ec.fieldContext_GanttAssignedToMe_Gantttask(ctx, field)
+				return ec.fieldContext_GanttAssigned_id(ctx, field)
+			case "user":
+				return ec.fieldContext_GanttAssigned_user(ctx, field)
+			case "activity":
+				return ec.fieldContext_GanttAssigned_activity(ctx, field)
 			}
-			return nil, fmt.Errorf("no field named %q was found under type GanttAssignedToMe", field.Name)
+			return nil, fmt.Errorf("no field named %q was found under type GanttAssigned", field.Name)
 		},
 	}
 	return fc, nil
 }
 
-func (ec *executionContext) _Query_ganttGanttComment(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Query_ganttGanttComment(ctx, field)
+func (ec *executionContext) _Query_activityComments(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Query_activityComments(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -5111,7 +4703,7 @@ func (ec *executionContext) _Query_ganttGanttComment(ctx context.Context, field 
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().GanttGanttComment(rctx, fc.Args["GanttactivityPk"].(int))
+		return ec.resolvers.Query().ActivityComments(rctx, fc.Args["activityPk"].(int))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -5128,7 +4720,7 @@ func (ec *executionContext) _Query_ganttGanttComment(ctx context.Context, field 
 	return ec.marshalNGanttComment2ᚕtoilerᚑgraphqlᚋdatabaseᚐGanttCommentᚄ(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Query_ganttGanttComment(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Query_activityComments(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Query",
 		Field:      field,
@@ -5136,8 +4728,10 @@ func (ec *executionContext) fieldContext_Query_ganttGanttComment(ctx context.Con
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
-			case "Ganttactivity":
-				return ec.fieldContext_GanttComment_Ganttactivity(ctx, field)
+			case "activityId":
+				return ec.fieldContext_GanttComment_activityId(ctx, field)
+			case "authorId":
+				return ec.fieldContext_GanttComment_authorId(ctx, field)
 			case "author":
 				return ec.fieldContext_GanttComment_author(ctx, field)
 			case "createdAt":
@@ -5159,15 +4753,15 @@ func (ec *executionContext) fieldContext_Query_ganttGanttComment(ctx context.Con
 		}
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
-	if fc.Args, err = ec.field_Query_ganttGanttComment_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+	if fc.Args, err = ec.field_Query_activityComments_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return
 	}
 	return fc, nil
 }
 
-func (ec *executionContext) _Query_ganttEmployee(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Query_ganttEmployee(ctx, field)
+func (ec *executionContext) _Query_projectEmployees(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Query_projectEmployees(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -5180,7 +4774,7 @@ func (ec *executionContext) _Query_ganttEmployee(ctx context.Context, field grap
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().GanttEmployee(rctx, fc.Args["projPk"].(int))
+		return ec.resolvers.Query().ProjectEmployees(rctx, fc.Args["projPk"].(int))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -5192,12 +4786,12 @@ func (ec *executionContext) _Query_ganttEmployee(ctx context.Context, field grap
 		}
 		return graphql.Null
 	}
-	res := resTmp.([]model.User)
+	res := resTmp.([]database.UserUser)
 	fc.Result = res
-	return ec.marshalNUser2ᚕtoilerᚑgraphqlᚋgraphᚋmodelᚐUserᚄ(ctx, field.Selections, res)
+	return ec.marshalNUserUser2ᚕtoilerᚑgraphqlᚋdatabaseᚐUserUserᚄ(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Query_ganttEmployee(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Query_projectEmployees(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Query",
 		Field:      field,
@@ -5206,17 +4800,17 @@ func (ec *executionContext) fieldContext_Query_ganttEmployee(ctx context.Context
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
 			case "avatar":
-				return ec.fieldContext_User_avatar(ctx, field)
+				return ec.fieldContext_UserUser_avatar(ctx, field)
 			case "firstName":
-				return ec.fieldContext_User_firstName(ctx, field)
+				return ec.fieldContext_UserUser_firstName(ctx, field)
 			case "id":
-				return ec.fieldContext_User_id(ctx, field)
+				return ec.fieldContext_UserUser_id(ctx, field)
 			case "lastName":
-				return ec.fieldContext_User_lastName(ctx, field)
+				return ec.fieldContext_UserUser_lastName(ctx, field)
 			case "username":
-				return ec.fieldContext_User_username(ctx, field)
+				return ec.fieldContext_UserUser_username(ctx, field)
 			}
-			return nil, fmt.Errorf("no field named %q was found under type User", field.Name)
+			return nil, fmt.Errorf("no field named %q was found under type UserUser", field.Name)
 		},
 	}
 	defer func() {
@@ -5226,15 +4820,15 @@ func (ec *executionContext) fieldContext_Query_ganttEmployee(ctx context.Context
 		}
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
-	if fc.Args, err = ec.field_Query_ganttEmployee_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+	if fc.Args, err = ec.field_Query_projectEmployees_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return
 	}
 	return fc, nil
 }
 
-func (ec *executionContext) _Query_ganttGanttProject(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Query_ganttGanttProject(ctx, field)
+func (ec *executionContext) _Query_projects(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Query_projects(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -5247,7 +4841,7 @@ func (ec *executionContext) _Query_ganttGanttProject(ctx context.Context, field 
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().GanttGanttProject(rctx)
+		return ec.resolvers.Query().Projects(rctx)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -5264,7 +4858,7 @@ func (ec *executionContext) _Query_ganttGanttProject(ctx context.Context, field 
 	return ec.marshalNGanttProject2ᚕtoilerᚑgraphqlᚋdatabaseᚐGanttProjectᚄ(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Query_ganttGanttProject(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Query_projects(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Query",
 		Field:      field,
@@ -5286,18 +4880,18 @@ func (ec *executionContext) fieldContext_Query_ganttGanttProject(ctx context.Con
 				return ec.fieldContext_GanttProject_plannedEndDate(ctx, field)
 			case "plannedStartDate":
 				return ec.fieldContext_GanttProject_plannedStartDate(ctx, field)
-			case "GanttprojectManager_id":
-				return ec.fieldContext_GanttProject_GanttprojectManager_id(ctx, field)
-			case "GanttprojectManager":
-				return ec.fieldContext_GanttProject_GanttprojectManager(ctx, field)
-			case "Gantttasks":
-				return ec.fieldContext_GanttProject_Gantttasks(ctx, field)
-			case "Ganttroles":
-				return ec.fieldContext_GanttProject_Ganttroles(ctx, field)
-			case "Ganttteams":
-				return ec.fieldContext_GanttProject_Ganttteams(ctx, field)
-			case "Ganttstates":
-				return ec.fieldContext_GanttProject_Ganttstates(ctx, field)
+			case "projectManagerId":
+				return ec.fieldContext_GanttProject_projectManagerId(ctx, field)
+			case "projectManager":
+				return ec.fieldContext_GanttProject_projectManager(ctx, field)
+			case "tasks":
+				return ec.fieldContext_GanttProject_tasks(ctx, field)
+			case "roles":
+				return ec.fieldContext_GanttProject_roles(ctx, field)
+			case "teams":
+				return ec.fieldContext_GanttProject_teams(ctx, field)
+			case "states":
+				return ec.fieldContext_GanttProject_states(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type GanttProject", field.Name)
 		},
@@ -5305,8 +4899,8 @@ func (ec *executionContext) fieldContext_Query_ganttGanttProject(ctx context.Con
 	return fc, nil
 }
 
-func (ec *executionContext) _Query_ganttGanttRole(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Query_ganttGanttRole(ctx, field)
+func (ec *executionContext) _Query_projectRoles(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Query_projectRoles(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -5319,7 +4913,7 @@ func (ec *executionContext) _Query_ganttGanttRole(ctx context.Context, field gra
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().GanttGanttRole(rctx, fc.Args["Ganttproject"].(*int))
+		return ec.resolvers.Query().ProjectRoles(rctx, fc.Args["project"].(int))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -5336,7 +4930,7 @@ func (ec *executionContext) _Query_ganttGanttRole(ctx context.Context, field gra
 	return ec.marshalNGanttRole2ᚕtoilerᚑgraphqlᚋdatabaseᚐGanttRoleᚄ(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Query_ganttGanttRole(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Query_projectRoles(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Query",
 		Field:      field,
@@ -5348,8 +4942,8 @@ func (ec *executionContext) fieldContext_Query_ganttGanttRole(ctx context.Contex
 				return ec.fieldContext_GanttRole_id(ctx, field)
 			case "name":
 				return ec.fieldContext_GanttRole_name(ctx, field)
-			case "Ganttproject_id":
-				return ec.fieldContext_GanttRole_Ganttproject_id(ctx, field)
+			case "projectId":
+				return ec.fieldContext_GanttRole_projectId(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type GanttRole", field.Name)
 		},
@@ -5361,15 +4955,15 @@ func (ec *executionContext) fieldContext_Query_ganttGanttRole(ctx context.Contex
 		}
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
-	if fc.Args, err = ec.field_Query_ganttGanttRole_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+	if fc.Args, err = ec.field_Query_projectRoles_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return
 	}
 	return fc, nil
 }
 
-func (ec *executionContext) _Query_ganttGanttState(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Query_ganttGanttState(ctx, field)
+func (ec *executionContext) _Query_projectStates(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Query_projectStates(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -5382,7 +4976,7 @@ func (ec *executionContext) _Query_ganttGanttState(ctx context.Context, field gr
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().GanttGanttState(rctx, fc.Args["projPk"].(int))
+		return ec.resolvers.Query().ProjectStates(rctx, fc.Args["projPk"].(int))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -5399,7 +4993,7 @@ func (ec *executionContext) _Query_ganttGanttState(ctx context.Context, field gr
 	return ec.marshalNGanttState2ᚕtoilerᚑgraphqlᚋdatabaseᚐGanttStateᚄ(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Query_ganttGanttState(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Query_projectStates(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Query",
 		Field:      field,
@@ -5411,8 +5005,8 @@ func (ec *executionContext) fieldContext_Query_ganttGanttState(ctx context.Conte
 				return ec.fieldContext_GanttState_id(ctx, field)
 			case "name":
 				return ec.fieldContext_GanttState_name(ctx, field)
-			case "Ganttproject_id":
-				return ec.fieldContext_GanttState_Ganttproject_id(ctx, field)
+			case "projectId":
+				return ec.fieldContext_GanttState_projectId(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type GanttState", field.Name)
 		},
@@ -5424,15 +5018,15 @@ func (ec *executionContext) fieldContext_Query_ganttGanttState(ctx context.Conte
 		}
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
-	if fc.Args, err = ec.field_Query_ganttGanttState_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+	if fc.Args, err = ec.field_Query_projectStates_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return
 	}
 	return fc, nil
 }
 
-func (ec *executionContext) _Query_ganttGanttTask(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Query_ganttGanttTask(ctx, field)
+func (ec *executionContext) _Query_projectTasks(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Query_projectTasks(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -5445,7 +5039,7 @@ func (ec *executionContext) _Query_ganttGanttTask(ctx context.Context, field gra
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().GanttGanttTask(rctx, fc.Args["projPk"].(int))
+		return ec.resolvers.Query().ProjectTasks(rctx, fc.Args["projPk"].(int))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -5462,7 +5056,7 @@ func (ec *executionContext) _Query_ganttGanttTask(ctx context.Context, field gra
 	return ec.marshalNGanttTask2ᚕtoilerᚑgraphqlᚋdatabaseᚐGanttTaskᚄ(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Query_ganttGanttTask(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Query_projectTasks(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Query",
 		Field:      field,
@@ -5488,10 +5082,10 @@ func (ec *executionContext) fieldContext_Query_ganttGanttTask(ctx context.Contex
 				return ec.fieldContext_GanttTask_plannedEndDate(ctx, field)
 			case "plannedStartDate":
 				return ec.fieldContext_GanttTask_plannedStartDate(ctx, field)
-			case "Ganttproject_id":
-				return ec.fieldContext_GanttTask_Ganttproject_id(ctx, field)
-			case "Ganttproject":
-				return ec.fieldContext_GanttTask_Ganttproject(ctx, field)
+			case "projectId":
+				return ec.fieldContext_GanttTask_projectId(ctx, field)
+			case "project":
+				return ec.fieldContext_GanttTask_project(ctx, field)
 			case "activities":
 				return ec.fieldContext_GanttTask_activities(ctx, field)
 			}
@@ -5505,15 +5099,15 @@ func (ec *executionContext) fieldContext_Query_ganttGanttTask(ctx context.Contex
 		}
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
-	if fc.Args, err = ec.field_Query_ganttGanttTask_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+	if fc.Args, err = ec.field_Query_projectTasks_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return
 	}
 	return fc, nil
 }
 
-func (ec *executionContext) _Query_ganttGanttTeam(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Query_ganttGanttTeam(ctx, field)
+func (ec *executionContext) _Query_projectTeams(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Query_projectTeams(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -5526,7 +5120,7 @@ func (ec *executionContext) _Query_ganttGanttTeam(ctx context.Context, field gra
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().GanttGanttTeam(rctx, fc.Args["Ganttproject"].(int))
+		return ec.resolvers.Query().ProjectTeams(rctx, fc.Args["project"].(int))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -5543,7 +5137,7 @@ func (ec *executionContext) _Query_ganttGanttTeam(ctx context.Context, field gra
 	return ec.marshalNGanttTeam2ᚕtoilerᚑgraphqlᚋdatabaseᚐGanttTeamᚄ(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Query_ganttGanttTeam(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Query_projectTeams(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Query",
 		Field:      field,
@@ -5555,10 +5149,10 @@ func (ec *executionContext) fieldContext_Query_ganttGanttTeam(ctx context.Contex
 				return ec.fieldContext_GanttTeam_id(ctx, field)
 			case "name":
 				return ec.fieldContext_GanttTeam_name(ctx, field)
-			case "Ganttproject_id":
-				return ec.fieldContext_GanttTeam_Ganttproject_id(ctx, field)
-			case "Ganttproject":
-				return ec.fieldContext_GanttTeam_Ganttproject(ctx, field)
+			case "projectId":
+				return ec.fieldContext_GanttTeam_projectId(ctx, field)
+			case "project":
+				return ec.fieldContext_GanttTeam_project(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type GanttTeam", field.Name)
 		},
@@ -5570,15 +5164,15 @@ func (ec *executionContext) fieldContext_Query_ganttGanttTeam(ctx context.Contex
 		}
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
-	if fc.Args, err = ec.field_Query_ganttGanttTeam_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+	if fc.Args, err = ec.field_Query_projectTeams_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return
 	}
 	return fc, nil
 }
 
-func (ec *executionContext) _Query_ganttGanttTeamMember(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Query_ganttGanttTeamMember(ctx, field)
+func (ec *executionContext) _Query_teamMembers(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Query_teamMembers(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -5591,7 +5185,7 @@ func (ec *executionContext) _Query_ganttGanttTeamMember(ctx context.Context, fie
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().GanttGanttTeamMember(rctx)
+		return ec.resolvers.Query().TeamMembers(rctx)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -5608,7 +5202,7 @@ func (ec *executionContext) _Query_ganttGanttTeamMember(ctx context.Context, fie
 	return ec.marshalNGanttTeamMember2ᚕtoilerᚑgraphqlᚋgraphᚋmodelᚐGanttTeamMemberᚄ(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Query_ganttGanttTeamMember(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Query_teamMembers(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Query",
 		Field:      field,
@@ -5618,10 +5212,10 @@ func (ec *executionContext) fieldContext_Query_ganttGanttTeamMember(ctx context.
 			switch field.Name {
 			case "id":
 				return ec.fieldContext_GanttTeamMember_id(ctx, field)
-			case "Ganttrole":
-				return ec.fieldContext_GanttTeamMember_Ganttrole(ctx, field)
-			case "Ganttteam":
-				return ec.fieldContext_GanttTeamMember_Ganttteam(ctx, field)
+			case "role":
+				return ec.fieldContext_GanttTeamMember_role(ctx, field)
+			case "team":
+				return ec.fieldContext_GanttTeamMember_team(ctx, field)
 			case "user":
 				return ec.fieldContext_GanttTeamMember_user(ctx, field)
 			}
@@ -5631,8 +5225,8 @@ func (ec *executionContext) fieldContext_Query_ganttGanttTeamMember(ctx context.
 	return fc, nil
 }
 
-func (ec *executionContext) _Query_Ganttproject(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Query_Ganttproject(ctx, field)
+func (ec *executionContext) _Query_project(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Query_project(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -5645,7 +5239,7 @@ func (ec *executionContext) _Query_Ganttproject(ctx context.Context, field graph
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().Ganttproject(rctx, fc.Args["id"].(int))
+		return ec.resolvers.Query().Project(rctx, fc.Args["id"].(int))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -5659,7 +5253,7 @@ func (ec *executionContext) _Query_Ganttproject(ctx context.Context, field graph
 	return ec.marshalOGanttProject2ᚖtoilerᚑgraphqlᚋdatabaseᚐGanttProject(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Query_Ganttproject(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Query_project(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Query",
 		Field:      field,
@@ -5681,18 +5275,18 @@ func (ec *executionContext) fieldContext_Query_Ganttproject(ctx context.Context,
 				return ec.fieldContext_GanttProject_plannedEndDate(ctx, field)
 			case "plannedStartDate":
 				return ec.fieldContext_GanttProject_plannedStartDate(ctx, field)
-			case "GanttprojectManager_id":
-				return ec.fieldContext_GanttProject_GanttprojectManager_id(ctx, field)
-			case "GanttprojectManager":
-				return ec.fieldContext_GanttProject_GanttprojectManager(ctx, field)
-			case "Gantttasks":
-				return ec.fieldContext_GanttProject_Gantttasks(ctx, field)
-			case "Ganttroles":
-				return ec.fieldContext_GanttProject_Ganttroles(ctx, field)
-			case "Ganttteams":
-				return ec.fieldContext_GanttProject_Ganttteams(ctx, field)
-			case "Ganttstates":
-				return ec.fieldContext_GanttProject_Ganttstates(ctx, field)
+			case "projectManagerId":
+				return ec.fieldContext_GanttProject_projectManagerId(ctx, field)
+			case "projectManager":
+				return ec.fieldContext_GanttProject_projectManager(ctx, field)
+			case "tasks":
+				return ec.fieldContext_GanttProject_tasks(ctx, field)
+			case "roles":
+				return ec.fieldContext_GanttProject_roles(ctx, field)
+			case "teams":
+				return ec.fieldContext_GanttProject_teams(ctx, field)
+			case "states":
+				return ec.fieldContext_GanttProject_states(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type GanttProject", field.Name)
 		},
@@ -5704,15 +5298,15 @@ func (ec *executionContext) fieldContext_Query_Ganttproject(ctx context.Context,
 		}
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
-	if fc.Args, err = ec.field_Query_Ganttproject_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+	if fc.Args, err = ec.field_Query_project_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return
 	}
 	return fc, nil
 }
 
-func (ec *executionContext) _Query_Ganttrole(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Query_Ganttrole(ctx, field)
+func (ec *executionContext) _Query_role(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Query_role(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -5725,7 +5319,7 @@ func (ec *executionContext) _Query_Ganttrole(ctx context.Context, field graphql.
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().Ganttrole(rctx, fc.Args["id"].(int))
+		return ec.resolvers.Query().Role(rctx, fc.Args["id"].(int))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -5739,7 +5333,7 @@ func (ec *executionContext) _Query_Ganttrole(ctx context.Context, field graphql.
 	return ec.marshalOGanttRole2ᚖtoilerᚑgraphqlᚋdatabaseᚐGanttRole(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Query_Ganttrole(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Query_role(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Query",
 		Field:      field,
@@ -5751,8 +5345,8 @@ func (ec *executionContext) fieldContext_Query_Ganttrole(ctx context.Context, fi
 				return ec.fieldContext_GanttRole_id(ctx, field)
 			case "name":
 				return ec.fieldContext_GanttRole_name(ctx, field)
-			case "Ganttproject_id":
-				return ec.fieldContext_GanttRole_Ganttproject_id(ctx, field)
+			case "projectId":
+				return ec.fieldContext_GanttRole_projectId(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type GanttRole", field.Name)
 		},
@@ -5764,15 +5358,15 @@ func (ec *executionContext) fieldContext_Query_Ganttrole(ctx context.Context, fi
 		}
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
-	if fc.Args, err = ec.field_Query_Ganttrole_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+	if fc.Args, err = ec.field_Query_role_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return
 	}
 	return fc, nil
 }
 
-func (ec *executionContext) _Query_Ganttstate(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Query_Ganttstate(ctx, field)
+func (ec *executionContext) _Query_state(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Query_state(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -5785,7 +5379,7 @@ func (ec *executionContext) _Query_Ganttstate(ctx context.Context, field graphql
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().Ganttstate(rctx, fc.Args["id"].(string))
+		return ec.resolvers.Query().State(rctx, fc.Args["id"].(int))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -5799,7 +5393,7 @@ func (ec *executionContext) _Query_Ganttstate(ctx context.Context, field graphql
 	return ec.marshalOGanttState2ᚖtoilerᚑgraphqlᚋdatabaseᚐGanttState(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Query_Ganttstate(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Query_state(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Query",
 		Field:      field,
@@ -5811,8 +5405,8 @@ func (ec *executionContext) fieldContext_Query_Ganttstate(ctx context.Context, f
 				return ec.fieldContext_GanttState_id(ctx, field)
 			case "name":
 				return ec.fieldContext_GanttState_name(ctx, field)
-			case "Ganttproject_id":
-				return ec.fieldContext_GanttState_Ganttproject_id(ctx, field)
+			case "projectId":
+				return ec.fieldContext_GanttState_projectId(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type GanttState", field.Name)
 		},
@@ -5824,15 +5418,15 @@ func (ec *executionContext) fieldContext_Query_Ganttstate(ctx context.Context, f
 		}
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
-	if fc.Args, err = ec.field_Query_Ganttstate_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+	if fc.Args, err = ec.field_Query_state_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return
 	}
 	return fc, nil
 }
 
-func (ec *executionContext) _Query_Gantttask(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Query_Gantttask(ctx, field)
+func (ec *executionContext) _Query_task(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Query_task(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -5845,7 +5439,7 @@ func (ec *executionContext) _Query_Gantttask(ctx context.Context, field graphql.
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().Gantttask(rctx, fc.Args["id"].(string))
+		return ec.resolvers.Query().Task(rctx, fc.Args["id"].(int))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -5859,7 +5453,7 @@ func (ec *executionContext) _Query_Gantttask(ctx context.Context, field graphql.
 	return ec.marshalOGanttTask2ᚖtoilerᚑgraphqlᚋdatabaseᚐGanttTask(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Query_Gantttask(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Query_task(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Query",
 		Field:      field,
@@ -5885,10 +5479,10 @@ func (ec *executionContext) fieldContext_Query_Gantttask(ctx context.Context, fi
 				return ec.fieldContext_GanttTask_plannedEndDate(ctx, field)
 			case "plannedStartDate":
 				return ec.fieldContext_GanttTask_plannedStartDate(ctx, field)
-			case "Ganttproject_id":
-				return ec.fieldContext_GanttTask_Ganttproject_id(ctx, field)
-			case "Ganttproject":
-				return ec.fieldContext_GanttTask_Ganttproject(ctx, field)
+			case "projectId":
+				return ec.fieldContext_GanttTask_projectId(ctx, field)
+			case "project":
+				return ec.fieldContext_GanttTask_project(ctx, field)
 			case "activities":
 				return ec.fieldContext_GanttTask_activities(ctx, field)
 			}
@@ -5902,15 +5496,15 @@ func (ec *executionContext) fieldContext_Query_Gantttask(ctx context.Context, fi
 		}
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
-	if fc.Args, err = ec.field_Query_Gantttask_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+	if fc.Args, err = ec.field_Query_task_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return
 	}
 	return fc, nil
 }
 
-func (ec *executionContext) _Query_Ganttteam(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Query_Ganttteam(ctx, field)
+func (ec *executionContext) _Query_team(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Query_team(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -5923,7 +5517,7 @@ func (ec *executionContext) _Query_Ganttteam(ctx context.Context, field graphql.
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().Ganttteam(rctx, fc.Args["id"].(string))
+		return ec.resolvers.Query().Team(rctx, fc.Args["id"].(int))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -5937,7 +5531,7 @@ func (ec *executionContext) _Query_Ganttteam(ctx context.Context, field graphql.
 	return ec.marshalOGanttTeam2ᚖtoilerᚑgraphqlᚋdatabaseᚐGanttTeam(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Query_Ganttteam(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Query_team(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Query",
 		Field:      field,
@@ -5949,10 +5543,10 @@ func (ec *executionContext) fieldContext_Query_Ganttteam(ctx context.Context, fi
 				return ec.fieldContext_GanttTeam_id(ctx, field)
 			case "name":
 				return ec.fieldContext_GanttTeam_name(ctx, field)
-			case "Ganttproject_id":
-				return ec.fieldContext_GanttTeam_Ganttproject_id(ctx, field)
-			case "Ganttproject":
-				return ec.fieldContext_GanttTeam_Ganttproject(ctx, field)
+			case "projectId":
+				return ec.fieldContext_GanttTeam_projectId(ctx, field)
+			case "project":
+				return ec.fieldContext_GanttTeam_project(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type GanttTeam", field.Name)
 		},
@@ -5964,7 +5558,7 @@ func (ec *executionContext) fieldContext_Query_Ganttteam(ctx context.Context, fi
 		}
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
-	if fc.Args, err = ec.field_Query_Ganttteam_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+	if fc.Args, err = ec.field_Query_team_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return
 	}
@@ -5994,9 +5588,9 @@ func (ec *executionContext) _Query_me(ctx context.Context, field graphql.Collect
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*model.User)
+	res := resTmp.(*database.UserUser)
 	fc.Result = res
-	return ec.marshalOUser2ᚖtoilerᚑgraphqlᚋgraphᚋmodelᚐUser(ctx, field.Selections, res)
+	return ec.marshalOUserUser2ᚖtoilerᚑgraphqlᚋdatabaseᚐUserUser(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Query_me(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -6008,17 +5602,17 @@ func (ec *executionContext) fieldContext_Query_me(ctx context.Context, field gra
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
 			case "avatar":
-				return ec.fieldContext_User_avatar(ctx, field)
+				return ec.fieldContext_UserUser_avatar(ctx, field)
 			case "firstName":
-				return ec.fieldContext_User_firstName(ctx, field)
+				return ec.fieldContext_UserUser_firstName(ctx, field)
 			case "id":
-				return ec.fieldContext_User_id(ctx, field)
+				return ec.fieldContext_UserUser_id(ctx, field)
 			case "lastName":
-				return ec.fieldContext_User_lastName(ctx, field)
+				return ec.fieldContext_UserUser_lastName(ctx, field)
 			case "username":
-				return ec.fieldContext_User_username(ctx, field)
+				return ec.fieldContext_UserUser_username(ctx, field)
 			}
-			return nil, fmt.Errorf("no field named %q was found under type User", field.Name)
+			return nil, fmt.Errorf("no field named %q was found under type UserUser", field.Name)
 		},
 	}
 	return fc, nil
@@ -6050,9 +5644,9 @@ func (ec *executionContext) _Query_userSearchUsers(ctx context.Context, field gr
 		}
 		return graphql.Null
 	}
-	res := resTmp.([]model.User)
+	res := resTmp.([]database.UserUser)
 	fc.Result = res
-	return ec.marshalNUser2ᚕtoilerᚑgraphqlᚋgraphᚋmodelᚐUserᚄ(ctx, field.Selections, res)
+	return ec.marshalNUserUser2ᚕtoilerᚑgraphqlᚋdatabaseᚐUserUserᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Query_userSearchUsers(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -6064,17 +5658,17 @@ func (ec *executionContext) fieldContext_Query_userSearchUsers(ctx context.Conte
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
 			case "avatar":
-				return ec.fieldContext_User_avatar(ctx, field)
+				return ec.fieldContext_UserUser_avatar(ctx, field)
 			case "firstName":
-				return ec.fieldContext_User_firstName(ctx, field)
+				return ec.fieldContext_UserUser_firstName(ctx, field)
 			case "id":
-				return ec.fieldContext_User_id(ctx, field)
+				return ec.fieldContext_UserUser_id(ctx, field)
 			case "lastName":
-				return ec.fieldContext_User_lastName(ctx, field)
+				return ec.fieldContext_UserUser_lastName(ctx, field)
 			case "username":
-				return ec.fieldContext_User_username(ctx, field)
+				return ec.fieldContext_UserUser_username(ctx, field)
 			}
-			return nil, fmt.Errorf("no field named %q was found under type User", field.Name)
+			return nil, fmt.Errorf("no field named %q was found under type UserUser", field.Name)
 		},
 	}
 	defer func() {
@@ -6220,8 +5814,8 @@ func (ec *executionContext) fieldContext_Query___schema(ctx context.Context, fie
 	return fc, nil
 }
 
-func (ec *executionContext) _User_avatar(ctx context.Context, field graphql.CollectedField, obj *model.User) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_User_avatar(ctx, field)
+func (ec *executionContext) _UserUser_avatar(ctx context.Context, field graphql.CollectedField, obj *database.UserUser) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_UserUser_avatar(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -6243,14 +5837,14 @@ func (ec *executionContext) _User_avatar(ctx context.Context, field graphql.Coll
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*string)
+	res := resTmp.(sql.NullString)
 	fc.Result = res
-	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+	return ec.marshalOString2databaseᚋsqlᚐNullString(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_User_avatar(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_UserUser_avatar(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
-		Object:     "User",
+		Object:     "UserUser",
 		Field:      field,
 		IsMethod:   false,
 		IsResolver: false,
@@ -6261,8 +5855,8 @@ func (ec *executionContext) fieldContext_User_avatar(ctx context.Context, field 
 	return fc, nil
 }
 
-func (ec *executionContext) _User_firstName(ctx context.Context, field graphql.CollectedField, obj *model.User) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_User_firstName(ctx, field)
+func (ec *executionContext) _UserUser_firstName(ctx context.Context, field graphql.CollectedField, obj *database.UserUser) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_UserUser_firstName(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -6284,14 +5878,14 @@ func (ec *executionContext) _User_firstName(ctx context.Context, field graphql.C
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*string)
+	res := resTmp.(string)
 	fc.Result = res
-	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+	return ec.marshalOString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_User_firstName(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_UserUser_firstName(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
-		Object:     "User",
+		Object:     "UserUser",
 		Field:      field,
 		IsMethod:   false,
 		IsResolver: false,
@@ -6302,8 +5896,8 @@ func (ec *executionContext) fieldContext_User_firstName(ctx context.Context, fie
 	return fc, nil
 }
 
-func (ec *executionContext) _User_id(ctx context.Context, field graphql.CollectedField, obj *model.User) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_User_id(ctx, field)
+func (ec *executionContext) _UserUser_id(ctx context.Context, field graphql.CollectedField, obj *database.UserUser) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_UserUser_id(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -6325,14 +5919,14 @@ func (ec *executionContext) _User_id(ctx context.Context, field graphql.Collecte
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*int)
+	res := resTmp.(int32)
 	fc.Result = res
-	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
+	return ec.marshalOInt2int32(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_User_id(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_UserUser_id(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
-		Object:     "User",
+		Object:     "UserUser",
 		Field:      field,
 		IsMethod:   false,
 		IsResolver: false,
@@ -6343,8 +5937,8 @@ func (ec *executionContext) fieldContext_User_id(ctx context.Context, field grap
 	return fc, nil
 }
 
-func (ec *executionContext) _User_lastName(ctx context.Context, field graphql.CollectedField, obj *model.User) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_User_lastName(ctx, field)
+func (ec *executionContext) _UserUser_lastName(ctx context.Context, field graphql.CollectedField, obj *database.UserUser) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_UserUser_lastName(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -6366,14 +5960,14 @@ func (ec *executionContext) _User_lastName(ctx context.Context, field graphql.Co
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*string)
+	res := resTmp.(string)
 	fc.Result = res
-	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+	return ec.marshalOString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_User_lastName(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_UserUser_lastName(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
-		Object:     "User",
+		Object:     "UserUser",
 		Field:      field,
 		IsMethod:   false,
 		IsResolver: false,
@@ -6384,8 +5978,8 @@ func (ec *executionContext) fieldContext_User_lastName(ctx context.Context, fiel
 	return fc, nil
 }
 
-func (ec *executionContext) _User_username(ctx context.Context, field graphql.CollectedField, obj *model.User) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_User_username(ctx, field)
+func (ec *executionContext) _UserUser_username(ctx context.Context, field graphql.CollectedField, obj *database.UserUser) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_UserUser_username(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -6407,14 +6001,14 @@ func (ec *executionContext) _User_username(ctx context.Context, field graphql.Co
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*string)
+	res := resTmp.(string)
 	fc.Result = res
-	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+	return ec.marshalOString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_User_username(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_UserUser_username(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
-		Object:     "User",
+		Object:     "UserUser",
 		Field:      field,
 		IsMethod:   false,
 		IsResolver: false,
@@ -8198,1110 +7792,6 @@ func (ec *executionContext) fieldContext___Type_specifiedByURL(ctx context.Conte
 
 // region    **************************** input.gotpl *****************************
 
-func (ec *executionContext) unmarshalInputGantActivityInput(ctx context.Context, obj interface{}) (model.GantActivityInput, error) {
-	var it model.GantActivityInput
-	asMap := map[string]interface{}{}
-	for k, v := range obj.(map[string]interface{}) {
-		asMap[k] = v
-	}
-
-	fieldsInOrder := [...]string{"actualBudget", "actualEndDate", "actualStartDate", "assignees", "dependency", "description", "id", "name", "plannedBudget", "plannedEndDate", "plannedStartDate", "Ganttstate", "Gantttask"}
-	for _, k := range fieldsInOrder {
-		v, ok := asMap[k]
-		if !ok {
-			continue
-		}
-		switch k {
-		case "actualBudget":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("actualBudget"))
-			it.ActualBudget, err = ec.unmarshalOString2ᚖstring(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "actualEndDate":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("actualEndDate"))
-			it.ActualEndDate, err = ec.unmarshalOString2ᚖstring(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "actualStartDate":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("actualStartDate"))
-			it.ActualStartDate, err = ec.unmarshalOString2ᚖstring(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "assignees":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("assignees"))
-			it.Assignees, err = ec.unmarshalOGanttAssignedUpdateInput2ᚕᚖtoilerᚑgraphqlᚋgraphᚋmodelᚐGanttAssignedUpdateInput(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "dependency":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("dependency"))
-			it.Dependency, err = ec.unmarshalOInt2ᚖint(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "description":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("description"))
-			it.Description, err = ec.unmarshalOString2ᚖstring(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "id":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
-			it.ID, err = ec.unmarshalOInt2ᚖint(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "name":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("name"))
-			it.Name, err = ec.unmarshalNString2string(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "plannedBudget":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("plannedBudget"))
-			it.PlannedBudget, err = ec.unmarshalOString2ᚖstring(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "plannedEndDate":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("plannedEndDate"))
-			it.PlannedEndDate, err = ec.unmarshalNString2string(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "plannedStartDate":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("plannedStartDate"))
-			it.PlannedStartDate, err = ec.unmarshalNString2string(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "Ganttstate":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("Ganttstate"))
-			it.Ganttstate, err = ec.unmarshalOInt2ᚖint(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "Gantttask":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("Gantttask"))
-			it.Gantttask, err = ec.unmarshalNInt2int(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		}
-	}
-
-	return it, nil
-}
-
-func (ec *executionContext) unmarshalInputGantActivityUpdateInput(ctx context.Context, obj interface{}) (model.GantActivityUpdateInput, error) {
-	var it model.GantActivityUpdateInput
-	asMap := map[string]interface{}{}
-	for k, v := range obj.(map[string]interface{}) {
-		asMap[k] = v
-	}
-
-	fieldsInOrder := [...]string{"actualBudget", "actualEndDate", "actualStartDate", "assignees", "dependency", "description", "id", "name", "plannedBudget", "plannedEndDate", "plannedStartDate", "Ganttstate", "Gantttask"}
-	for _, k := range fieldsInOrder {
-		v, ok := asMap[k]
-		if !ok {
-			continue
-		}
-		switch k {
-		case "actualBudget":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("actualBudget"))
-			it.ActualBudget, err = ec.unmarshalOString2ᚖstring(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "actualEndDate":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("actualEndDate"))
-			it.ActualEndDate, err = ec.unmarshalOString2ᚖstring(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "actualStartDate":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("actualStartDate"))
-			it.ActualStartDate, err = ec.unmarshalOString2ᚖstring(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "assignees":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("assignees"))
-			it.Assignees, err = ec.unmarshalOGanttAssignedUpdateInput2ᚕᚖtoilerᚑgraphqlᚋgraphᚋmodelᚐGanttAssignedUpdateInput(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "dependency":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("dependency"))
-			it.Dependency, err = ec.unmarshalOInt2ᚖint(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "description":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("description"))
-			it.Description, err = ec.unmarshalOString2ᚖstring(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "id":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
-			it.ID, err = ec.unmarshalOInt2ᚖint(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "name":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("name"))
-			it.Name, err = ec.unmarshalNString2string(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "plannedBudget":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("plannedBudget"))
-			it.PlannedBudget, err = ec.unmarshalOString2ᚖstring(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "plannedEndDate":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("plannedEndDate"))
-			it.PlannedEndDate, err = ec.unmarshalNString2string(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "plannedStartDate":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("plannedStartDate"))
-			it.PlannedStartDate, err = ec.unmarshalNString2string(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "Ganttstate":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("Ganttstate"))
-			it.Ganttstate, err = ec.unmarshalOInt2ᚖint(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "Gantttask":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("Gantttask"))
-			it.Gantttask, err = ec.unmarshalOInt2ᚖint(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		}
-	}
-
-	return it, nil
-}
-
-func (ec *executionContext) unmarshalInputGanttAssignedInput(ctx context.Context, obj interface{}) (model.GanttAssignedInput, error) {
-	var it model.GanttAssignedInput
-	asMap := map[string]interface{}{}
-	for k, v := range obj.(map[string]interface{}) {
-		asMap[k] = v
-	}
-
-	fieldsInOrder := [...]string{"Ganttactivity", "id", "user"}
-	for _, k := range fieldsInOrder {
-		v, ok := asMap[k]
-		if !ok {
-			continue
-		}
-		switch k {
-		case "Ganttactivity":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("Ganttactivity"))
-			it.Ganttactivity, err = ec.unmarshalNInt2int(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "id":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
-			it.ID, err = ec.unmarshalOInt2ᚖint(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "user":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("user"))
-			it.User, err = ec.unmarshalNInt2int(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		}
-	}
-
-	return it, nil
-}
-
-func (ec *executionContext) unmarshalInputGanttAssignedUpdateInput(ctx context.Context, obj interface{}) (model.GanttAssignedUpdateInput, error) {
-	var it model.GanttAssignedUpdateInput
-	asMap := map[string]interface{}{}
-	for k, v := range obj.(map[string]interface{}) {
-		asMap[k] = v
-	}
-
-	fieldsInOrder := [...]string{"Ganttactivity", "id", "user"}
-	for _, k := range fieldsInOrder {
-		v, ok := asMap[k]
-		if !ok {
-			continue
-		}
-		switch k {
-		case "Ganttactivity":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("Ganttactivity"))
-			it.Ganttactivity, err = ec.unmarshalOInt2ᚖint(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "id":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
-			it.ID, err = ec.unmarshalOInt2ᚖint(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "user":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("user"))
-			it.User, err = ec.unmarshalNInt2int(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		}
-	}
-
-	return it, nil
-}
-
-func (ec *executionContext) unmarshalInputGanttCommentInput(ctx context.Context, obj interface{}) (model.GanttCommentInput, error) {
-	var it model.GanttCommentInput
-	asMap := map[string]interface{}{}
-	for k, v := range obj.(map[string]interface{}) {
-		asMap[k] = v
-	}
-
-	fieldsInOrder := [...]string{"Ganttactivity", "author", "createdAt", "id", "text", "updatedAt"}
-	for _, k := range fieldsInOrder {
-		v, ok := asMap[k]
-		if !ok {
-			continue
-		}
-		switch k {
-		case "Ganttactivity":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("Ganttactivity"))
-			it.Ganttactivity, err = ec.unmarshalNInt2int(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "author":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("author"))
-			it.Author, err = ec.unmarshalOInt2ᚖint(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "createdAt":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("createdAt"))
-			it.CreatedAt, err = ec.unmarshalOString2ᚖstring(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "id":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
-			it.ID, err = ec.unmarshalOInt2ᚖint(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "text":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("text"))
-			it.Text, err = ec.unmarshalNString2string(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "updatedAt":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("updatedAt"))
-			it.UpdatedAt, err = ec.unmarshalOString2ᚖstring(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		}
-	}
-
-	return it, nil
-}
-
-func (ec *executionContext) unmarshalInputGanttCommentOnlyChangeTextInput(ctx context.Context, obj interface{}) (model.GanttCommentOnlyChangeTextInput, error) {
-	var it model.GanttCommentOnlyChangeTextInput
-	asMap := map[string]interface{}{}
-	for k, v := range obj.(map[string]interface{}) {
-		asMap[k] = v
-	}
-
-	fieldsInOrder := [...]string{"Ganttactivity", "author", "createdAt", "id", "text", "updatedAt"}
-	for _, k := range fieldsInOrder {
-		v, ok := asMap[k]
-		if !ok {
-			continue
-		}
-		switch k {
-		case "Ganttactivity":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("Ganttactivity"))
-			it.Ganttactivity, err = ec.unmarshalOInt2ᚖint(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "author":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("author"))
-			it.Author, err = ec.unmarshalOInt2ᚖint(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "createdAt":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("createdAt"))
-			it.CreatedAt, err = ec.unmarshalOString2ᚖstring(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "id":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
-			it.ID, err = ec.unmarshalOInt2ᚖint(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "text":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("text"))
-			it.Text, err = ec.unmarshalNString2string(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "updatedAt":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("updatedAt"))
-			it.UpdatedAt, err = ec.unmarshalOString2ᚖstring(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		}
-	}
-
-	return it, nil
-}
-
-func (ec *executionContext) unmarshalInputGanttProjectInput(ctx context.Context, obj interface{}) (model.GanttProjectInput, error) {
-	var it model.GanttProjectInput
-	asMap := map[string]interface{}{}
-	for k, v := range obj.(map[string]interface{}) {
-		asMap[k] = v
-	}
-
-	fieldsInOrder := [...]string{"actualEndDate", "actualStartDate", "description", "id", "name", "plannedEndDate", "plannedStartDate", "GanttprojectManager"}
-	for _, k := range fieldsInOrder {
-		v, ok := asMap[k]
-		if !ok {
-			continue
-		}
-		switch k {
-		case "actualEndDate":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("actualEndDate"))
-			it.ActualEndDate, err = ec.unmarshalOString2ᚖstring(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "actualStartDate":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("actualStartDate"))
-			it.ActualStartDate, err = ec.unmarshalOString2ᚖstring(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "description":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("description"))
-			it.Description, err = ec.unmarshalOString2ᚖstring(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "id":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
-			it.ID, err = ec.unmarshalOInt2ᚖint(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "name":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("name"))
-			it.Name, err = ec.unmarshalNString2string(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "plannedEndDate":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("plannedEndDate"))
-			it.PlannedEndDate, err = ec.unmarshalNString2string(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "plannedStartDate":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("plannedStartDate"))
-			it.PlannedStartDate, err = ec.unmarshalNString2string(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "GanttprojectManager":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("GanttprojectManager"))
-			it.GanttprojectManager, err = ec.unmarshalOInt2ᚖint(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		}
-	}
-
-	return it, nil
-}
-
-func (ec *executionContext) unmarshalInputGanttRoleInput(ctx context.Context, obj interface{}) (model.GanttRoleInput, error) {
-	var it model.GanttRoleInput
-	asMap := map[string]interface{}{}
-	for k, v := range obj.(map[string]interface{}) {
-		asMap[k] = v
-	}
-
-	fieldsInOrder := [...]string{"id", "name", "Ganttproject"}
-	for _, k := range fieldsInOrder {
-		v, ok := asMap[k]
-		if !ok {
-			continue
-		}
-		switch k {
-		case "id":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
-			it.ID, err = ec.unmarshalOInt2ᚖint(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "name":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("name"))
-			it.Name, err = ec.unmarshalNString2string(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "Ganttproject":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("Ganttproject"))
-			it.Ganttproject, err = ec.unmarshalNInt2int(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		}
-	}
-
-	return it, nil
-}
-
-func (ec *executionContext) unmarshalInputGanttStateInput(ctx context.Context, obj interface{}) (model.GanttStateInput, error) {
-	var it model.GanttStateInput
-	asMap := map[string]interface{}{}
-	for k, v := range obj.(map[string]interface{}) {
-		asMap[k] = v
-	}
-
-	fieldsInOrder := [...]string{"id", "name", "Ganttproject"}
-	for _, k := range fieldsInOrder {
-		v, ok := asMap[k]
-		if !ok {
-			continue
-		}
-		switch k {
-		case "id":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
-			it.ID, err = ec.unmarshalOInt2ᚖint(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "name":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("name"))
-			it.Name, err = ec.unmarshalNString2string(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "Ganttproject":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("Ganttproject"))
-			it.Ganttproject, err = ec.unmarshalNInt2int(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		}
-	}
-
-	return it, nil
-}
-
-func (ec *executionContext) unmarshalInputGanttStateUpdateInput(ctx context.Context, obj interface{}) (model.GanttStateUpdateInput, error) {
-	var it model.GanttStateUpdateInput
-	asMap := map[string]interface{}{}
-	for k, v := range obj.(map[string]interface{}) {
-		asMap[k] = v
-	}
-
-	fieldsInOrder := [...]string{"id", "name", "Ganttproject"}
-	for _, k := range fieldsInOrder {
-		v, ok := asMap[k]
-		if !ok {
-			continue
-		}
-		switch k {
-		case "id":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
-			it.ID, err = ec.unmarshalOInt2ᚖint(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "name":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("name"))
-			it.Name, err = ec.unmarshalNString2string(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "Ganttproject":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("Ganttproject"))
-			it.Ganttproject, err = ec.unmarshalOInt2ᚖint(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		}
-	}
-
-	return it, nil
-}
-
-func (ec *executionContext) unmarshalInputGanttTaskInput(ctx context.Context, obj interface{}) (model.GanttTaskInput, error) {
-	var it model.GanttTaskInput
-	asMap := map[string]interface{}{}
-	for k, v := range obj.(map[string]interface{}) {
-		asMap[k] = v
-	}
-
-	fieldsInOrder := [...]string{"actualBudget", "actualEndDate", "actualStartDate", "description", "id", "name", "plannedBudget", "plannedEndDate", "plannedStartDate", "Ganttproject"}
-	for _, k := range fieldsInOrder {
-		v, ok := asMap[k]
-		if !ok {
-			continue
-		}
-		switch k {
-		case "actualBudget":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("actualBudget"))
-			it.ActualBudget, err = ec.unmarshalOString2ᚖstring(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "actualEndDate":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("actualEndDate"))
-			it.ActualEndDate, err = ec.unmarshalOString2ᚖstring(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "actualStartDate":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("actualStartDate"))
-			it.ActualStartDate, err = ec.unmarshalOString2ᚖstring(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "description":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("description"))
-			it.Description, err = ec.unmarshalOString2ᚖstring(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "id":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
-			it.ID, err = ec.unmarshalOInt2ᚖint(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "name":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("name"))
-			it.Name, err = ec.unmarshalNString2string(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "plannedBudget":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("plannedBudget"))
-			it.PlannedBudget, err = ec.unmarshalOString2ᚖstring(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "plannedEndDate":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("plannedEndDate"))
-			it.PlannedEndDate, err = ec.unmarshalNString2string(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "plannedStartDate":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("plannedStartDate"))
-			it.PlannedStartDate, err = ec.unmarshalNString2string(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "Ganttproject":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("Ganttproject"))
-			it.Ganttproject, err = ec.unmarshalNInt2int(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		}
-	}
-
-	return it, nil
-}
-
-func (ec *executionContext) unmarshalInputGanttTaskUpdateInput(ctx context.Context, obj interface{}) (model.GanttTaskUpdateInput, error) {
-	var it model.GanttTaskUpdateInput
-	asMap := map[string]interface{}{}
-	for k, v := range obj.(map[string]interface{}) {
-		asMap[k] = v
-	}
-
-	fieldsInOrder := [...]string{"actualBudget", "actualEndDate", "actualStartDate", "description", "id", "name", "plannedBudget", "plannedEndDate", "plannedStartDate", "Ganttproject"}
-	for _, k := range fieldsInOrder {
-		v, ok := asMap[k]
-		if !ok {
-			continue
-		}
-		switch k {
-		case "actualBudget":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("actualBudget"))
-			it.ActualBudget, err = ec.unmarshalOString2ᚖstring(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "actualEndDate":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("actualEndDate"))
-			it.ActualEndDate, err = ec.unmarshalOString2ᚖstring(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "actualStartDate":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("actualStartDate"))
-			it.ActualStartDate, err = ec.unmarshalOString2ᚖstring(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "description":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("description"))
-			it.Description, err = ec.unmarshalOString2ᚖstring(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "id":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
-			it.ID, err = ec.unmarshalOInt2ᚖint(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "name":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("name"))
-			it.Name, err = ec.unmarshalNString2string(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "plannedBudget":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("plannedBudget"))
-			it.PlannedBudget, err = ec.unmarshalOString2ᚖstring(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "plannedEndDate":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("plannedEndDate"))
-			it.PlannedEndDate, err = ec.unmarshalNString2string(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "plannedStartDate":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("plannedStartDate"))
-			it.PlannedStartDate, err = ec.unmarshalNString2string(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "Ganttproject":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("Ganttproject"))
-			it.Ganttproject, err = ec.unmarshalOInt2ᚖint(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		}
-	}
-
-	return it, nil
-}
-
-func (ec *executionContext) unmarshalInputGanttTeamInput(ctx context.Context, obj interface{}) (model.GanttTeamInput, error) {
-	var it model.GanttTeamInput
-	asMap := map[string]interface{}{}
-	for k, v := range obj.(map[string]interface{}) {
-		asMap[k] = v
-	}
-
-	fieldsInOrder := [...]string{"id", "name", "Ganttproject"}
-	for _, k := range fieldsInOrder {
-		v, ok := asMap[k]
-		if !ok {
-			continue
-		}
-		switch k {
-		case "id":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
-			it.ID, err = ec.unmarshalOInt2ᚖint(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "name":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("name"))
-			it.Name, err = ec.unmarshalNString2string(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "Ganttproject":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("Ganttproject"))
-			it.Ganttproject, err = ec.unmarshalNInt2int(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		}
-	}
-
-	return it, nil
-}
-
-func (ec *executionContext) unmarshalInputGanttTeamMemberGetInput(ctx context.Context, obj interface{}) (model.GanttTeamMemberGetInput, error) {
-	var it model.GanttTeamMemberGetInput
-	asMap := map[string]interface{}{}
-	for k, v := range obj.(map[string]interface{}) {
-		asMap[k] = v
-	}
-
-	fieldsInOrder := [...]string{"id", "Ganttrole", "Ganttteam", "user"}
-	for _, k := range fieldsInOrder {
-		v, ok := asMap[k]
-		if !ok {
-			continue
-		}
-		switch k {
-		case "id":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
-			it.ID, err = ec.unmarshalOInt2ᚖint(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "Ganttrole":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("Ganttrole"))
-			it.Ganttrole, err = ec.unmarshalNInt2int(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "Ganttteam":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("Ganttteam"))
-			it.Ganttteam, err = ec.unmarshalNInt2int(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "user":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("user"))
-			it.User, err = ec.unmarshalOInt2ᚖint(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		}
-	}
-
-	return it, nil
-}
-
-func (ec *executionContext) unmarshalInputGanttTeamMemberInput(ctx context.Context, obj interface{}) (model.GanttTeamMemberInput, error) {
-	var it model.GanttTeamMemberInput
-	asMap := map[string]interface{}{}
-	for k, v := range obj.(map[string]interface{}) {
-		asMap[k] = v
-	}
-
-	fieldsInOrder := [...]string{"id", "Ganttrole", "Ganttteam", "user"}
-	for _, k := range fieldsInOrder {
-		v, ok := asMap[k]
-		if !ok {
-			continue
-		}
-		switch k {
-		case "id":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
-			it.ID, err = ec.unmarshalOInt2ᚖint(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "Ganttrole":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("Ganttrole"))
-			it.Ganttrole, err = ec.unmarshalNInt2int(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "Ganttteam":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("Ganttteam"))
-			it.Ganttteam, err = ec.unmarshalNInt2int(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "user":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("user"))
-			it.User, err = ec.unmarshalNInt2int(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		}
-	}
-
-	return it, nil
-}
-
-func (ec *executionContext) unmarshalInputUserInput(ctx context.Context, obj interface{}) (model.UserInput, error) {
-	var it model.UserInput
-	asMap := map[string]interface{}{}
-	for k, v := range obj.(map[string]interface{}) {
-		asMap[k] = v
-	}
-
-	fieldsInOrder := [...]string{"avatar", "email", "firstName", "id", "lastName", "username"}
-	for _, k := range fieldsInOrder {
-		v, ok := asMap[k]
-		if !ok {
-			continue
-		}
-		switch k {
-		case "avatar":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("avatar"))
-			it.Avatar, err = ec.unmarshalOString2ᚖstring(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "email":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("email"))
-			it.Email, err = ec.unmarshalOString2ᚖstring(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "firstName":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("firstName"))
-			it.FirstName, err = ec.unmarshalOString2ᚖstring(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "id":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
-			it.ID, err = ec.unmarshalOInt2ᚖint(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "lastName":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("lastName"))
-			it.LastName, err = ec.unmarshalOString2ᚖstring(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "username":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("username"))
-			it.Username, err = ec.unmarshalOString2ᚖstring(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		}
-	}
-
-	return it, nil
-}
-
 // endregion **************************** input.gotpl *****************************
 
 // region    ************************** interface.gotpl ***************************
@@ -9309,31 +7799,6 @@ func (ec *executionContext) unmarshalInputUserInput(ctx context.Context, obj int
 // endregion ************************** interface.gotpl ***************************
 
 // region    **************************** object.gotpl ****************************
-
-var avatarImplementors = []string{"Avatar"}
-
-func (ec *executionContext) _Avatar(ctx context.Context, sel ast.SelectionSet, obj *model.Avatar) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, avatarImplementors)
-	out := graphql.NewFieldSet(fields)
-	var invalids uint32
-	for i, field := range fields {
-		switch field.Name {
-		case "__typename":
-			out.Values[i] = graphql.MarshalString("Avatar")
-		case "avatar":
-
-			out.Values[i] = ec._Avatar_avatar(ctx, field, obj)
-
-		default:
-			panic("unknown field " + strconv.Quote(field.Name))
-		}
-	}
-	out.Dispatch()
-	if invalids > 0 {
-		return graphql.Null
-	}
-	return out
-}
 
 var ganttActivityImplementors = []string{"GanttActivity"}
 
@@ -9377,23 +7842,10 @@ func (ec *executionContext) _GanttActivity(ctx context.Context, sel ast.Selectio
 				return innerFunc(ctx)
 
 			})
-		case "dependency":
-			field := field
+		case "dependencyId":
 
-			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._GanttActivity_dependency(ctx, field, obj)
-				return res
-			}
+			out.Values[i] = ec._GanttActivity_dependencyId(ctx, field, obj)
 
-			out.Concurrently(i, func() graphql.Marshaler {
-				return innerFunc(ctx)
-
-			})
 		case "description":
 
 			out.Values[i] = ec._GanttActivity_description(ctx, field, obj)
@@ -9427,7 +7879,11 @@ func (ec *executionContext) _GanttActivity(ctx context.Context, sel ast.Selectio
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&invalids, 1)
 			}
-		case "Ganttstate_id":
+		case "stateId":
+
+			out.Values[i] = ec._GanttActivity_stateId(ctx, field, obj)
+
+		case "state":
 			field := field
 
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
@@ -9436,7 +7892,7 @@ func (ec *executionContext) _GanttActivity(ctx context.Context, sel ast.Selectio
 						ec.Error(ctx, ec.Recover(ctx, r))
 					}
 				}()
-				res = ec._GanttActivity_Ganttstate_id(ctx, field, obj)
+				res = ec._GanttActivity_state(ctx, field, obj)
 				return res
 			}
 
@@ -9444,24 +7900,14 @@ func (ec *executionContext) _GanttActivity(ctx context.Context, sel ast.Selectio
 				return innerFunc(ctx)
 
 			})
-		case "Ganttstate":
-			field := field
+		case "taskId":
 
-			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._GanttActivity_Ganttstate(ctx, field, obj)
-				return res
+			out.Values[i] = ec._GanttActivity_taskId(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
 			}
-
-			out.Concurrently(i, func() graphql.Marshaler {
-				return innerFunc(ctx)
-
-			})
-		case "Gantttask_id":
+		case "task":
 			field := field
 
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
@@ -9470,27 +7916,7 @@ func (ec *executionContext) _GanttActivity(ctx context.Context, sel ast.Selectio
 						ec.Error(ctx, ec.Recover(ctx, r))
 					}
 				}()
-				res = ec._GanttActivity_Gantttask_id(ctx, field, obj)
-				if res == graphql.Null {
-					atomic.AddUint32(&invalids, 1)
-				}
-				return res
-			}
-
-			out.Concurrently(i, func() graphql.Marshaler {
-				return innerFunc(ctx)
-
-			})
-		case "Gantttask":
-			field := field
-
-			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._GanttActivity_Gantttask(ctx, field, obj)
+				res = ec._GanttActivity_task(ctx, field, obj)
 				if res == graphql.Null {
 					atomic.AddUint32(&invalids, 1)
 				}
@@ -9522,26 +7948,13 @@ func (ec *executionContext) _GanttAssigned(ctx context.Context, sel ast.Selectio
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("GanttAssigned")
-		case "Ganttactivity":
-			field := field
+		case "activityId":
 
-			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._GanttAssigned_Ganttactivity(ctx, field, obj)
-				if res == graphql.Null {
-					atomic.AddUint32(&invalids, 1)
-				}
-				return res
+			out.Values[i] = ec._GanttAssigned_activityId(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
 			}
-
-			out.Concurrently(i, func() graphql.Marshaler {
-				return innerFunc(ctx)
-
-			})
 		case "id":
 
 			out.Values[i] = ec._GanttAssigned_id(ctx, field, obj)
@@ -9566,72 +7979,26 @@ func (ec *executionContext) _GanttAssigned(ctx context.Context, sel ast.Selectio
 				return innerFunc(ctx)
 
 			})
-		default:
-			panic("unknown field " + strconv.Quote(field.Name))
-		}
-	}
-	out.Dispatch()
-	if invalids > 0 {
-		return graphql.Null
-	}
-	return out
-}
+		case "activity":
+			field := field
 
-var ganttAssignedToMeImplementors = []string{"GanttAssignedToMe"}
-
-func (ec *executionContext) _GanttAssignedToMe(ctx context.Context, sel ast.SelectionSet, obj *model.GanttAssignedToMe) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, ganttAssignedToMeImplementors)
-	out := graphql.NewFieldSet(fields)
-	var invalids uint32
-	for i, field := range fields {
-		switch field.Name {
-		case "__typename":
-			out.Values[i] = graphql.MarshalString("GanttAssignedToMe")
-		case "actualStartDate":
-
-			out.Values[i] = ec._GanttAssignedToMe_actualStartDate(ctx, field, obj)
-
-		case "dependency":
-
-			out.Values[i] = ec._GanttAssignedToMe_dependency(ctx, field, obj)
-
-		case "id":
-
-			out.Values[i] = ec._GanttAssignedToMe_id(ctx, field, obj)
-
-		case "name":
-
-			out.Values[i] = ec._GanttAssignedToMe_name(ctx, field, obj)
-
-			if out.Values[i] == graphql.Null {
-				invalids++
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._GanttAssigned_activity(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
 			}
-		case "plannedEndDate":
 
-			out.Values[i] = ec._GanttAssignedToMe_plannedEndDate(ctx, field, obj)
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
 
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		case "Ganttproject":
-
-			out.Values[i] = ec._GanttAssignedToMe_Ganttproject(ctx, field, obj)
-
-		case "GanttprojectId":
-
-			out.Values[i] = ec._GanttAssignedToMe_GanttprojectId(ctx, field, obj)
-
-		case "Ganttstate":
-
-			out.Values[i] = ec._GanttAssignedToMe_Ganttstate(ctx, field, obj)
-
-		case "Gantttask":
-
-			out.Values[i] = ec._GanttAssignedToMe_Gantttask(ctx, field, obj)
-
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
+			})
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -9653,23 +8020,14 @@ func (ec *executionContext) _GanttComment(ctx context.Context, sel ast.Selection
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("GanttComment")
-		case "Ganttactivity":
-			field := field
+		case "activityId":
 
-			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._GanttComment_Ganttactivity(ctx, field, obj)
-				return res
-			}
+			out.Values[i] = ec._GanttComment_activityId(ctx, field, obj)
 
-			out.Concurrently(i, func() graphql.Marshaler {
-				return innerFunc(ctx)
+		case "authorId":
 
-			})
+			out.Values[i] = ec._GanttComment_authorId(ctx, field, obj)
+
 		case "author":
 			field := field
 
@@ -9764,7 +8122,11 @@ func (ec *executionContext) _GanttProject(ctx context.Context, sel ast.Selection
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&invalids, 1)
 			}
-		case "GanttprojectManager_id":
+		case "projectManagerId":
+
+			out.Values[i] = ec._GanttProject_projectManagerId(ctx, field, obj)
+
+		case "projectManager":
 			field := field
 
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
@@ -9773,24 +8135,7 @@ func (ec *executionContext) _GanttProject(ctx context.Context, sel ast.Selection
 						ec.Error(ctx, ec.Recover(ctx, r))
 					}
 				}()
-				res = ec._GanttProject_GanttprojectManager_id(ctx, field, obj)
-				return res
-			}
-
-			out.Concurrently(i, func() graphql.Marshaler {
-				return innerFunc(ctx)
-
-			})
-		case "GanttprojectManager":
-			field := field
-
-			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._GanttProject_GanttprojectManager(ctx, field, obj)
+				res = ec._GanttProject_projectManager(ctx, field, obj)
 				if res == graphql.Null {
 					atomic.AddUint32(&invalids, 1)
 				}
@@ -9801,7 +8146,7 @@ func (ec *executionContext) _GanttProject(ctx context.Context, sel ast.Selection
 				return innerFunc(ctx)
 
 			})
-		case "Gantttasks":
+		case "tasks":
 			field := field
 
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
@@ -9810,7 +8155,7 @@ func (ec *executionContext) _GanttProject(ctx context.Context, sel ast.Selection
 						ec.Error(ctx, ec.Recover(ctx, r))
 					}
 				}()
-				res = ec._GanttProject_Gantttasks(ctx, field, obj)
+				res = ec._GanttProject_tasks(ctx, field, obj)
 				if res == graphql.Null {
 					atomic.AddUint32(&invalids, 1)
 				}
@@ -9821,7 +8166,7 @@ func (ec *executionContext) _GanttProject(ctx context.Context, sel ast.Selection
 				return innerFunc(ctx)
 
 			})
-		case "Ganttroles":
+		case "roles":
 			field := field
 
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
@@ -9830,7 +8175,7 @@ func (ec *executionContext) _GanttProject(ctx context.Context, sel ast.Selection
 						ec.Error(ctx, ec.Recover(ctx, r))
 					}
 				}()
-				res = ec._GanttProject_Ganttroles(ctx, field, obj)
+				res = ec._GanttProject_roles(ctx, field, obj)
 				if res == graphql.Null {
 					atomic.AddUint32(&invalids, 1)
 				}
@@ -9841,7 +8186,7 @@ func (ec *executionContext) _GanttProject(ctx context.Context, sel ast.Selection
 				return innerFunc(ctx)
 
 			})
-		case "Ganttteams":
+		case "teams":
 			field := field
 
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
@@ -9850,7 +8195,7 @@ func (ec *executionContext) _GanttProject(ctx context.Context, sel ast.Selection
 						ec.Error(ctx, ec.Recover(ctx, r))
 					}
 				}()
-				res = ec._GanttProject_Ganttteams(ctx, field, obj)
+				res = ec._GanttProject_teams(ctx, field, obj)
 				if res == graphql.Null {
 					atomic.AddUint32(&invalids, 1)
 				}
@@ -9861,7 +8206,7 @@ func (ec *executionContext) _GanttProject(ctx context.Context, sel ast.Selection
 				return innerFunc(ctx)
 
 			})
-		case "Ganttstates":
+		case "states":
 			field := field
 
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
@@ -9870,7 +8215,7 @@ func (ec *executionContext) _GanttProject(ctx context.Context, sel ast.Selection
 						ec.Error(ctx, ec.Recover(ctx, r))
 					}
 				}()
-				res = ec._GanttProject_Ganttstates(ctx, field, obj)
+				res = ec._GanttProject_states(ctx, field, obj)
 				if res == graphql.Null {
 					atomic.AddUint32(&invalids, 1)
 				}
@@ -9911,28 +8256,15 @@ func (ec *executionContext) _GanttRole(ctx context.Context, sel ast.SelectionSet
 			out.Values[i] = ec._GanttRole_name(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
+				invalids++
 			}
-		case "Ganttproject_id":
-			field := field
+		case "projectId":
 
-			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._GanttRole_Ganttproject_id(ctx, field, obj)
-				if res == graphql.Null {
-					atomic.AddUint32(&invalids, 1)
-				}
-				return res
+			out.Values[i] = ec._GanttRole_projectId(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
 			}
-
-			out.Concurrently(i, func() graphql.Marshaler {
-				return innerFunc(ctx)
-
-			})
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -9963,28 +8295,15 @@ func (ec *executionContext) _GanttState(ctx context.Context, sel ast.SelectionSe
 			out.Values[i] = ec._GanttState_name(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
+				invalids++
 			}
-		case "Ganttproject_id":
-			field := field
+		case "projectId":
 
-			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._GanttState_Ganttproject_id(ctx, field, obj)
-				if res == graphql.Null {
-					atomic.AddUint32(&invalids, 1)
-				}
-				return res
+			out.Values[i] = ec._GanttState_projectId(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
 			}
-
-			out.Concurrently(i, func() graphql.Marshaler {
-				return innerFunc(ctx)
-
-			})
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -10051,27 +8370,14 @@ func (ec *executionContext) _GanttTask(ctx context.Context, sel ast.SelectionSet
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&invalids, 1)
 			}
-		case "Ganttproject_id":
-			field := field
+		case "projectId":
 
-			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._GanttTask_Ganttproject_id(ctx, field, obj)
-				if res == graphql.Null {
-					atomic.AddUint32(&invalids, 1)
-				}
-				return res
+			out.Values[i] = ec._GanttTask_projectId(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
 			}
-
-			out.Concurrently(i, func() graphql.Marshaler {
-				return innerFunc(ctx)
-
-			})
-		case "Ganttproject":
+		case "project":
 			field := field
 
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
@@ -10080,7 +8386,7 @@ func (ec *executionContext) _GanttTask(ctx context.Context, sel ast.SelectionSet
 						ec.Error(ctx, ec.Recover(ctx, r))
 					}
 				}()
-				res = ec._GanttTask_Ganttproject(ctx, field, obj)
+				res = ec._GanttTask_project(ctx, field, obj)
 				if res == graphql.Null {
 					atomic.AddUint32(&invalids, 1)
 				}
@@ -10143,27 +8449,14 @@ func (ec *executionContext) _GanttTeam(ctx context.Context, sel ast.SelectionSet
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&invalids, 1)
 			}
-		case "Ganttproject_id":
-			field := field
+		case "projectId":
 
-			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._GanttTeam_Ganttproject_id(ctx, field, obj)
-				if res == graphql.Null {
-					atomic.AddUint32(&invalids, 1)
-				}
-				return res
+			out.Values[i] = ec._GanttTeam_projectId(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
 			}
-
-			out.Concurrently(i, func() graphql.Marshaler {
-				return innerFunc(ctx)
-
-			})
-		case "Ganttproject":
+		case "project":
 			field := field
 
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
@@ -10172,7 +8465,7 @@ func (ec *executionContext) _GanttTeam(ctx context.Context, sel ast.SelectionSet
 						ec.Error(ctx, ec.Recover(ctx, r))
 					}
 				}()
-				res = ec._GanttTeam_Ganttproject(ctx, field, obj)
+				res = ec._GanttTeam_project(ctx, field, obj)
 				if res == graphql.Null {
 					atomic.AddUint32(&invalids, 1)
 				}
@@ -10208,16 +8501,16 @@ func (ec *executionContext) _GanttTeamMember(ctx context.Context, sel ast.Select
 
 			out.Values[i] = ec._GanttTeamMember_id(ctx, field, obj)
 
-		case "Ganttrole":
+		case "role":
 
-			out.Values[i] = ec._GanttTeamMember_Ganttrole(ctx, field, obj)
+			out.Values[i] = ec._GanttTeamMember_role(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
-		case "Ganttteam":
+		case "team":
 
-			out.Values[i] = ec._GanttTeamMember_Ganttteam(ctx, field, obj)
+			out.Values[i] = ec._GanttTeamMember_team(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
 				invalids++
@@ -10259,7 +8552,7 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("Query")
-		case "Activity":
+		case "activity":
 			field := field
 
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
@@ -10268,7 +8561,7 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 						ec.Error(ctx, ec.Recover(ctx, r))
 					}
 				}()
-				res = ec._Query_Activity(ctx, field)
+				res = ec._Query_activity(ctx, field)
 				return res
 			}
 
@@ -10279,7 +8572,7 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 			out.Concurrently(i, func() graphql.Marshaler {
 				return rrm(innerCtx)
 			})
-		case "Ganttassigned":
+		case "assigned":
 			field := field
 
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
@@ -10288,7 +8581,7 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 						ec.Error(ctx, ec.Recover(ctx, r))
 					}
 				}()
-				res = ec._Query_Ganttassigned(ctx, field)
+				res = ec._Query_assigned(ctx, field)
 				return res
 			}
 
@@ -10299,7 +8592,7 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 			out.Concurrently(i, func() graphql.Marshaler {
 				return rrm(innerCtx)
 			})
-		case "GanttActivity":
+		case "projectActivities":
 			field := field
 
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
@@ -10308,7 +8601,7 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 						ec.Error(ctx, ec.Recover(ctx, r))
 					}
 				}()
-				res = ec._Query_GanttActivity(ctx, field)
+				res = ec._Query_projectActivities(ctx, field)
 				if res == graphql.Null {
 					atomic.AddUint32(&invalids, 1)
 				}
@@ -10322,7 +8615,7 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 			out.Concurrently(i, func() graphql.Marshaler {
 				return rrm(innerCtx)
 			})
-		case "ganttGanttAssigned":
+		case "projectAssigned":
 			field := field
 
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
@@ -10331,7 +8624,7 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 						ec.Error(ctx, ec.Recover(ctx, r))
 					}
 				}()
-				res = ec._Query_ganttGanttAssigned(ctx, field)
+				res = ec._Query_projectAssigned(ctx, field)
 				if res == graphql.Null {
 					atomic.AddUint32(&invalids, 1)
 				}
@@ -10345,7 +8638,7 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 			out.Concurrently(i, func() graphql.Marshaler {
 				return rrm(innerCtx)
 			})
-		case "ganttGanttAssignedToMe":
+		case "assignedToMe":
 			field := field
 
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
@@ -10354,7 +8647,7 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 						ec.Error(ctx, ec.Recover(ctx, r))
 					}
 				}()
-				res = ec._Query_ganttGanttAssignedToMe(ctx, field)
+				res = ec._Query_assignedToMe(ctx, field)
 				if res == graphql.Null {
 					atomic.AddUint32(&invalids, 1)
 				}
@@ -10368,7 +8661,7 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 			out.Concurrently(i, func() graphql.Marshaler {
 				return rrm(innerCtx)
 			})
-		case "ganttGanttComment":
+		case "activityComments":
 			field := field
 
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
@@ -10377,7 +8670,7 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 						ec.Error(ctx, ec.Recover(ctx, r))
 					}
 				}()
-				res = ec._Query_ganttGanttComment(ctx, field)
+				res = ec._Query_activityComments(ctx, field)
 				if res == graphql.Null {
 					atomic.AddUint32(&invalids, 1)
 				}
@@ -10391,7 +8684,7 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 			out.Concurrently(i, func() graphql.Marshaler {
 				return rrm(innerCtx)
 			})
-		case "ganttEmployee":
+		case "projectEmployees":
 			field := field
 
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
@@ -10400,7 +8693,7 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 						ec.Error(ctx, ec.Recover(ctx, r))
 					}
 				}()
-				res = ec._Query_ganttEmployee(ctx, field)
+				res = ec._Query_projectEmployees(ctx, field)
 				if res == graphql.Null {
 					atomic.AddUint32(&invalids, 1)
 				}
@@ -10414,7 +8707,7 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 			out.Concurrently(i, func() graphql.Marshaler {
 				return rrm(innerCtx)
 			})
-		case "ganttGanttProject":
+		case "projects":
 			field := field
 
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
@@ -10423,7 +8716,7 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 						ec.Error(ctx, ec.Recover(ctx, r))
 					}
 				}()
-				res = ec._Query_ganttGanttProject(ctx, field)
+				res = ec._Query_projects(ctx, field)
 				if res == graphql.Null {
 					atomic.AddUint32(&invalids, 1)
 				}
@@ -10437,7 +8730,7 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 			out.Concurrently(i, func() graphql.Marshaler {
 				return rrm(innerCtx)
 			})
-		case "ganttGanttRole":
+		case "projectRoles":
 			field := field
 
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
@@ -10446,7 +8739,7 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 						ec.Error(ctx, ec.Recover(ctx, r))
 					}
 				}()
-				res = ec._Query_ganttGanttRole(ctx, field)
+				res = ec._Query_projectRoles(ctx, field)
 				if res == graphql.Null {
 					atomic.AddUint32(&invalids, 1)
 				}
@@ -10460,7 +8753,7 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 			out.Concurrently(i, func() graphql.Marshaler {
 				return rrm(innerCtx)
 			})
-		case "ganttGanttState":
+		case "projectStates":
 			field := field
 
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
@@ -10469,7 +8762,7 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 						ec.Error(ctx, ec.Recover(ctx, r))
 					}
 				}()
-				res = ec._Query_ganttGanttState(ctx, field)
+				res = ec._Query_projectStates(ctx, field)
 				if res == graphql.Null {
 					atomic.AddUint32(&invalids, 1)
 				}
@@ -10483,7 +8776,7 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 			out.Concurrently(i, func() graphql.Marshaler {
 				return rrm(innerCtx)
 			})
-		case "ganttGanttTask":
+		case "projectTasks":
 			field := field
 
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
@@ -10492,7 +8785,7 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 						ec.Error(ctx, ec.Recover(ctx, r))
 					}
 				}()
-				res = ec._Query_ganttGanttTask(ctx, field)
+				res = ec._Query_projectTasks(ctx, field)
 				if res == graphql.Null {
 					atomic.AddUint32(&invalids, 1)
 				}
@@ -10506,7 +8799,7 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 			out.Concurrently(i, func() graphql.Marshaler {
 				return rrm(innerCtx)
 			})
-		case "ganttGanttTeam":
+		case "projectTeams":
 			field := field
 
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
@@ -10515,7 +8808,7 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 						ec.Error(ctx, ec.Recover(ctx, r))
 					}
 				}()
-				res = ec._Query_ganttGanttTeam(ctx, field)
+				res = ec._Query_projectTeams(ctx, field)
 				if res == graphql.Null {
 					atomic.AddUint32(&invalids, 1)
 				}
@@ -10529,7 +8822,7 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 			out.Concurrently(i, func() graphql.Marshaler {
 				return rrm(innerCtx)
 			})
-		case "ganttGanttTeamMember":
+		case "teamMembers":
 			field := field
 
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
@@ -10538,7 +8831,7 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 						ec.Error(ctx, ec.Recover(ctx, r))
 					}
 				}()
-				res = ec._Query_ganttGanttTeamMember(ctx, field)
+				res = ec._Query_teamMembers(ctx, field)
 				if res == graphql.Null {
 					atomic.AddUint32(&invalids, 1)
 				}
@@ -10552,7 +8845,7 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 			out.Concurrently(i, func() graphql.Marshaler {
 				return rrm(innerCtx)
 			})
-		case "Ganttproject":
+		case "project":
 			field := field
 
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
@@ -10561,7 +8854,7 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 						ec.Error(ctx, ec.Recover(ctx, r))
 					}
 				}()
-				res = ec._Query_Ganttproject(ctx, field)
+				res = ec._Query_project(ctx, field)
 				return res
 			}
 
@@ -10572,7 +8865,7 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 			out.Concurrently(i, func() graphql.Marshaler {
 				return rrm(innerCtx)
 			})
-		case "Ganttrole":
+		case "role":
 			field := field
 
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
@@ -10581,7 +8874,7 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 						ec.Error(ctx, ec.Recover(ctx, r))
 					}
 				}()
-				res = ec._Query_Ganttrole(ctx, field)
+				res = ec._Query_role(ctx, field)
 				return res
 			}
 
@@ -10592,7 +8885,7 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 			out.Concurrently(i, func() graphql.Marshaler {
 				return rrm(innerCtx)
 			})
-		case "Ganttstate":
+		case "state":
 			field := field
 
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
@@ -10601,7 +8894,7 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 						ec.Error(ctx, ec.Recover(ctx, r))
 					}
 				}()
-				res = ec._Query_Ganttstate(ctx, field)
+				res = ec._Query_state(ctx, field)
 				return res
 			}
 
@@ -10612,7 +8905,7 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 			out.Concurrently(i, func() graphql.Marshaler {
 				return rrm(innerCtx)
 			})
-		case "Gantttask":
+		case "task":
 			field := field
 
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
@@ -10621,7 +8914,7 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 						ec.Error(ctx, ec.Recover(ctx, r))
 					}
 				}()
-				res = ec._Query_Gantttask(ctx, field)
+				res = ec._Query_task(ctx, field)
 				return res
 			}
 
@@ -10632,7 +8925,7 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 			out.Concurrently(i, func() graphql.Marshaler {
 				return rrm(innerCtx)
 			})
-		case "Ganttteam":
+		case "team":
 			field := field
 
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
@@ -10641,7 +8934,7 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 						ec.Error(ctx, ec.Recover(ctx, r))
 					}
 				}()
-				res = ec._Query_Ganttteam(ctx, field)
+				res = ec._Query_team(ctx, field)
 				return res
 			}
 
@@ -10718,35 +9011,35 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 	return out
 }
 
-var userImplementors = []string{"User"}
+var userUserImplementors = []string{"UserUser"}
 
-func (ec *executionContext) _User(ctx context.Context, sel ast.SelectionSet, obj *model.User) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, userImplementors)
+func (ec *executionContext) _UserUser(ctx context.Context, sel ast.SelectionSet, obj *database.UserUser) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, userUserImplementors)
 	out := graphql.NewFieldSet(fields)
 	var invalids uint32
 	for i, field := range fields {
 		switch field.Name {
 		case "__typename":
-			out.Values[i] = graphql.MarshalString("User")
+			out.Values[i] = graphql.MarshalString("UserUser")
 		case "avatar":
 
-			out.Values[i] = ec._User_avatar(ctx, field, obj)
+			out.Values[i] = ec._UserUser_avatar(ctx, field, obj)
 
 		case "firstName":
 
-			out.Values[i] = ec._User_firstName(ctx, field, obj)
+			out.Values[i] = ec._UserUser_firstName(ctx, field, obj)
 
 		case "id":
 
-			out.Values[i] = ec._User_id(ctx, field, obj)
+			out.Values[i] = ec._UserUser_id(ctx, field, obj)
 
 		case "lastName":
 
-			out.Values[i] = ec._User_lastName(ctx, field, obj)
+			out.Values[i] = ec._UserUser_lastName(ctx, field, obj)
 
 		case "username":
 
-			out.Values[i] = ec._User_username(ctx, field, obj)
+			out.Values[i] = ec._UserUser_username(ctx, field, obj)
 
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
@@ -11155,6 +9448,16 @@ func (ec *executionContext) marshalNGanttActivity2ᚕtoilerᚑgraphqlᚋdatabase
 	return ret
 }
 
+func (ec *executionContext) marshalNGanttActivity2ᚖtoilerᚑgraphqlᚋdatabaseᚐGanttActivity(ctx context.Context, sel ast.SelectionSet, v *database.GanttActivity) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._GanttActivity(ctx, sel, v)
+}
+
 func (ec *executionContext) marshalNGanttAssigned2toilerᚑgraphqlᚋdatabaseᚐGanttAssigned(ctx context.Context, sel ast.SelectionSet, v database.GanttAssigned) graphql.Marshaler {
 	return ec._GanttAssigned(ctx, sel, &v)
 }
@@ -11184,54 +9487,6 @@ func (ec *executionContext) marshalNGanttAssigned2ᚕtoilerᚑgraphqlᚋdatabase
 				defer wg.Done()
 			}
 			ret[i] = ec.marshalNGanttAssigned2toilerᚑgraphqlᚋdatabaseᚐGanttAssigned(ctx, sel, v[i])
-		}
-		if isLen1 {
-			f(i)
-		} else {
-			go f(i)
-		}
-
-	}
-	wg.Wait()
-
-	for _, e := range ret {
-		if e == graphql.Null {
-			return graphql.Null
-		}
-	}
-
-	return ret
-}
-
-func (ec *executionContext) marshalNGanttAssignedToMe2toilerᚑgraphqlᚋgraphᚋmodelᚐGanttAssignedToMe(ctx context.Context, sel ast.SelectionSet, v model.GanttAssignedToMe) graphql.Marshaler {
-	return ec._GanttAssignedToMe(ctx, sel, &v)
-}
-
-func (ec *executionContext) marshalNGanttAssignedToMe2ᚕtoilerᚑgraphqlᚋgraphᚋmodelᚐGanttAssignedToMeᚄ(ctx context.Context, sel ast.SelectionSet, v []model.GanttAssignedToMe) graphql.Marshaler {
-	ret := make(graphql.Array, len(v))
-	var wg sync.WaitGroup
-	isLen1 := len(v) == 1
-	if !isLen1 {
-		wg.Add(len(v))
-	}
-	for i := range v {
-		i := i
-		fc := &graphql.FieldContext{
-			Index:  &i,
-			Result: &v[i],
-		}
-		ctx := graphql.WithFieldContext(ctx, fc)
-		f := func(i int) {
-			defer func() {
-				if r := recover(); r != nil {
-					ec.Error(ctx, ec.Recover(ctx, r))
-					ret = nil
-				}
-			}()
-			if !isLen1 {
-				defer wg.Done()
-			}
-			ret[i] = ec.marshalNGanttAssignedToMe2toilerᚑgraphqlᚋgraphᚋmodelᚐGanttAssignedToMe(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -11622,6 +9877,21 @@ func (ec *executionContext) marshalNInt2int(ctx context.Context, sel ast.Selecti
 	return res
 }
 
+func (ec *executionContext) unmarshalNInt2int64(ctx context.Context, v interface{}) (int64, error) {
+	res, err := graphql.UnmarshalInt64(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNInt2int64(ctx context.Context, sel ast.SelectionSet, v int64) graphql.Marshaler {
+	res := graphql.MarshalInt64(v)
+	if res == graphql.Null {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+	}
+	return res
+}
+
 func (ec *executionContext) unmarshalNString2string(ctx context.Context, v interface{}) (string, error) {
 	res, err := graphql.UnmarshalString(v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -11637,11 +9907,11 @@ func (ec *executionContext) marshalNString2string(ctx context.Context, sel ast.S
 	return res
 }
 
-func (ec *executionContext) marshalNUser2toilerᚑgraphqlᚋgraphᚋmodelᚐUser(ctx context.Context, sel ast.SelectionSet, v model.User) graphql.Marshaler {
-	return ec._User(ctx, sel, &v)
+func (ec *executionContext) marshalNUserUser2toilerᚑgraphqlᚋdatabaseᚐUserUser(ctx context.Context, sel ast.SelectionSet, v database.UserUser) graphql.Marshaler {
+	return ec._UserUser(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNUser2ᚕtoilerᚑgraphqlᚋgraphᚋmodelᚐUserᚄ(ctx context.Context, sel ast.SelectionSet, v []model.User) graphql.Marshaler {
+func (ec *executionContext) marshalNUserUser2ᚕtoilerᚑgraphqlᚋdatabaseᚐUserUserᚄ(ctx context.Context, sel ast.SelectionSet, v []database.UserUser) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
 	isLen1 := len(v) == 1
@@ -11665,7 +9935,7 @@ func (ec *executionContext) marshalNUser2ᚕtoilerᚑgraphqlᚋgraphᚋmodelᚐU
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalNUser2toilerᚑgraphqlᚋgraphᚋmodelᚐUser(ctx, sel, v[i])
+			ret[i] = ec.marshalNUserUser2toilerᚑgraphqlᚋdatabaseᚐUserUser(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -11685,14 +9955,14 @@ func (ec *executionContext) marshalNUser2ᚕtoilerᚑgraphqlᚋgraphᚋmodelᚐU
 	return ret
 }
 
-func (ec *executionContext) marshalNUser2ᚖtoilerᚑgraphqlᚋgraphᚋmodelᚐUser(ctx context.Context, sel ast.SelectionSet, v *model.User) graphql.Marshaler {
+func (ec *executionContext) marshalNUserUser2ᚖtoilerᚑgraphqlᚋdatabaseᚐUserUser(ctx context.Context, sel ast.SelectionSet, v *database.UserUser) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
 		}
 		return graphql.Null
 	}
-	return ec._User(ctx, sel, v)
+	return ec._UserUser(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalN__Directive2githubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚋintrospectionᚐDirective(ctx context.Context, sel ast.SelectionSet, v introspection.Directive) graphql.Marshaler {
@@ -12008,34 +10278,6 @@ func (ec *executionContext) marshalOGanttAssigned2ᚖtoilerᚑgraphqlᚋdatabase
 	return ec._GanttAssigned(ctx, sel, v)
 }
 
-func (ec *executionContext) unmarshalOGanttAssignedUpdateInput2ᚕᚖtoilerᚑgraphqlᚋgraphᚋmodelᚐGanttAssignedUpdateInput(ctx context.Context, v interface{}) ([]*model.GanttAssignedUpdateInput, error) {
-	if v == nil {
-		return nil, nil
-	}
-	var vSlice []interface{}
-	if v != nil {
-		vSlice = graphql.CoerceList(v)
-	}
-	var err error
-	res := make([]*model.GanttAssignedUpdateInput, len(vSlice))
-	for i := range vSlice {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithIndex(i))
-		res[i], err = ec.unmarshalOGanttAssignedUpdateInput2ᚖtoilerᚑgraphqlᚋgraphᚋmodelᚐGanttAssignedUpdateInput(ctx, vSlice[i])
-		if err != nil {
-			return nil, err
-		}
-	}
-	return res, nil
-}
-
-func (ec *executionContext) unmarshalOGanttAssignedUpdateInput2ᚖtoilerᚑgraphqlᚋgraphᚋmodelᚐGanttAssignedUpdateInput(ctx context.Context, v interface{}) (*model.GanttAssignedUpdateInput, error) {
-	if v == nil {
-		return nil, nil
-	}
-	res, err := ec.unmarshalInputGanttAssignedUpdateInput(ctx, v)
-	return &res, graphql.ErrorOnPath(ctx, err)
-}
-
 func (ec *executionContext) marshalOGanttProject2ᚖtoilerᚑgraphqlᚋdatabaseᚐGanttProject(ctx context.Context, sel ast.SelectionSet, v *database.GanttProject) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
@@ -12069,6 +10311,26 @@ func (ec *executionContext) marshalOGanttTeam2ᚖtoilerᚑgraphqlᚋdatabaseᚐG
 		return graphql.Null
 	}
 	return ec._GanttTeam(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalOInt2databaseᚋsqlᚐNullInt64(ctx context.Context, v interface{}) (sql.NullInt64, error) {
+	res, err := scallers.UnmarshalNullInt64(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalOInt2databaseᚋsqlᚐNullInt64(ctx context.Context, sel ast.SelectionSet, v sql.NullInt64) graphql.Marshaler {
+	res := scallers.MarshalNullInt64(v)
+	return res
+}
+
+func (ec *executionContext) unmarshalOInt2int32(ctx context.Context, v interface{}) (int32, error) {
+	res, err := graphql.UnmarshalInt32(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalOInt2int32(ctx context.Context, sel ast.SelectionSet, v int32) graphql.Marshaler {
+	res := graphql.MarshalInt32(v)
+	return res
 }
 
 func (ec *executionContext) unmarshalOInt2int64(ctx context.Context, v interface{}) (int64, error) {
@@ -12133,11 +10395,11 @@ func (ec *executionContext) marshalOString2ᚖstring(ctx context.Context, sel as
 	return res
 }
 
-func (ec *executionContext) marshalOUser2ᚖtoilerᚑgraphqlᚋgraphᚋmodelᚐUser(ctx context.Context, sel ast.SelectionSet, v *model.User) graphql.Marshaler {
+func (ec *executionContext) marshalOUserUser2ᚖtoilerᚑgraphqlᚋdatabaseᚐUserUser(ctx context.Context, sel ast.SelectionSet, v *database.UserUser) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
-	return ec._User(ctx, sel, v)
+	return ec._UserUser(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalO__EnumValue2ᚕgithubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚋintrospectionᚐEnumValueᚄ(ctx context.Context, sel ast.SelectionSet, v []introspection.EnumValue) graphql.Marshaler {

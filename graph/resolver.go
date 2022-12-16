@@ -11,7 +11,7 @@ import (
 // It serves as dependency injection for your app, add any dependencies you require here.
 
 type Resolver struct{
-	Repository database.Repository
+	Repository database.Queries
 }
 
 // func (r* Resolver) GetActivity(ctx context.Context, id int64) (model.GanttActivity, error)
