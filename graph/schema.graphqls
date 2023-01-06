@@ -35,7 +35,7 @@ type Query {
   projectTeams(project: Int!): [GanttTeam!]!
 
   
-  teamMembers: [GanttTeamMember!]!
+  projectTeamMembers(project: Int!): [GanttTeammember!]!
 
   
   project(id: Int!): GanttProject
@@ -138,11 +138,14 @@ type GanttTeam {
   project: GanttProject!
 }
 
-type GanttTeamMember {
+type GanttTeammember {
   id: Int
-  role: Int!
-  team: Int!
-  user: Int!
+  roleId: Int!
+  teamId: Int!
+  userId: Int!
+  role: GanttRole!
+  team: GanttTeam!
+  user: UserUser!
 }
 
 type GanttState {
@@ -284,14 +287,14 @@ type UserUser {
 #   Ganttproject: Int!
 # }
 
-# input GanttTeamMemberInput {
+# input GanttTeammemberInput {
 #   id: Int
 #   Ganttrole: Int!
 #   Ganttteam: Int!
 #   user: Int!
 # }
 
-# input GanttTeamMemberGetInput {
+# input GanttTeammemberGetInput {
 #   id: Int
 #   Ganttrole: Int!
 #   Ganttteam: Int!

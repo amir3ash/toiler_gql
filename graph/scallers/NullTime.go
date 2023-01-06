@@ -11,7 +11,7 @@ import (
 )
 
 func MarshalNullTime(t sql.NullTime) graphql.Marshaler {
-	if t.Valid {
+	if !t.Valid {
 		return graphql.Null
 	}
 
@@ -22,9 +22,9 @@ func MarshalNullTime(t sql.NullTime) graphql.Marshaler {
 
 func UnmarshalNullTime(v interface{}) (sql.NullTime, error) {
 	if tmpStr, ok := v.(string); ok {
-		if time, err := time.Parse(time.RFC3339Nano, tmpStr); err!=nil{
+		if time, err := time.Parse(time.RFC3339Nano, tmpStr); err != nil {
 			return sql.NullTime{
-				Time: time,
+				Time:  time,
 				Valid: true,
 			}, nil
 		}

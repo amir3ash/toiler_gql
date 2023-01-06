@@ -361,6 +361,40 @@ func (q *Queries) GetProjectTasks(ctx context.Context, projectID int64) ([]Gantt
 	return items, nil
 }
 
+const getProjectTeammembers = `-- name: GetProjectTeammembers :many
+SELECT tm.id, tm.role_id, tm.team_id, tm.user_id FROM ` + "`" + `gantt_teammember` + "`" + ` tm
+JOIN ` + "`" + `gantt_team` + "`" + ` t ON t.id = tm.team_id
+WHERE t.project_id = ?
+`
+
+func (q *Queries) GetProjectTeammembers(ctx context.Context, projectID int64) ([]GanttTeammember, error) {
+	rows, err := q.db.QueryContext(ctx, getProjectTeammembers, projectID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []GanttTeammember
+	for rows.Next() {
+		var i GanttTeammember
+		if err := rows.Scan(
+			&i.ID,
+			&i.RoleID,
+			&i.TeamID,
+			&i.UserID,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const getProjectTeams = `-- name: GetProjectTeams :many
 SELECT id, name, project_id FROM ` + "`" + `gantt_team` + "`" + `
 WHERE project_id = ?
@@ -508,9 +542,9 @@ func (q *Queries) GetUser(ctx context.Context, id int32) (UserUser, error) {
 }
 
 const listProjects = `-- name: ListProjects :many
-SELECT p.id, p.name, p.planned_start_date, p.planned_end_date, p.actual_start_date, p.actual_end_date, p.description, p.project_manager_id FROM ` + "`" + `gantt_project` + "`" + ` p
-JOIN ` + "`" + `gantt_team` + "`" + ` t ON p.id = t.project_id
-JOIN ` + "`" + `gantt_teammember` + "`" + ` tm ON t.id = tm.team_id
+SELECT DISTINCT p.id, p.name, p.planned_start_date, p.planned_end_date, p.actual_start_date, p.actual_end_date, p.description, p.project_manager_id FROM ` + "`" + `gantt_project` + "`" + ` p
+LEFT JOIN ` + "`" + `gantt_team` + "`" + ` t ON p.id = t.project_id
+LEFT JOIN ` + "`" + `gantt_teammember` + "`" + ` tm ON t.id = tm.team_id
 WHERE p.project_manager_id = ? OR tm.user_id = ?
 `
 

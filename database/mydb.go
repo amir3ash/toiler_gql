@@ -31,6 +31,9 @@ import (
 
 // NewRepository returns an implementation of the Repository interface.
 func NewRepository(db *sql.DB) *Queries {
+	db.SetMaxIdleConns(30)
+	db.SetMaxOpenConns(20)
+
 	return &Queries{
 		// Queries: New(db),
 		db: db,
@@ -41,4 +44,3 @@ func NewRepository(db *sql.DB) *Queries {
 func Open(dataSourceName string) (*sql.DB, error) {
 	return sql.Open("mysql", dataSourceName)
 }
-

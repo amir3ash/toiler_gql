@@ -14,7 +14,6 @@ import (
 	"sync/atomic"
 	"time"
 	"toiler-graphql/database"
-	"toiler-graphql/graph/model"
 	"toiler-graphql/graph/scallers"
 
 	"github.com/99designs/gqlgen/graphql"
@@ -47,6 +46,7 @@ type ResolverRoot interface {
 	GanttProject() GanttProjectResolver
 	GanttTask() GanttTaskResolver
 	GanttTeam() GanttTeamResolver
+	GanttTeammember() GanttTeammemberResolver
 	Query() QueryResolver
 }
 
@@ -139,34 +139,37 @@ type ComplexityRoot struct {
 		ProjectID func(childComplexity int) int
 	}
 
-	GanttTeamMember struct {
-		ID   func(childComplexity int) int
-		Role func(childComplexity int) int
-		Team func(childComplexity int) int
-		User func(childComplexity int) int
+	GanttTeammember struct {
+		ID     func(childComplexity int) int
+		Role   func(childComplexity int) int
+		RoleID func(childComplexity int) int
+		Team   func(childComplexity int) int
+		TeamID func(childComplexity int) int
+		User   func(childComplexity int) int
+		UserID func(childComplexity int) int
 	}
 
 	Query struct {
-		Activity          func(childComplexity int, id int) int
-		ActivityComments  func(childComplexity int, activityPk int) int
-		Assigned          func(childComplexity int, id int) int
-		AssignedToMe      func(childComplexity int) int
-		Me                func(childComplexity int) int
-		Project           func(childComplexity int, id int) int
-		ProjectActivities func(childComplexity int, projPk int) int
-		ProjectAssigned   func(childComplexity int, projPk int) int
-		ProjectEmployees  func(childComplexity int, projPk int) int
-		ProjectRoles      func(childComplexity int, project int) int
-		ProjectStates     func(childComplexity int, projPk int) int
-		ProjectTasks      func(childComplexity int, projPk int) int
-		ProjectTeams      func(childComplexity int, project int) int
-		Projects          func(childComplexity int) int
-		Role              func(childComplexity int, id int) int
-		State             func(childComplexity int, id int) int
-		Task              func(childComplexity int, id int) int
-		Team              func(childComplexity int, id int) int
-		TeamMembers       func(childComplexity int) int
-		UserSearchUsers   func(childComplexity int, search *string) int
+		Activity           func(childComplexity int, id int) int
+		ActivityComments   func(childComplexity int, activityPk int) int
+		Assigned           func(childComplexity int, id int) int
+		AssignedToMe       func(childComplexity int) int
+		Me                 func(childComplexity int) int
+		Project            func(childComplexity int, id int) int
+		ProjectActivities  func(childComplexity int, projPk int) int
+		ProjectAssigned    func(childComplexity int, projPk int) int
+		ProjectEmployees   func(childComplexity int, projPk int) int
+		ProjectRoles       func(childComplexity int, project int) int
+		ProjectStates      func(childComplexity int, projPk int) int
+		ProjectTasks       func(childComplexity int, projPk int) int
+		ProjectTeamMembers func(childComplexity int, project int) int
+		ProjectTeams       func(childComplexity int, project int) int
+		Projects           func(childComplexity int) int
+		Role               func(childComplexity int, id int) int
+		State              func(childComplexity int, id int) int
+		Task               func(childComplexity int, id int) int
+		Team               func(childComplexity int, id int) int
+		UserSearchUsers    func(childComplexity int, search *string) int
 	}
 
 	UserUser struct {
@@ -206,6 +209,11 @@ type GanttTaskResolver interface {
 type GanttTeamResolver interface {
 	Project(ctx context.Context, obj *database.GanttTeam) (*database.GanttProject, error)
 }
+type GanttTeammemberResolver interface {
+	Role(ctx context.Context, obj *database.GanttTeammember) (*database.GanttRole, error)
+	Team(ctx context.Context, obj *database.GanttTeammember) (*database.GanttTeam, error)
+	User(ctx context.Context, obj *database.GanttTeammember) (*database.UserUser, error)
+}
 type QueryResolver interface {
 	Activity(ctx context.Context, id int) (*database.GanttActivity, error)
 	Assigned(ctx context.Context, id int) (*database.GanttAssigned, error)
@@ -219,7 +227,7 @@ type QueryResolver interface {
 	ProjectStates(ctx context.Context, projPk int) ([]database.GanttState, error)
 	ProjectTasks(ctx context.Context, projPk int) ([]database.GanttTask, error)
 	ProjectTeams(ctx context.Context, project int) ([]database.GanttTeam, error)
-	TeamMembers(ctx context.Context) ([]model.GanttTeamMember, error)
+	ProjectTeamMembers(ctx context.Context, project int) ([]database.GanttTeammember, error)
 	Project(ctx context.Context, id int) (*database.GanttProject, error)
 	Role(ctx context.Context, id int) (*database.GanttRole, error)
 	State(ctx context.Context, id int) (*database.GanttState, error)
@@ -671,33 +679,54 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.GanttTeam.ProjectID(childComplexity), true
 
-	case "GanttTeamMember.id":
-		if e.complexity.GanttTeamMember.ID == nil {
+	case "GanttTeammember.id":
+		if e.complexity.GanttTeammember.ID == nil {
 			break
 		}
 
-		return e.complexity.GanttTeamMember.ID(childComplexity), true
+		return e.complexity.GanttTeammember.ID(childComplexity), true
 
-	case "GanttTeamMember.role":
-		if e.complexity.GanttTeamMember.Role == nil {
+	case "GanttTeammember.role":
+		if e.complexity.GanttTeammember.Role == nil {
 			break
 		}
 
-		return e.complexity.GanttTeamMember.Role(childComplexity), true
+		return e.complexity.GanttTeammember.Role(childComplexity), true
 
-	case "GanttTeamMember.team":
-		if e.complexity.GanttTeamMember.Team == nil {
+	case "GanttTeammember.roleId":
+		if e.complexity.GanttTeammember.RoleID == nil {
 			break
 		}
 
-		return e.complexity.GanttTeamMember.Team(childComplexity), true
+		return e.complexity.GanttTeammember.RoleID(childComplexity), true
 
-	case "GanttTeamMember.user":
-		if e.complexity.GanttTeamMember.User == nil {
+	case "GanttTeammember.team":
+		if e.complexity.GanttTeammember.Team == nil {
 			break
 		}
 
-		return e.complexity.GanttTeamMember.User(childComplexity), true
+		return e.complexity.GanttTeammember.Team(childComplexity), true
+
+	case "GanttTeammember.teamId":
+		if e.complexity.GanttTeammember.TeamID == nil {
+			break
+		}
+
+		return e.complexity.GanttTeammember.TeamID(childComplexity), true
+
+	case "GanttTeammember.user":
+		if e.complexity.GanttTeammember.User == nil {
+			break
+		}
+
+		return e.complexity.GanttTeammember.User(childComplexity), true
+
+	case "GanttTeammember.userId":
+		if e.complexity.GanttTeammember.UserID == nil {
+			break
+		}
+
+		return e.complexity.GanttTeammember.UserID(childComplexity), true
 
 	case "Query.activity":
 		if e.complexity.Query.Activity == nil {
@@ -833,6 +862,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Query.ProjectTasks(childComplexity, args["projPk"].(int)), true
 
+	case "Query.projectTeamMembers":
+		if e.complexity.Query.ProjectTeamMembers == nil {
+			break
+		}
+
+		args, err := ec.field_Query_projectTeamMembers_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.ProjectTeamMembers(childComplexity, args["project"].(int)), true
+
 	case "Query.projectTeams":
 		if e.complexity.Query.ProjectTeams == nil {
 			break
@@ -899,13 +940,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Query.Team(childComplexity, args["id"].(int)), true
-
-	case "Query.teamMembers":
-		if e.complexity.Query.TeamMembers == nil {
-			break
-		}
-
-		return e.complexity.Query.TeamMembers(childComplexity), true
 
 	case "Query.userSearchUsers":
 		if e.complexity.Query.UserSearchUsers == nil {
@@ -1172,6 +1206,21 @@ func (ec *executionContext) field_Query_projectTasks_args(ctx context.Context, r
 		}
 	}
 	args["projPk"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_projectTeamMembers_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 int
+	if tmp, ok := rawArgs["project"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("project"))
+		arg0, err = ec.unmarshalNInt2int(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["project"] = arg0
 	return args, nil
 }
 
@@ -4164,8 +4213,8 @@ func (ec *executionContext) fieldContext_GanttTeam_project(ctx context.Context, 
 	return fc, nil
 }
 
-func (ec *executionContext) _GanttTeamMember_id(ctx context.Context, field graphql.CollectedField, obj *model.GanttTeamMember) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_GanttTeamMember_id(ctx, field)
+func (ec *executionContext) _GanttTeammember_id(ctx context.Context, field graphql.CollectedField, obj *database.GanttTeammember) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_GanttTeammember_id(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -4187,14 +4236,14 @@ func (ec *executionContext) _GanttTeamMember_id(ctx context.Context, field graph
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*int)
+	res := resTmp.(int64)
 	fc.Result = res
-	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
+	return ec.marshalOInt2int64(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_GanttTeamMember_id(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_GanttTeammember_id(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
-		Object:     "GanttTeamMember",
+		Object:     "GanttTeammember",
 		Field:      field,
 		IsMethod:   false,
 		IsResolver: false,
@@ -4205,8 +4254,8 @@ func (ec *executionContext) fieldContext_GanttTeamMember_id(ctx context.Context,
 	return fc, nil
 }
 
-func (ec *executionContext) _GanttTeamMember_role(ctx context.Context, field graphql.CollectedField, obj *model.GanttTeamMember) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_GanttTeamMember_role(ctx, field)
+func (ec *executionContext) _GanttTeammember_roleId(ctx context.Context, field graphql.CollectedField, obj *database.GanttTeammember) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_GanttTeammember_roleId(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -4219,7 +4268,7 @@ func (ec *executionContext) _GanttTeamMember_role(ctx context.Context, field gra
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Role, nil
+		return obj.RoleID, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -4231,14 +4280,14 @@ func (ec *executionContext) _GanttTeamMember_role(ctx context.Context, field gra
 		}
 		return graphql.Null
 	}
-	res := resTmp.(int)
+	res := resTmp.(int64)
 	fc.Result = res
-	return ec.marshalNInt2int(ctx, field.Selections, res)
+	return ec.marshalNInt2int64(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_GanttTeamMember_role(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_GanttTeammember_roleId(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
-		Object:     "GanttTeamMember",
+		Object:     "GanttTeammember",
 		Field:      field,
 		IsMethod:   false,
 		IsResolver: false,
@@ -4249,8 +4298,8 @@ func (ec *executionContext) fieldContext_GanttTeamMember_role(ctx context.Contex
 	return fc, nil
 }
 
-func (ec *executionContext) _GanttTeamMember_team(ctx context.Context, field graphql.CollectedField, obj *model.GanttTeamMember) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_GanttTeamMember_team(ctx, field)
+func (ec *executionContext) _GanttTeammember_teamId(ctx context.Context, field graphql.CollectedField, obj *database.GanttTeammember) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_GanttTeammember_teamId(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -4263,7 +4312,7 @@ func (ec *executionContext) _GanttTeamMember_team(ctx context.Context, field gra
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Team, nil
+		return obj.TeamID, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -4275,14 +4324,14 @@ func (ec *executionContext) _GanttTeamMember_team(ctx context.Context, field gra
 		}
 		return graphql.Null
 	}
-	res := resTmp.(int)
+	res := resTmp.(int64)
 	fc.Result = res
-	return ec.marshalNInt2int(ctx, field.Selections, res)
+	return ec.marshalNInt2int64(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_GanttTeamMember_team(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_GanttTeammember_teamId(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
-		Object:     "GanttTeamMember",
+		Object:     "GanttTeammember",
 		Field:      field,
 		IsMethod:   false,
 		IsResolver: false,
@@ -4293,8 +4342,8 @@ func (ec *executionContext) fieldContext_GanttTeamMember_team(ctx context.Contex
 	return fc, nil
 }
 
-func (ec *executionContext) _GanttTeamMember_user(ctx context.Context, field graphql.CollectedField, obj *model.GanttTeamMember) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_GanttTeamMember_user(ctx, field)
+func (ec *executionContext) _GanttTeammember_userId(ctx context.Context, field graphql.CollectedField, obj *database.GanttTeammember) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_GanttTeammember_userId(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -4307,7 +4356,7 @@ func (ec *executionContext) _GanttTeamMember_user(ctx context.Context, field gra
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.User, nil
+		return obj.UserID, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -4319,19 +4368,181 @@ func (ec *executionContext) _GanttTeamMember_user(ctx context.Context, field gra
 		}
 		return graphql.Null
 	}
-	res := resTmp.(int)
+	res := resTmp.(int32)
 	fc.Result = res
-	return ec.marshalNInt2int(ctx, field.Selections, res)
+	return ec.marshalNInt2int32(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_GanttTeamMember_user(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_GanttTeammember_userId(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
-		Object:     "GanttTeamMember",
+		Object:     "GanttTeammember",
 		Field:      field,
 		IsMethod:   false,
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type Int does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _GanttTeammember_role(ctx context.Context, field graphql.CollectedField, obj *database.GanttTeammember) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_GanttTeammember_role(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.GanttTeammember().Role(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*database.GanttRole)
+	fc.Result = res
+	return ec.marshalNGanttRole2ᚖtoilerᚑgraphqlᚋdatabaseᚐGanttRole(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_GanttTeammember_role(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "GanttTeammember",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_GanttRole_id(ctx, field)
+			case "name":
+				return ec.fieldContext_GanttRole_name(ctx, field)
+			case "projectId":
+				return ec.fieldContext_GanttRole_projectId(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type GanttRole", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _GanttTeammember_team(ctx context.Context, field graphql.CollectedField, obj *database.GanttTeammember) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_GanttTeammember_team(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.GanttTeammember().Team(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*database.GanttTeam)
+	fc.Result = res
+	return ec.marshalNGanttTeam2ᚖtoilerᚑgraphqlᚋdatabaseᚐGanttTeam(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_GanttTeammember_team(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "GanttTeammember",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_GanttTeam_id(ctx, field)
+			case "name":
+				return ec.fieldContext_GanttTeam_name(ctx, field)
+			case "projectId":
+				return ec.fieldContext_GanttTeam_projectId(ctx, field)
+			case "project":
+				return ec.fieldContext_GanttTeam_project(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type GanttTeam", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _GanttTeammember_user(ctx context.Context, field graphql.CollectedField, obj *database.GanttTeammember) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_GanttTeammember_user(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.GanttTeammember().User(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*database.UserUser)
+	fc.Result = res
+	return ec.marshalNUserUser2ᚖtoilerᚑgraphqlᚋdatabaseᚐUserUser(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_GanttTeammember_user(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "GanttTeammember",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "avatar":
+				return ec.fieldContext_UserUser_avatar(ctx, field)
+			case "firstName":
+				return ec.fieldContext_UserUser_firstName(ctx, field)
+			case "id":
+				return ec.fieldContext_UserUser_id(ctx, field)
+			case "lastName":
+				return ec.fieldContext_UserUser_lastName(ctx, field)
+			case "username":
+				return ec.fieldContext_UserUser_username(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type UserUser", field.Name)
 		},
 	}
 	return fc, nil
@@ -5171,8 +5382,8 @@ func (ec *executionContext) fieldContext_Query_projectTeams(ctx context.Context,
 	return fc, nil
 }
 
-func (ec *executionContext) _Query_teamMembers(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Query_teamMembers(ctx, field)
+func (ec *executionContext) _Query_projectTeamMembers(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Query_projectTeamMembers(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -5185,7 +5396,7 @@ func (ec *executionContext) _Query_teamMembers(ctx context.Context, field graphq
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().TeamMembers(rctx)
+		return ec.resolvers.Query().ProjectTeamMembers(rctx, fc.Args["project"].(int))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -5197,12 +5408,12 @@ func (ec *executionContext) _Query_teamMembers(ctx context.Context, field graphq
 		}
 		return graphql.Null
 	}
-	res := resTmp.([]model.GanttTeamMember)
+	res := resTmp.([]database.GanttTeammember)
 	fc.Result = res
-	return ec.marshalNGanttTeamMember2ᚕtoilerᚑgraphqlᚋgraphᚋmodelᚐGanttTeamMemberᚄ(ctx, field.Selections, res)
+	return ec.marshalNGanttTeammember2ᚕtoilerᚑgraphqlᚋdatabaseᚐGanttTeammemberᚄ(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Query_teamMembers(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Query_projectTeamMembers(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Query",
 		Field:      field,
@@ -5211,16 +5422,33 @@ func (ec *executionContext) fieldContext_Query_teamMembers(ctx context.Context, 
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
 			case "id":
-				return ec.fieldContext_GanttTeamMember_id(ctx, field)
+				return ec.fieldContext_GanttTeammember_id(ctx, field)
+			case "roleId":
+				return ec.fieldContext_GanttTeammember_roleId(ctx, field)
+			case "teamId":
+				return ec.fieldContext_GanttTeammember_teamId(ctx, field)
+			case "userId":
+				return ec.fieldContext_GanttTeammember_userId(ctx, field)
 			case "role":
-				return ec.fieldContext_GanttTeamMember_role(ctx, field)
+				return ec.fieldContext_GanttTeammember_role(ctx, field)
 			case "team":
-				return ec.fieldContext_GanttTeamMember_team(ctx, field)
+				return ec.fieldContext_GanttTeammember_team(ctx, field)
 			case "user":
-				return ec.fieldContext_GanttTeamMember_user(ctx, field)
+				return ec.fieldContext_GanttTeammember_user(ctx, field)
 			}
-			return nil, fmt.Errorf("no field named %q was found under type GanttTeamMember", field.Name)
+			return nil, fmt.Errorf("no field named %q was found under type GanttTeammember", field.Name)
 		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Query_projectTeamMembers_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return
 	}
 	return fc, nil
 }
@@ -8487,41 +8715,101 @@ func (ec *executionContext) _GanttTeam(ctx context.Context, sel ast.SelectionSet
 	return out
 }
 
-var ganttTeamMemberImplementors = []string{"GanttTeamMember"}
+var ganttTeammemberImplementors = []string{"GanttTeammember"}
 
-func (ec *executionContext) _GanttTeamMember(ctx context.Context, sel ast.SelectionSet, obj *model.GanttTeamMember) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, ganttTeamMemberImplementors)
+func (ec *executionContext) _GanttTeammember(ctx context.Context, sel ast.SelectionSet, obj *database.GanttTeammember) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, ganttTeammemberImplementors)
 	out := graphql.NewFieldSet(fields)
 	var invalids uint32
 	for i, field := range fields {
 		switch field.Name {
 		case "__typename":
-			out.Values[i] = graphql.MarshalString("GanttTeamMember")
+			out.Values[i] = graphql.MarshalString("GanttTeammember")
 		case "id":
 
-			out.Values[i] = ec._GanttTeamMember_id(ctx, field, obj)
+			out.Values[i] = ec._GanttTeammember_id(ctx, field, obj)
 
+		case "roleId":
+
+			out.Values[i] = ec._GanttTeammember_roleId(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "teamId":
+
+			out.Values[i] = ec._GanttTeammember_teamId(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "userId":
+
+			out.Values[i] = ec._GanttTeammember_userId(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
 		case "role":
+			field := field
 
-			out.Values[i] = ec._GanttTeamMember_role(ctx, field, obj)
-
-			if out.Values[i] == graphql.Null {
-				invalids++
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._GanttTeammember_role(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
 			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
+
+			})
 		case "team":
+			field := field
 
-			out.Values[i] = ec._GanttTeamMember_team(ctx, field, obj)
-
-			if out.Values[i] == graphql.Null {
-				invalids++
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._GanttTeammember_team(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
 			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
+
+			})
 		case "user":
+			field := field
 
-			out.Values[i] = ec._GanttTeamMember_user(ctx, field, obj)
-
-			if out.Values[i] == graphql.Null {
-				invalids++
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._GanttTeammember_user(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
 			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
+
+			})
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -8822,7 +9110,7 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 			out.Concurrently(i, func() graphql.Marshaler {
 				return rrm(innerCtx)
 			})
-		case "teamMembers":
+		case "projectTeamMembers":
 			field := field
 
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
@@ -8831,7 +9119,7 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 						ec.Error(ctx, ec.Recover(ctx, r))
 					}
 				}()
-				res = ec._Query_teamMembers(ctx, field)
+				res = ec._Query_projectTeamMembers(ctx, field)
 				if res == graphql.Null {
 					atomic.AddUint32(&invalids, 1)
 				}
@@ -9660,6 +9948,16 @@ func (ec *executionContext) marshalNGanttRole2ᚕtoilerᚑgraphqlᚋdatabaseᚐG
 	return ret
 }
 
+func (ec *executionContext) marshalNGanttRole2ᚖtoilerᚑgraphqlᚋdatabaseᚐGanttRole(ctx context.Context, sel ast.SelectionSet, v *database.GanttRole) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._GanttRole(ctx, sel, v)
+}
+
 func (ec *executionContext) marshalNGanttState2toilerᚑgraphqlᚋdatabaseᚐGanttState(ctx context.Context, sel ast.SelectionSet, v database.GanttState) graphql.Marshaler {
 	return ec._GanttState(ctx, sel, &v)
 }
@@ -9814,11 +10112,21 @@ func (ec *executionContext) marshalNGanttTeam2ᚕtoilerᚑgraphqlᚋdatabaseᚐG
 	return ret
 }
 
-func (ec *executionContext) marshalNGanttTeamMember2toilerᚑgraphqlᚋgraphᚋmodelᚐGanttTeamMember(ctx context.Context, sel ast.SelectionSet, v model.GanttTeamMember) graphql.Marshaler {
-	return ec._GanttTeamMember(ctx, sel, &v)
+func (ec *executionContext) marshalNGanttTeam2ᚖtoilerᚑgraphqlᚋdatabaseᚐGanttTeam(ctx context.Context, sel ast.SelectionSet, v *database.GanttTeam) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._GanttTeam(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNGanttTeamMember2ᚕtoilerᚑgraphqlᚋgraphᚋmodelᚐGanttTeamMemberᚄ(ctx context.Context, sel ast.SelectionSet, v []model.GanttTeamMember) graphql.Marshaler {
+func (ec *executionContext) marshalNGanttTeammember2toilerᚑgraphqlᚋdatabaseᚐGanttTeammember(ctx context.Context, sel ast.SelectionSet, v database.GanttTeammember) graphql.Marshaler {
+	return ec._GanttTeammember(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNGanttTeammember2ᚕtoilerᚑgraphqlᚋdatabaseᚐGanttTeammemberᚄ(ctx context.Context, sel ast.SelectionSet, v []database.GanttTeammember) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
 	isLen1 := len(v) == 1
@@ -9842,7 +10150,7 @@ func (ec *executionContext) marshalNGanttTeamMember2ᚕtoilerᚑgraphqlᚋgraph�
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalNGanttTeamMember2toilerᚑgraphqlᚋgraphᚋmodelᚐGanttTeamMember(ctx, sel, v[i])
+			ret[i] = ec.marshalNGanttTeammember2toilerᚑgraphqlᚋdatabaseᚐGanttTeammember(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -9869,6 +10177,21 @@ func (ec *executionContext) unmarshalNInt2int(ctx context.Context, v interface{}
 
 func (ec *executionContext) marshalNInt2int(ctx context.Context, sel ast.SelectionSet, v int) graphql.Marshaler {
 	res := graphql.MarshalInt(v)
+	if res == graphql.Null {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+	}
+	return res
+}
+
+func (ec *executionContext) unmarshalNInt2int32(ctx context.Context, v interface{}) (int32, error) {
+	res, err := graphql.UnmarshalInt32(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNInt2int32(ctx context.Context, sel ast.SelectionSet, v int32) graphql.Marshaler {
+	res := graphql.MarshalInt32(v)
 	if res == graphql.Null {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
@@ -10340,22 +10663,6 @@ func (ec *executionContext) unmarshalOInt2int64(ctx context.Context, v interface
 
 func (ec *executionContext) marshalOInt2int64(ctx context.Context, sel ast.SelectionSet, v int64) graphql.Marshaler {
 	res := graphql.MarshalInt64(v)
-	return res
-}
-
-func (ec *executionContext) unmarshalOInt2ᚖint(ctx context.Context, v interface{}) (*int, error) {
-	if v == nil {
-		return nil, nil
-	}
-	res, err := graphql.UnmarshalInt(v)
-	return &res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) marshalOInt2ᚖint(ctx context.Context, sel ast.SelectionSet, v *int) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	res := graphql.MarshalInt(*v)
 	return res
 }
 

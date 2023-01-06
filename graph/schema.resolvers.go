@@ -9,7 +9,6 @@ import (
 	"fmt"
 	"toiler-graphql/auth"
 	"toiler-graphql/database"
-	"toiler-graphql/graph/model"
 )
 
 // Assignees is the resolver for the assignees field.
@@ -98,6 +97,24 @@ func (r *ganttTeamResolver) Project(ctx context.Context, obj *database.GanttTeam
 	return &project, err
 }
 
+// Role is the resolver for the role field.
+func (r *ganttTeammemberResolver) Role(ctx context.Context, obj *database.GanttTeammember) (*database.GanttRole, error) {
+	role, err := r.Repository.GetRole(ctx, obj.RoleID)
+	return &role, err
+}
+
+// Team is the resolver for the team field.
+func (r *ganttTeammemberResolver) Team(ctx context.Context, obj *database.GanttTeammember) (*database.GanttTeam, error) {
+	team, err := r.Repository.GetTeam(ctx, obj.TeamID)
+	return &team, err
+}
+
+// User is the resolver for the user field.
+func (r *ganttTeammemberResolver) User(ctx context.Context, obj *database.GanttTeammember) (*database.UserUser, error) {
+	user, err := r.Repository.GetUser(ctx, obj.UserID)
+	return &user, err
+}
+
 // Activity is the resolver for the Activity field.
 func (r *queryResolver) Activity(ctx context.Context, id int) (*database.GanttActivity, error) {
 	activity, err := r.Repository.GetActivity(ctx, int64(id))
@@ -134,7 +151,7 @@ func (r *queryResolver) AssignedToMe(ctx context.Context) ([]database.GanttAssig
 	if err != nil {
 		return nil, err
 	}
-	
+
 	return r.Repository.GetAssignedToUser(ctx, userId)
 }
 
@@ -177,9 +194,9 @@ func (r *queryResolver) ProjectTeams(ctx context.Context, project int) ([]databa
 	return r.Repository.GetProjectTeams(ctx, int64(project))
 }
 
-// TeamMembers is the resolver for the teamMembers field.
-func (r *queryResolver) TeamMembers(ctx context.Context) ([]model.GanttTeamMember, error) {
-	panic(fmt.Errorf("not implemented: TeamMembers - teamMembers"))
+// ProjectTeamMembers is the resolver for the projectTeamMembers field.
+func (r *queryResolver) ProjectTeamMembers(ctx context.Context, project int) ([]database.GanttTeammember, error) {
+	return r.Repository.GetProjectTeammembers(ctx, int64(project))
 }
 
 // Project is the resolver for the project field.
@@ -266,6 +283,9 @@ func (r *Resolver) GanttTask() GanttTaskResolver { return &ganttTaskResolver{r} 
 // GanttTeam returns GanttTeamResolver implementation.
 func (r *Resolver) GanttTeam() GanttTeamResolver { return &ganttTeamResolver{r} }
 
+// GanttTeammember returns GanttTeammemberResolver implementation.
+func (r *Resolver) GanttTeammember() GanttTeammemberResolver { return &ganttTeammemberResolver{r} }
+
 // Query returns QueryResolver implementation.
 func (r *Resolver) Query() QueryResolver { return &queryResolver{r} }
 
@@ -275,4 +295,5 @@ type ganttCommentResolver struct{ *Resolver }
 type ganttProjectResolver struct{ *Resolver }
 type ganttTaskResolver struct{ *Resolver }
 type ganttTeamResolver struct{ *Resolver }
+type ganttTeammemberResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }

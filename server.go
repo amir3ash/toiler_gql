@@ -44,6 +44,22 @@ func Notify(logger *log.Logger) Adapter {
 	}
 }
 
+func UserIdEndPoint() http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		ctx := r.Context()
+
+		userId, err := auth.GetUserId(ctx)
+		if err != nil {
+			w.WriteHeader(http.StatusUnauthorized)
+			return 
+		}
+
+		w.Header().Set("Content-Type", "application/json")
+		fmt.Fprintf(w, "{\"user_id\": %d}", userId)
+	})
+	
+}
+
 func main() {
 	godotenv.Load()
 
@@ -77,6 +93,7 @@ func main() {
 	mux := http.NewServeMux()
 	mux.Handle("/gql/", m.Then(playgroundHandler))
 	mux.Handle("/gql/query", m.Then(srv))
+	mux.Handle("/gql/user_id", m.Then(UserIdEndPoint()))
 
 	log.Printf("connect to http://localhost:%s/gql/ for GraphQL playground", port)
 	log.Fatal(http.ListenAndServe(":"+port, mux))
