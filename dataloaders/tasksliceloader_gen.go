@@ -9,10 +9,10 @@ import (
 	"toiler-graphql/database"
 )
 
-// UserLoaderConfig captures the config to create a new UserLoader
-type UserLoaderConfig struct {
+// TaskSliceLoaderConfig captures the config to create a new TaskSliceLoader
+type TaskSliceLoaderConfig struct {
 	// Fetch is a method that provides the data for the loader
-	Fetch func(keys []int32) ([]*database.UserUser, []error)
+	Fetch func(keys []int64) ([][]database.GanttTask, []error)
 
 	// Wait is how long wait before sending a batch
 	Wait time.Duration
@@ -21,19 +21,19 @@ type UserLoaderConfig struct {
 	MaxBatch int
 }
 
-// NewUserLoader creates a new UserLoader given a fetch, wait, and maxBatch
-func NewUserLoader(config UserLoaderConfig) *UserLoader {
-	return &UserLoader{
+// NewTaskSliceLoader creates a new TaskSliceLoader given a fetch, wait, and maxBatch
+func NewTaskSliceLoader(config TaskSliceLoaderConfig) *TaskSliceLoader {
+	return &TaskSliceLoader{
 		fetch:    config.Fetch,
 		wait:     config.Wait,
 		maxBatch: config.MaxBatch,
 	}
 }
 
-// UserLoader batches and caches requests
-type UserLoader struct {
+// TaskSliceLoader batches and caches requests
+type TaskSliceLoader struct {
 	// this method provides the data for the loader
-	fetch func(keys []int32) ([]*database.UserUser, []error)
+	fetch func(keys []int64) ([][]database.GanttTask, []error)
 
 	// how long to done before sending a batch
 	wait time.Duration
@@ -44,51 +44,51 @@ type UserLoader struct {
 	// INTERNAL
 
 	// lazily created cache
-	cache map[int32]*database.UserUser
+	cache map[int64][]database.GanttTask
 
 	// the current batch. keys will continue to be collected until timeout is hit,
 	// then everything will be sent to the fetch method and out to the listeners
-	batch *userLoaderBatch
+	batch *taskSliceLoaderBatch
 
 	// mutex to prevent races
 	mu sync.Mutex
 }
 
-type userLoaderBatch struct {
-	keys    []int32
-	data    []*database.UserUser
+type taskSliceLoaderBatch struct {
+	keys    []int64
+	data    [][]database.GanttTask
 	error   []error
 	closing bool
 	done    chan struct{}
 }
 
-// Load a UserUser by key, batching and caching will be applied automatically
-func (l *UserLoader) Load(key int32) (*database.UserUser, error) {
+// Load a GanttTask by key, batching and caching will be applied automatically
+func (l *TaskSliceLoader) Load(key int64) ([]database.GanttTask, error) {
 	return l.LoadThunk(key)()
 }
 
-// LoadThunk returns a function that when called will block waiting for a UserUser.
+// LoadThunk returns a function that when called will block waiting for a GanttTask.
 // This method should be used if you want one goroutine to make requests to many
 // different data loaders without blocking until the thunk is called.
-func (l *UserLoader) LoadThunk(key int32) func() (*database.UserUser, error) {
+func (l *TaskSliceLoader) LoadThunk(key int64) func() ([]database.GanttTask, error) {
 	l.mu.Lock()
 	if it, ok := l.cache[key]; ok {
 		l.mu.Unlock()
-		return func() (*database.UserUser, error) {
+		return func() ([]database.GanttTask, error) {
 			return it, nil
 		}
 	}
 	if l.batch == nil {
-		l.batch = &userLoaderBatch{done: make(chan struct{})}
+		l.batch = &taskSliceLoaderBatch{done: make(chan struct{})}
 	}
 	batch := l.batch
 	pos := batch.keyIndex(l, key)
 	l.mu.Unlock()
 
-	return func() (*database.UserUser, error) {
+	return func() ([]database.GanttTask, error) {
 		<-batch.done
 
-		var data *database.UserUser
+		var data []database.GanttTask
 		if pos < len(batch.data) {
 			data = batch.data[pos]
 		}
@@ -113,72 +113,73 @@ func (l *UserLoader) LoadThunk(key int32) func() (*database.UserUser, error) {
 
 // LoadAll fetches many keys at once. It will be broken into appropriate sized
 // sub batches depending on how the loader is configured
-func (l *UserLoader) LoadAll(keys []int32) ([]*database.UserUser, []error) {
-	results := make([]func() (*database.UserUser, error), len(keys))
+func (l *TaskSliceLoader) LoadAll(keys []int64) ([][]database.GanttTask, []error) {
+	results := make([]func() ([]database.GanttTask, error), len(keys))
 
 	for i, key := range keys {
 		results[i] = l.LoadThunk(key)
 	}
 
-	userUsers := make([]*database.UserUser, len(keys))
+	ganttTasks := make([][]database.GanttTask, len(keys))
 	errors := make([]error, len(keys))
 	for i, thunk := range results {
-		userUsers[i], errors[i] = thunk()
+		ganttTasks[i], errors[i] = thunk()
 	}
-	return userUsers, errors
+	return ganttTasks, errors
 }
 
-// LoadAllThunk returns a function that when called will block waiting for a UserUsers.
+// LoadAllThunk returns a function that when called will block waiting for a GanttTasks.
 // This method should be used if you want one goroutine to make requests to many
 // different data loaders without blocking until the thunk is called.
-func (l *UserLoader) LoadAllThunk(keys []int32) func() ([]*database.UserUser, []error) {
-	results := make([]func() (*database.UserUser, error), len(keys))
+func (l *TaskSliceLoader) LoadAllThunk(keys []int64) func() ([][]database.GanttTask, []error) {
+	results := make([]func() ([]database.GanttTask, error), len(keys))
 	for i, key := range keys {
 		results[i] = l.LoadThunk(key)
 	}
-	return func() ([]*database.UserUser, []error) {
-		userUsers := make([]*database.UserUser, len(keys))
+	return func() ([][]database.GanttTask, []error) {
+		ganttTasks := make([][]database.GanttTask, len(keys))
 		errors := make([]error, len(keys))
 		for i, thunk := range results {
-			userUsers[i], errors[i] = thunk()
+			ganttTasks[i], errors[i] = thunk()
 		}
-		return userUsers, errors
+		return ganttTasks, errors
 	}
 }
 
 // Prime the cache with the provided key and value. If the key already exists, no change is made
 // and false is returned.
 // (To forcefully prime the cache, clear the key first with loader.clear(key).prime(key, value).)
-func (l *UserLoader) Prime(key int32, value *database.UserUser) bool {
+func (l *TaskSliceLoader) Prime(key int64, value []database.GanttTask) bool {
 	l.mu.Lock()
 	var found bool
 	if _, found = l.cache[key]; !found {
 		// make a copy when writing to the cache, its easy to pass a pointer in from a loop var
 		// and end up with the whole cache pointing to the same value.
-		cpy := *value
-		l.unsafeSet(key, &cpy)
+		cpy := make([]database.GanttTask, len(value))
+		copy(cpy, value)
+		l.unsafeSet(key, cpy)
 	}
 	l.mu.Unlock()
 	return !found
 }
 
 // Clear the value at key from the cache, if it exists
-func (l *UserLoader) Clear(key int32) {
+func (l *TaskSliceLoader) Clear(key int64) {
 	l.mu.Lock()
 	delete(l.cache, key)
 	l.mu.Unlock()
 }
 
-func (l *UserLoader) unsafeSet(key int32, value *database.UserUser) {
+func (l *TaskSliceLoader) unsafeSet(key int64, value []database.GanttTask) {
 	if l.cache == nil {
-		l.cache = map[int32]*database.UserUser{}
+		l.cache = map[int64][]database.GanttTask{}
 	}
 	l.cache[key] = value
 }
 
 // keyIndex will return the location of the key in the batch, if its not found
 // it will add the key to the batch
-func (b *userLoaderBatch) keyIndex(l *UserLoader, key int32) int {
+func (b *taskSliceLoaderBatch) keyIndex(l *TaskSliceLoader, key int64) int {
 	for i, existingKey := range b.keys {
 		if key == existingKey {
 			return i
@@ -202,7 +203,7 @@ func (b *userLoaderBatch) keyIndex(l *UserLoader, key int32) int {
 	return pos
 }
 
-func (b *userLoaderBatch) startTimer(l *UserLoader) {
+func (b *taskSliceLoaderBatch) startTimer(l *TaskSliceLoader) {
 	time.Sleep(l.wait)
 	l.mu.Lock()
 
@@ -218,7 +219,7 @@ func (b *userLoaderBatch) startTimer(l *UserLoader) {
 	b.end(l)
 }
 
-func (b *userLoaderBatch) end(l *UserLoader) {
+func (b *taskSliceLoaderBatch) end(l *TaskSliceLoader) {
 	b.data, b.error = l.fetch(b.keys)
 	close(b.done)
 }

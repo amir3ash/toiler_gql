@@ -57,9 +57,11 @@ type Repository interface {
 
 	ListActivitiesByTaskIDs(ctx context.Context, taskIDs []int64) ([]GanttActivity, error)
 
-	ListStateByActivityIDS(ctx context.Context, activityIDs []int64) ([]StateAndParent[int64], error)
+	ListTasksByProjectIDs(ctx context.Context, projectIDs []int64) ([]GanttTask, error)
 
-	ListUsersByAssignedIDS(ctx context.Context, assignedIDs []int64) ([]UserAndParent[int64], error)
+	ListStateByIDS(ctx context.Context, activityIDs []int64) ([]GanttState, error)
+
+	ListUsersIDS(ctx context.Context, ids []int32) ([]UserUser, error)
 
 	ListAssignedsByActivityIDs(ctx context.Context, activityIDs []int64) ([]GanttAssigned, error)
 }
@@ -150,16 +152,10 @@ func (rep *repoSvc) ListActivitiesByTaskIDs(ctx context.Context, taskIDs []int64
 	return items, nil
 }
 
-type StateAndParent[K int32 | int64] struct {
-	GanttState
-	ParentId K
-}
-
-func (repo *repoSvc) ListStateByActivityIDS(ctx context.Context, activityIDs []int64) ([]StateAndParent[int64], error) {
+func (repo *repoSvc) ListStateByIDS(ctx context.Context, activityIDs []int64) ([]GanttState, error) {
 	query := fmt.Sprintf(`-- name: GetState_batch :Many
-	SELECT s.id, s.name, s.project_id, a.id FROM gantt_state s
-	JOIN gantt_activity a ON a.state_id = s.id
-	WHERE a.id IN %s
+	SELECT id, name, project_id FROM gantt_state
+	WHERE id IN %s
 	`, genSqlListWithIds(activityIDs))
 
 	rows, err := repo.db.QueryContext(ctx, query)
@@ -167,14 +163,13 @@ func (repo *repoSvc) ListStateByActivityIDS(ctx context.Context, activityIDs []i
 		return nil, err
 	}
 	defer rows.Close()
-	var items []StateAndParent[int64]
+	var items []GanttState
 	for rows.Next() {
-		var i StateAndParent[int64]
+		var i GanttState
 		if err := rows.Scan(
 			&i.ID,
 			&i.Name,
 			&i.ProjectID,
-			&i.ParentId,
 		); err != nil {
 			return nil, err
 		}
@@ -189,33 +184,26 @@ func (repo *repoSvc) ListStateByActivityIDS(ctx context.Context, activityIDs []i
 	return items, nil
 }
 
-type UserAndParent[K int32 | int64] struct {
-	UserUser
-	ParentId K
-}
-
-func (repo *repoSvc) ListUsersByAssignedIDS(ctx context.Context, assignedIDs []int64) ([]UserAndParent[int64], error) {
+func (repo *repoSvc) ListUsersIDS(ctx context.Context, userIDs []int32) ([]UserUser, error) {
 	query := fmt.Sprintf(`-- name: GetUser_batch :many
-	SELECT u.id, u.username, u.first_name, u.last_name, u.avatar, a.id FROM user_user u
-	JOIN gantt_assigned a ON a.user_id = u.id
-	WHERE a.id IN %s
-	`, genSqlListWithIds(assignedIDs))
+	SELECT id, username, first_name, last_name, avatar FROM user_user
+	WHERE id IN %s
+	`, genSqlListWithIds(userIDs))
 
 	rows, err := repo.db.QueryContext(ctx, query)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	var items []UserAndParent[int64]
+	var items []UserUser
 	for rows.Next() {
-		var i UserAndParent[int64]
+		var i UserUser
 		if err := rows.Scan(
 			&i.ID,
 			&i.Username,
 			&i.FirstName,
 			&i.LastName,
 			&i.Avatar,
-			&i.ParentId,
 		); err != nil {
 			return nil, err
 		}
@@ -230,13 +218,12 @@ func (repo *repoSvc) ListUsersByAssignedIDS(ctx context.Context, assignedIDs []i
 	return items, nil
 }
 
-
-func (repo *repoSvc) ListAssignedsByActivityIDs(ctx context.Context, activityIDs []int64) ([]GanttAssigned, error){
+func (repo *repoSvc) ListAssignedsByActivityIDs(ctx context.Context, activityIDs []int64) ([]GanttAssigned, error) {
 	query := fmt.Sprintf(`-- name: GetActivityAssignees_batch :many
-	SELECT a.id, a.activity_id, a.user_id FROM gantt_assigned a
-	WHERE a.activity_id in %s
+	SELECT id, activity_id, user_id FROM gantt_assigned
+	WHERE activity_id in %s
 	`, genSqlListWithIds(activityIDs))
-	
+
 	rows, err := repo.db.QueryContext(ctx, query)
 	if err != nil {
 		return nil, err
@@ -246,6 +233,45 @@ func (repo *repoSvc) ListAssignedsByActivityIDs(ctx context.Context, activityIDs
 	for rows.Next() {
 		var i GanttAssigned
 		if err := rows.Scan(&i.ID, &i.ActivityID, &i.UserID); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+func (repo *repoSvc) ListTasksByProjectIDs(ctx context.Context, projectIDs []int64) ([]GanttTask, error) {
+	query := fmt.Sprintf(`-- name: GetProjectTasks_batch :many
+	SELECT id, name, planned_start_date, planned_end_date, planned_budget, actual_start_date, actual_end_date, actual_budget, description, project_id FROM ` + "`" + `gantt_task` + "`" + `
+	WHERE project_id IN %s
+	`, genSqlListWithIds(projectIDs))
+	
+	rows, err := repo.db.QueryContext(ctx, query)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []GanttTask
+	for rows.Next() {
+		var i GanttTask
+		if err := rows.Scan(
+			&i.ID,
+			&i.Name,
+			&i.PlannedStartDate,
+			&i.PlannedEndDate,
+			&i.PlannedBudget,
+			&i.ActualStartDate,
+			&i.ActualEndDate,
+			&i.ActualBudget,
+			&i.Description,
+			&i.ProjectID,
+		); err != nil {
 			return nil, err
 		}
 		items = append(items, i)

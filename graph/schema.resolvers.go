@@ -18,7 +18,12 @@ func (r *ganttActivityResolver) Assignees(ctx context.Context, obj *database.Gan
 
 // State is the resolver for the state field.
 func (r *ganttActivityResolver) State(ctx context.Context, obj *database.GanttActivity) (*database.GanttState, error) {
-	state, err := r.Dataloaders.Retrieve(ctx).StateByActivityID.Load(obj.ID)
+	stateId := obj.StateID
+	if !stateId.Valid{
+		return nil, nil
+	}
+
+	state, err := r.Dataloaders.Retrieve(ctx).StateByID.Load(stateId.Int64)
 	return state, err
 }
 
@@ -30,7 +35,7 @@ func (r *ganttActivityResolver) Task(ctx context.Context, obj *database.GanttAct
 
 // User is the resolver for the user field.
 func (r *ganttAssignedResolver) User(ctx context.Context, obj *database.GanttAssigned) (*database.UserUser, error) {
-	user, err := r.Dataloaders.Retrieve(ctx).UserByAssignedID.Load(obj.ID)
+	user, err := r.Dataloaders.Retrieve(ctx).UserByID.Load(obj.UserID)
 	return user, err
 }
 
@@ -42,19 +47,19 @@ func (r *ganttAssignedResolver) Activity(ctx context.Context, obj *database.Gant
 
 // Author is the resolver for the author field.
 func (r *ganttCommentResolver) Author(ctx context.Context, obj *database.GanttComment) (*database.UserUser, error) {
-	user, err := r.Repository.GetUser(ctx, obj.AuthorID)
-	return &user, err
+	user, err := r.Dataloaders.Retrieve(ctx).UserByID.Load(obj.AuthorID)
+	return user, err
 }
 
 // ProjectManager is the resolver for the projectManager field.
 func (r *ganttProjectResolver) ProjectManager(ctx context.Context, obj *database.GanttProject) (*database.UserUser, error) {
-	user, err := r.Repository.GetUser(ctx, obj.ProjectManagerID)
-	return &user, err
+	user, err := r.Dataloaders.Retrieve(ctx).UserByID.Load(obj.ProjectManagerID)
+	return user, err
 }
 
 // Tasks is the resolver for the tasks field.
 func (r *ganttProjectResolver) Tasks(ctx context.Context, obj *database.GanttProject) ([]database.GanttTask, error) {
-	return r.Repository.GetProjectTasks(ctx, obj.ID)
+	return r.Dataloaders.Retrieve(ctx).TasksByProjectID.Load(obj.ID)
 }
 
 // Roles is the resolver for the roles field.
@@ -111,8 +116,8 @@ func (r *ganttTeammemberResolver) Team(ctx context.Context, obj *database.GanttT
 
 // User is the resolver for the user field.
 func (r *ganttTeammemberResolver) User(ctx context.Context, obj *database.GanttTeammember) (*database.UserUser, error) {
-	user, err := r.Repository.GetUser(ctx, obj.UserID)
-	return &user, err
+	user, err := r.Dataloaders.Retrieve(ctx).UserByID.Load(obj.UserID)
+	return user, err
 }
 
 // Activity is the resolver for the Activity field.
@@ -256,8 +261,8 @@ func (r *queryResolver) Me(ctx context.Context) (*database.UserUser, error) {
 		return nil, err
 	}
 
-	user, err := r.Repository.GetUser(ctx, userId)
-	return &user, err
+	user, err := r.Dataloaders.Retrieve(ctx).UserByID.Load(userId)
+	return user, err
 }
 
 // UserSearchUsers is the resolver for the userSearchUsers field.

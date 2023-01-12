@@ -2,8 +2,9 @@ package dataloaders
 
 //go:generate go run github.com/vektah/dataloaden ActivityLoader int64 []toiler-graphql/database.GanttActivity
 //go:generate go run github.com/vektah/dataloaden StateLoader int64 *toiler-graphql/database.GanttState
-//go:generate go run github.com/vektah/dataloaden UserLoader int64 *toiler-graphql/database.UserUser
+//go:generate go run github.com/vektah/dataloaden UserLoader int32 *toiler-graphql/database.UserUser
 //go:generate go run github.com/vektah/dataloaden AssignedSliceLoader int64 []toiler-graphql/database.GanttAssigned
+//go:generate go run github.com/vektah/dataloaden TaskSliceLoader int64 []toiler-graphql/database.GanttTask
 
 import (
 	"context"
@@ -16,17 +17,19 @@ type contextKey string
 const key = contextKey("con")
 
 type Loaders struct {
+	TasksByProjectID      *TaskSliceLoader
 	ActivitiesByTaskID    *ActivityLoader
-	StateByActivityID     *StateLoader
-	UserByAssignedID      *UserLoader
+	StateByID             *StateLoader
+	UserByID              *UserLoader
 	AssignedsByActivityID *AssignedSliceLoader
 }
 
 func newLoaders(ctx context.Context, repo database.Repository) *Loaders {
 	return &Loaders{
+		TasksByProjectID:      newTasksByProjectID(ctx, repo),
 		ActivitiesByTaskID:    newActivityByTaskID(ctx, repo),
-		StateByActivityID:     newStateByActivityID(ctx, repo),
-		UserByAssignedID:      newUserByAssignedID(ctx, repo),
+		StateByID:             newStateByID(ctx, repo),
+		UserByID:              newUserByID(ctx, repo),
 		AssignedsByActivityID: newAssignedsByActivityID(ctx, repo),
 	}
 }
@@ -66,55 +69,55 @@ func newActivityByTaskID(ctx context.Context, repo database.Repository) *Activit
 	})
 }
 
-func newStateByActivityID(ctx context.Context, repo database.Repository) *StateLoader {
-	return NewStateLoader(StateLoaderConfig{
+func newTasksByProjectID(ctx context.Context, repo database.Repository) *TaskSliceLoader {
+	return NewTaskSliceLoader(TaskSliceLoaderConfig{
 		MaxBatch: 100,
 		Wait:     400 * time.Microsecond,
-		Fetch: func(activityIDs []int64) ([]*database.GanttState, []error) {
+		Fetch: func(projectIDs []int64) ([][]database.GanttTask, []error) {
 			// db query
-			res, err := repo.ListStateByActivityIDS(ctx, activityIDs)
+			res, err := repo.ListTasksByProjectIDs(ctx, projectIDs)
 			if err != nil {
 				return nil, []error{err}
 			}
 
-			statesAndParents := findSlice(activityIDs, res, func(t database.StateAndParent[int64]) int64 { return t.ParentId })
+			result := findSliceOfSlice(projectIDs, res, func(t database.GanttTask) int64 { return t.ProjectID })
 
-			result := make([]*database.GanttState, len(statesAndParents))
-			for i, s := range statesAndParents {
-				if s != nil {
-					result[i] = &database.GanttState{ID: s.ID, Name: s.Name, ProjectID: s.ProjectID}
-				}
-			}
 			return result, nil
 		},
 	})
 }
 
-func newUserByAssignedID(ctx context.Context, repo database.Repository) *UserLoader {
-	return NewUserLoader(UserLoaderConfig{
+func newStateByID(ctx context.Context, repo database.Repository) *StateLoader {
+	return NewStateLoader(StateLoaderConfig{
 		MaxBatch: 100,
 		Wait:     400 * time.Microsecond,
-		Fetch: func(assigneeIDs []int64) ([]*database.UserUser, []error) {
+		Fetch: func(stateIDs []int64) ([]*database.GanttState, []error) {
 			// db query
-			res, err := repo.ListUsersByAssignedIDS(ctx, assigneeIDs)
+			res, err := repo.ListStateByIDS(ctx, stateIDs)
 			if err != nil {
 				return nil, []error{err}
 			}
 
-			usersAndParents := findSlice(assigneeIDs, res, func(t database.UserAndParent[int64]) int64 { return t.ParentId })
+			result := findSlice(stateIDs, res, func(t database.GanttState) int64 { return t.ID })
 
-			result := make([]*database.UserUser, len(usersAndParents))
-			for i, s := range usersAndParents {
-				if s != nil {
-					result[i] = &database.UserUser{
-						ID:        s.ID,
-						Username:  s.Username,
-						FirstName: s.FirstName,
-						LastName:  s.LastName,
-						Avatar:    s.Avatar,
-					}
-				}
+			return result, nil
+		},
+	})
+}
+
+func newUserByID(ctx context.Context, repo database.Repository) *UserLoader {
+	return NewUserLoader(UserLoaderConfig{
+		MaxBatch: 100,
+		Wait:     400 * time.Microsecond,
+		Fetch: func(userIDs []int32) ([]*database.UserUser, []error) {
+			// db query
+			res, err := repo.ListUsersIDS(ctx, userIDs)
+			if err != nil {
+				return nil, []error{err}
 			}
+
+			result := findSlice(userIDs, res, func(t database.UserUser) int32 { return t.ID })
+
 			return result, nil
 		},
 	})
