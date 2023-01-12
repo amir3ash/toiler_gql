@@ -7,6 +7,7 @@ import (
 	"os"
 	"toiler-graphql/auth"
 	"toiler-graphql/database"
+	"toiler-graphql/dataloaders"
 	"toiler-graphql/graph"
 
 	"github.com/99designs/gqlgen/graphql/handler"
@@ -75,20 +76,26 @@ func main() {
 	}
 	defer db.Close()
 
+	repo := database.NewRepository(db)
+	dl := dataloaders.NewRetriever()
+
 	srv := handler.NewDefaultServer(
 		graph.NewExecutableSchema(
 			graph.Config{
 				Resolvers: &graph.Resolver{
-					Repository: *database.NewRepository(db),
+					Repository: repo,
+					Dataloaders: dl,
 				},
 			},
 		),
 	)
 
+	dlMiddleware := dataloaders.Middleware(repo)
+
 	playgroundHandler := playground.Handler("GraphQL playground", "/gql/query")
 
 	m := middlewareStack{}
-	m.Adapt(auth.AuthMiddleware())
+	m.Adapt(auth.AuthMiddleware(), dlMiddleware)
 
 	mux := http.NewServeMux()
 	mux.Handle("/gql/", m.Then(playgroundHandler))

@@ -13,13 +13,13 @@ import (
 
 // Assignees is the resolver for the assignees field.
 func (r *ganttActivityResolver) Assignees(ctx context.Context, obj *database.GanttActivity) ([]database.GanttAssigned, error) {
-	return r.Repository.GetActivityAssignees(ctx, obj.ID)
+	return r.Dataloaders.Retrieve(ctx).AssignedsByActivityID.Load(obj.ID)
 }
 
 // State is the resolver for the state field.
 func (r *ganttActivityResolver) State(ctx context.Context, obj *database.GanttActivity) (*database.GanttState, error) {
-	state, err := r.Repository.GetState(ctx, obj.StateID.Int64)
-	return &state, err
+	state, err := r.Dataloaders.Retrieve(ctx).StateByActivityID.Load(obj.ID)
+	return state, err
 }
 
 // Task is the resolver for the task field.
@@ -30,8 +30,8 @@ func (r *ganttActivityResolver) Task(ctx context.Context, obj *database.GanttAct
 
 // User is the resolver for the user field.
 func (r *ganttAssignedResolver) User(ctx context.Context, obj *database.GanttAssigned) (*database.UserUser, error) {
-	user, err := r.Repository.GetUser(ctx, obj.UserID)
-	return &user, err
+	user, err := r.Dataloaders.Retrieve(ctx).UserByAssignedID.Load(obj.ID)
+	return user, err
 }
 
 // Activity is the resolver for the activity field.
@@ -84,7 +84,7 @@ func (r *ganttTaskResolver) Project(ctx context.Context, obj *database.GanttTask
 
 // Activities is the resolver for the activities field.
 func (r *ganttTaskResolver) Activities(ctx context.Context, obj *database.GanttTask) ([]database.GanttActivity, error) {
-	return r.Repository.GetTaskActivities(ctx, obj.ID)
+	return r.Dataloaders.Retrieve(ctx).ActivitiesByTaskID.Load(obj.ID)
 }
 
 // Project is the resolver for the project field.

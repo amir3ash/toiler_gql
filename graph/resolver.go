@@ -3,6 +3,7 @@ package graph
 import (
 	// "context"
 	"toiler-graphql/database"
+	"toiler-graphql/dataloaders"
 	// "toiler-graphql/graph/model"
 )
 
@@ -10,8 +11,9 @@ import (
 //
 // It serves as dependency injection for your app, add any dependencies you require here.
 
-type Resolver struct{
-	Repository database.Queries
+type Resolver struct {
+	Repository  database.Repository
+	Dataloaders dataloaders.Retriever
 }
 
 // func (r* Resolver) GetActivity(ctx context.Context, id int64) (model.GanttActivity, error)
