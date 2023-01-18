@@ -9,6 +9,7 @@ import (
 	"toiler-graphql/database"
 	"toiler-graphql/dataloaders"
 	"toiler-graphql/graph"
+	"toiler-graphql/graph/model"
 
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/playground"
@@ -52,13 +53,13 @@ func UserIdEndPoint() http.Handler {
 		userId, err := auth.GetUserId(ctx)
 		if err != nil {
 			w.WriteHeader(http.StatusUnauthorized)
-			return 
+			return
 		}
 
 		w.Header().Set("Content-Type", "application/json")
 		fmt.Fprintf(w, "{\"user_id\": %d}", userId)
 	})
-	
+
 }
 
 func main() {
@@ -68,6 +69,8 @@ func main() {
 	if port == "" {
 		port = defaultPort
 	}
+
+	model.SetAvatarsPrefixPath(os.Getenv("AVATARS_S3_URL"))
 
 	dbUrl := fmt.Sprintf("app_user:%s@/toiler_db?parseTime=true", os.Getenv("MYSQL_PASSWORD"))
 	db, err := database.Open(dbUrl)
@@ -83,7 +86,7 @@ func main() {
 		graph.NewExecutableSchema(
 			graph.Config{
 				Resolvers: &graph.Resolver{
-					Repository: repo,
+					Repository:  repo,
 					Dataloaders: dl,
 				},
 			},

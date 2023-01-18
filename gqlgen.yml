@@ -63,7 +63,6 @@ models:
       - github.com/99designs/gqlgen/graphql.Int32
       - toiler-graphql/graph/scallers.NullInt64
 
-  
   DateTime:
     model:
       - toiler-graphql/graph/scallers.NullTime
@@ -74,4 +73,6 @@ models:
     model:
       - github.com/99designs/gqlgen/graphql.String
       - toiler-graphql/graph/scallers.NullString
-
+  UserUser:
+    model:
+      - toiler-graphql/graph/model.UserUser

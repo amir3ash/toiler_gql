@@ -9,6 +9,7 @@ import (
 	"fmt"
 	"toiler-graphql/auth"
 	"toiler-graphql/database"
+	"toiler-graphql/graph/model"
 )
 
 // Assignees is the resolver for the assignees field.
@@ -19,7 +20,7 @@ func (r *ganttActivityResolver) Assignees(ctx context.Context, obj *database.Gan
 // State is the resolver for the state field.
 func (r *ganttActivityResolver) State(ctx context.Context, obj *database.GanttActivity) (*database.GanttState, error) {
 	stateId := obj.StateID
-	if !stateId.Valid{
+	if !stateId.Valid {
 		return nil, nil
 	}
 
@@ -34,7 +35,7 @@ func (r *ganttActivityResolver) Task(ctx context.Context, obj *database.GanttAct
 }
 
 // User is the resolver for the user field.
-func (r *ganttAssignedResolver) User(ctx context.Context, obj *database.GanttAssigned) (*database.UserUser, error) {
+func (r *ganttAssignedResolver) User(ctx context.Context, obj *database.GanttAssigned) (*model.UserUser, error) {
 	user, err := r.Dataloaders.Retrieve(ctx).UserByID.Load(obj.UserID)
 	return user, err
 }
@@ -46,13 +47,13 @@ func (r *ganttAssignedResolver) Activity(ctx context.Context, obj *database.Gant
 }
 
 // Author is the resolver for the author field.
-func (r *ganttCommentResolver) Author(ctx context.Context, obj *database.GanttComment) (*database.UserUser, error) {
+func (r *ganttCommentResolver) Author(ctx context.Context, obj *database.GanttComment) (*model.UserUser, error) {
 	user, err := r.Dataloaders.Retrieve(ctx).UserByID.Load(obj.AuthorID)
 	return user, err
 }
 
 // ProjectManager is the resolver for the projectManager field.
-func (r *ganttProjectResolver) ProjectManager(ctx context.Context, obj *database.GanttProject) (*database.UserUser, error) {
+func (r *ganttProjectResolver) ProjectManager(ctx context.Context, obj *database.GanttProject) (*model.UserUser, error) {
 	user, err := r.Dataloaders.Retrieve(ctx).UserByID.Load(obj.ProjectManagerID)
 	return user, err
 }
@@ -115,7 +116,7 @@ func (r *ganttTeammemberResolver) Team(ctx context.Context, obj *database.GanttT
 }
 
 // User is the resolver for the user field.
-func (r *ganttTeammemberResolver) User(ctx context.Context, obj *database.GanttTeammember) (*database.UserUser, error) {
+func (r *ganttTeammemberResolver) User(ctx context.Context, obj *database.GanttTeammember) (*model.UserUser, error) {
 	user, err := r.Dataloaders.Retrieve(ctx).UserByID.Load(obj.UserID)
 	return user, err
 }
@@ -166,8 +167,12 @@ func (r *queryResolver) ActivityComments(ctx context.Context, activityPk int) ([
 }
 
 // ProjectEmployees is the resolver for the projectEmployees field.
-func (r *queryResolver) ProjectEmployees(ctx context.Context, projPk int) ([]database.UserUser, error) {
-	return r.Repository.GetProjectEmployees(ctx, int64(projPk))
+func (r *queryResolver) ProjectEmployees(ctx context.Context, projPk int) ([]model.UserUser, error) {
+	res, err := r.Repository.GetProjectEmployees(ctx, int64(projPk))
+	if err != nil{
+		return nil, nil
+	}
+	return model.NormalizeUsersAvatar(res), nil
 }
 
 // Projects is the resolver for the projects field.
@@ -255,7 +260,7 @@ func (r *queryResolver) Team(ctx context.Context, id int) (*database.GanttTeam, 
 }
 
 // Me is the resolver for the me field.
-func (r *queryResolver) Me(ctx context.Context) (*database.UserUser, error) {
+func (r *queryResolver) Me(ctx context.Context) (*model.UserUser, error) {
 	userId, err := auth.GetUserId(ctx)
 	if err != nil {
 		return nil, err
@@ -266,7 +271,7 @@ func (r *queryResolver) Me(ctx context.Context) (*database.UserUser, error) {
 }
 
 // UserSearchUsers is the resolver for the userSearchUsers field.
-func (r *queryResolver) UserSearchUsers(ctx context.Context, search *string) ([]database.UserUser, error) {
+func (r *queryResolver) UserSearchUsers(ctx context.Context, search *string) ([]model.UserUser, error) {
 	panic(fmt.Errorf("not implemented: UserSearchUsers - userSearchUsers"))
 }
 

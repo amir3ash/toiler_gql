@@ -14,6 +14,7 @@ import (
 	"sync/atomic"
 	"time"
 	"toiler-graphql/database"
+	"toiler-graphql/graph/model"
 	"toiler-graphql/graph/scallers"
 
 	"github.com/99designs/gqlgen/graphql"
@@ -189,14 +190,14 @@ type GanttActivityResolver interface {
 	Task(ctx context.Context, obj *database.GanttActivity) (*database.GanttTask, error)
 }
 type GanttAssignedResolver interface {
-	User(ctx context.Context, obj *database.GanttAssigned) (*database.UserUser, error)
+	User(ctx context.Context, obj *database.GanttAssigned) (*model.UserUser, error)
 	Activity(ctx context.Context, obj *database.GanttAssigned) (*database.GanttActivity, error)
 }
 type GanttCommentResolver interface {
-	Author(ctx context.Context, obj *database.GanttComment) (*database.UserUser, error)
+	Author(ctx context.Context, obj *database.GanttComment) (*model.UserUser, error)
 }
 type GanttProjectResolver interface {
-	ProjectManager(ctx context.Context, obj *database.GanttProject) (*database.UserUser, error)
+	ProjectManager(ctx context.Context, obj *database.GanttProject) (*model.UserUser, error)
 	Tasks(ctx context.Context, obj *database.GanttProject) ([]database.GanttTask, error)
 	Roles(ctx context.Context, obj *database.GanttProject) ([]database.GanttRole, error)
 	Teams(ctx context.Context, obj *database.GanttProject) ([]database.GanttTeam, error)
@@ -212,7 +213,7 @@ type GanttTeamResolver interface {
 type GanttTeammemberResolver interface {
 	Role(ctx context.Context, obj *database.GanttTeammember) (*database.GanttRole, error)
 	Team(ctx context.Context, obj *database.GanttTeammember) (*database.GanttTeam, error)
-	User(ctx context.Context, obj *database.GanttTeammember) (*database.UserUser, error)
+	User(ctx context.Context, obj *database.GanttTeammember) (*model.UserUser, error)
 }
 type QueryResolver interface {
 	Activity(ctx context.Context, id int) (*database.GanttActivity, error)
@@ -221,7 +222,7 @@ type QueryResolver interface {
 	ProjectAssigned(ctx context.Context, projPk int) ([]database.GanttAssigned, error)
 	AssignedToMe(ctx context.Context) ([]database.GanttAssigned, error)
 	ActivityComments(ctx context.Context, activityPk int) ([]database.GanttComment, error)
-	ProjectEmployees(ctx context.Context, projPk int) ([]database.UserUser, error)
+	ProjectEmployees(ctx context.Context, projPk int) ([]model.UserUser, error)
 	Projects(ctx context.Context) ([]database.GanttProject, error)
 	ProjectRoles(ctx context.Context, project int) ([]database.GanttRole, error)
 	ProjectStates(ctx context.Context, projPk int) ([]database.GanttState, error)
@@ -233,8 +234,8 @@ type QueryResolver interface {
 	State(ctx context.Context, id int) (*database.GanttState, error)
 	Task(ctx context.Context, id int) (*database.GanttTask, error)
 	Team(ctx context.Context, id int) (*database.GanttTeam, error)
-	Me(ctx context.Context) (*database.UserUser, error)
-	UserSearchUsers(ctx context.Context, search *string) ([]database.UserUser, error)
+	Me(ctx context.Context) (*model.UserUser, error)
+	UserSearchUsers(ctx context.Context, search *string) ([]model.UserUser, error)
 }
 
 type executableSchema struct {
@@ -2155,9 +2156,9 @@ func (ec *executionContext) _GanttAssigned_user(ctx context.Context, field graph
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*database.UserUser)
+	res := resTmp.(*model.UserUser)
 	fc.Result = res
-	return ec.marshalNUserUser2ᚖtoilerᚑgraphqlᚋdatabaseᚐUserUser(ctx, field.Selections, res)
+	return ec.marshalNUserUser2ᚖtoilerᚑgraphqlᚋgraphᚋmodelᚐUserUser(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_GanttAssigned_user(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -2369,9 +2370,9 @@ func (ec *executionContext) _GanttComment_author(ctx context.Context, field grap
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*database.UserUser)
+	res := resTmp.(*model.UserUser)
 	fc.Result = res
-	return ec.marshalNUserUser2ᚖtoilerᚑgraphqlᚋdatabaseᚐUserUser(ctx, field.Selections, res)
+	return ec.marshalNUserUser2ᚖtoilerᚑgraphqlᚋgraphᚋmodelᚐUserUser(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_GanttComment_author(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -2926,9 +2927,9 @@ func (ec *executionContext) _GanttProject_projectManager(ctx context.Context, fi
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*database.UserUser)
+	res := resTmp.(*model.UserUser)
 	fc.Result = res
-	return ec.marshalNUserUser2ᚖtoilerᚑgraphqlᚋdatabaseᚐUserUser(ctx, field.Selections, res)
+	return ec.marshalNUserUser2ᚖtoilerᚑgraphqlᚋgraphᚋmodelᚐUserUser(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_GanttProject_projectManager(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -4518,9 +4519,9 @@ func (ec *executionContext) _GanttTeammember_user(ctx context.Context, field gra
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*database.UserUser)
+	res := resTmp.(*model.UserUser)
 	fc.Result = res
-	return ec.marshalNUserUser2ᚖtoilerᚑgraphqlᚋdatabaseᚐUserUser(ctx, field.Selections, res)
+	return ec.marshalNUserUser2ᚖtoilerᚑgraphqlᚋgraphᚋmodelᚐUserUser(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_GanttTeammember_user(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -4997,9 +4998,9 @@ func (ec *executionContext) _Query_projectEmployees(ctx context.Context, field g
 		}
 		return graphql.Null
 	}
-	res := resTmp.([]database.UserUser)
+	res := resTmp.([]model.UserUser)
 	fc.Result = res
-	return ec.marshalNUserUser2ᚕtoilerᚑgraphqlᚋdatabaseᚐUserUserᚄ(ctx, field.Selections, res)
+	return ec.marshalNUserUser2ᚕtoilerᚑgraphqlᚋgraphᚋmodelᚐUserUserᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Query_projectEmployees(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -5816,9 +5817,9 @@ func (ec *executionContext) _Query_me(ctx context.Context, field graphql.Collect
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*database.UserUser)
+	res := resTmp.(*model.UserUser)
 	fc.Result = res
-	return ec.marshalOUserUser2ᚖtoilerᚑgraphqlᚋdatabaseᚐUserUser(ctx, field.Selections, res)
+	return ec.marshalOUserUser2ᚖtoilerᚑgraphqlᚋgraphᚋmodelᚐUserUser(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Query_me(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -5872,9 +5873,9 @@ func (ec *executionContext) _Query_userSearchUsers(ctx context.Context, field gr
 		}
 		return graphql.Null
 	}
-	res := resTmp.([]database.UserUser)
+	res := resTmp.([]model.UserUser)
 	fc.Result = res
-	return ec.marshalNUserUser2ᚕtoilerᚑgraphqlᚋdatabaseᚐUserUserᚄ(ctx, field.Selections, res)
+	return ec.marshalNUserUser2ᚕtoilerᚑgraphqlᚋgraphᚋmodelᚐUserUserᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Query_userSearchUsers(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -6042,7 +6043,7 @@ func (ec *executionContext) fieldContext_Query___schema(ctx context.Context, fie
 	return fc, nil
 }
 
-func (ec *executionContext) _UserUser_avatar(ctx context.Context, field graphql.CollectedField, obj *database.UserUser) (ret graphql.Marshaler) {
+func (ec *executionContext) _UserUser_avatar(ctx context.Context, field graphql.CollectedField, obj *model.UserUser) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_UserUser_avatar(ctx, field)
 	if err != nil {
 		return graphql.Null
@@ -6083,7 +6084,7 @@ func (ec *executionContext) fieldContext_UserUser_avatar(ctx context.Context, fi
 	return fc, nil
 }
 
-func (ec *executionContext) _UserUser_firstName(ctx context.Context, field graphql.CollectedField, obj *database.UserUser) (ret graphql.Marshaler) {
+func (ec *executionContext) _UserUser_firstName(ctx context.Context, field graphql.CollectedField, obj *model.UserUser) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_UserUser_firstName(ctx, field)
 	if err != nil {
 		return graphql.Null
@@ -6124,7 +6125,7 @@ func (ec *executionContext) fieldContext_UserUser_firstName(ctx context.Context,
 	return fc, nil
 }
 
-func (ec *executionContext) _UserUser_id(ctx context.Context, field graphql.CollectedField, obj *database.UserUser) (ret graphql.Marshaler) {
+func (ec *executionContext) _UserUser_id(ctx context.Context, field graphql.CollectedField, obj *model.UserUser) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_UserUser_id(ctx, field)
 	if err != nil {
 		return graphql.Null
@@ -6165,7 +6166,7 @@ func (ec *executionContext) fieldContext_UserUser_id(ctx context.Context, field 
 	return fc, nil
 }
 
-func (ec *executionContext) _UserUser_lastName(ctx context.Context, field graphql.CollectedField, obj *database.UserUser) (ret graphql.Marshaler) {
+func (ec *executionContext) _UserUser_lastName(ctx context.Context, field graphql.CollectedField, obj *model.UserUser) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_UserUser_lastName(ctx, field)
 	if err != nil {
 		return graphql.Null
@@ -6206,7 +6207,7 @@ func (ec *executionContext) fieldContext_UserUser_lastName(ctx context.Context, 
 	return fc, nil
 }
 
-func (ec *executionContext) _UserUser_username(ctx context.Context, field graphql.CollectedField, obj *database.UserUser) (ret graphql.Marshaler) {
+func (ec *executionContext) _UserUser_username(ctx context.Context, field graphql.CollectedField, obj *model.UserUser) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_UserUser_username(ctx, field)
 	if err != nil {
 		return graphql.Null
@@ -9301,7 +9302,7 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 
 var userUserImplementors = []string{"UserUser"}
 
-func (ec *executionContext) _UserUser(ctx context.Context, sel ast.SelectionSet, obj *database.UserUser) graphql.Marshaler {
+func (ec *executionContext) _UserUser(ctx context.Context, sel ast.SelectionSet, obj *model.UserUser) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, userUserImplementors)
 	out := graphql.NewFieldSet(fields)
 	var invalids uint32
@@ -10230,11 +10231,11 @@ func (ec *executionContext) marshalNString2string(ctx context.Context, sel ast.S
 	return res
 }
 
-func (ec *executionContext) marshalNUserUser2toilerᚑgraphqlᚋdatabaseᚐUserUser(ctx context.Context, sel ast.SelectionSet, v database.UserUser) graphql.Marshaler {
+func (ec *executionContext) marshalNUserUser2toilerᚑgraphqlᚋgraphᚋmodelᚐUserUser(ctx context.Context, sel ast.SelectionSet, v model.UserUser) graphql.Marshaler {
 	return ec._UserUser(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNUserUser2ᚕtoilerᚑgraphqlᚋdatabaseᚐUserUserᚄ(ctx context.Context, sel ast.SelectionSet, v []database.UserUser) graphql.Marshaler {
+func (ec *executionContext) marshalNUserUser2ᚕtoilerᚑgraphqlᚋgraphᚋmodelᚐUserUserᚄ(ctx context.Context, sel ast.SelectionSet, v []model.UserUser) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
 	isLen1 := len(v) == 1
@@ -10258,7 +10259,7 @@ func (ec *executionContext) marshalNUserUser2ᚕtoilerᚑgraphqlᚋdatabaseᚐUs
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalNUserUser2toilerᚑgraphqlᚋdatabaseᚐUserUser(ctx, sel, v[i])
+			ret[i] = ec.marshalNUserUser2toilerᚑgraphqlᚋgraphᚋmodelᚐUserUser(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -10278,7 +10279,7 @@ func (ec *executionContext) marshalNUserUser2ᚕtoilerᚑgraphqlᚋdatabaseᚐUs
 	return ret
 }
 
-func (ec *executionContext) marshalNUserUser2ᚖtoilerᚑgraphqlᚋdatabaseᚐUserUser(ctx context.Context, sel ast.SelectionSet, v *database.UserUser) graphql.Marshaler {
+func (ec *executionContext) marshalNUserUser2ᚖtoilerᚑgraphqlᚋgraphᚋmodelᚐUserUser(ctx context.Context, sel ast.SelectionSet, v *model.UserUser) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
@@ -10702,7 +10703,7 @@ func (ec *executionContext) marshalOString2ᚖstring(ctx context.Context, sel as
 	return res
 }
 
-func (ec *executionContext) marshalOUserUser2ᚖtoilerᚑgraphqlᚋdatabaseᚐUserUser(ctx context.Context, sel ast.SelectionSet, v *database.UserUser) graphql.Marshaler {
+func (ec *executionContext) marshalOUserUser2ᚖtoilerᚑgraphqlᚋgraphᚋmodelᚐUserUser(ctx context.Context, sel ast.SelectionSet, v *model.UserUser) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}

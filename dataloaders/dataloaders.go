@@ -2,7 +2,7 @@ package dataloaders
 
 //go:generate go run github.com/vektah/dataloaden ActivityLoader int64 []toiler-graphql/database.GanttActivity
 //go:generate go run github.com/vektah/dataloaden StateLoader int64 *toiler-graphql/database.GanttState
-//go:generate go run github.com/vektah/dataloaden UserLoader int32 *toiler-graphql/database.UserUser
+//go:generate go run github.com/vektah/dataloaden UserLoader int32 *toiler-graphql/graph/model.UserUser
 //go:generate go run github.com/vektah/dataloaden AssignedSliceLoader int64 []toiler-graphql/database.GanttAssigned
 //go:generate go run github.com/vektah/dataloaden TaskSliceLoader int64 []toiler-graphql/database.GanttTask
 
@@ -10,6 +10,7 @@ import (
 	"context"
 	"time"
 	"toiler-graphql/database"
+	"toiler-graphql/graph/model"
 )
 
 type contextKey string
@@ -109,14 +110,15 @@ func newUserByID(ctx context.Context, repo database.Repository) *UserLoader {
 	return NewUserLoader(UserLoaderConfig{
 		MaxBatch: 100,
 		Wait:     400 * time.Microsecond,
-		Fetch: func(userIDs []int32) ([]*database.UserUser, []error) {
+		Fetch: func(userIDs []int32) ([]*model.UserUser, []error) {
 			// db query
 			res, err := repo.ListUsersIDS(ctx, userIDs)
 			if err != nil {
 				return nil, []error{err}
 			}
 
-			result := findSlice(userIDs, res, func(t database.UserUser) int32 { return t.ID })
+			users := model.NormalizeUsersAvatar(res)
+			result := findSlice(userIDs, users, func(t model.UserUser) int32 { return t.ID })
 
 			return result, nil
 		},
