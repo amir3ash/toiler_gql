@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"os"
 	"toiler-graphql/auth"
+	"toiler-graphql/cache"
 	"toiler-graphql/database"
 	"toiler-graphql/dataloaders"
 	"toiler-graphql/graph"
@@ -81,6 +82,10 @@ func main() {
 
 	repo := database.NewRepository(db)
 	dl := dataloaders.NewRetriever()
+	cache, err := cache.NewLRU()
+	if err != nil {
+		panic(err)
+	}
 
 	srv := handler.NewDefaultServer(
 		graph.NewExecutableSchema(
@@ -88,6 +93,7 @@ func main() {
 				Resolvers: &graph.Resolver{
 					Repository:  repo,
 					Dataloaders: dl,
+					Cache: cache,
 				},
 			},
 		),

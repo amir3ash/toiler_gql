@@ -2,6 +2,7 @@ package graph
 
 import (
 	// "context"
+	"toiler-graphql/cache"
 	"toiler-graphql/database"
 	"toiler-graphql/dataloaders"
 	// "toiler-graphql/graph/model"
@@ -14,9 +15,10 @@ import (
 type Resolver struct {
 	Repository  database.Repository
 	Dataloaders dataloaders.Retriever
+	Cache       cache.Cache
 }
 
-// func (r* Resolver) GetActivity(ctx context.Context, id int64) (model.GanttActivity, error)
+// func (r *Resolver) GetActivity(ctx context.Context, id int64) (database.GanttActivity, error)
 
 // func (r* Resolver) GetActivityComments(ctx context.Context, activityID int64) ([]GanttComment, error)
 

@@ -24,7 +24,17 @@ func (r *ganttActivityResolver) State(ctx context.Context, obj *database.GanttAc
 		return nil, nil
 	}
 
+	state, ok := r.Cache.State(stateId.Int64)
+	if ok {
+		return state, nil
+	}
+
 	state, err := r.Dataloaders.Retrieve(ctx).StateByID.Load(stateId.Int64)
+	if err != nil {
+		return nil, err
+	}
+
+	r.Cache.SetState(state)
 	return state, err
 }
 
@@ -36,7 +46,17 @@ func (r *ganttActivityResolver) Task(ctx context.Context, obj *database.GanttAct
 
 // User is the resolver for the user field.
 func (r *ganttAssignedResolver) User(ctx context.Context, obj *database.GanttAssigned) (*model.UserUser, error) {
+	user, ok := r.Cache.User(obj.UserID)
+	if ok {
+		return user, nil
+	}
+
 	user, err := r.Dataloaders.Retrieve(ctx).UserByID.Load(obj.UserID)
+	if err != nil {
+		return nil, err
+	}
+
+	r.Cache.SetUser(user)
 	return user, err
 }
 
@@ -48,13 +68,33 @@ func (r *ganttAssignedResolver) Activity(ctx context.Context, obj *database.Gant
 
 // Author is the resolver for the author field.
 func (r *ganttCommentResolver) Author(ctx context.Context, obj *database.GanttComment) (*model.UserUser, error) {
+	user, ok := r.Cache.User(obj.AuthorID)
+	if ok {
+		return user, nil
+	}
+
 	user, err := r.Dataloaders.Retrieve(ctx).UserByID.Load(obj.AuthorID)
+	if err != nil {
+		return nil, err
+	}
+
+	r.Cache.SetUser(user)
 	return user, err
 }
 
 // ProjectManager is the resolver for the projectManager field.
 func (r *ganttProjectResolver) ProjectManager(ctx context.Context, obj *database.GanttProject) (*model.UserUser, error) {
+	user, ok := r.Cache.User(obj.ProjectManagerID)
+	if ok {
+		return user, nil
+	}
+
 	user, err := r.Dataloaders.Retrieve(ctx).UserByID.Load(obj.ProjectManagerID)
+	if err != nil {
+		return nil, err
+	}
+
+	r.Cache.SetUser(user)
 	return user, err
 }
 
@@ -80,12 +120,21 @@ func (r *ganttProjectResolver) States(ctx context.Context, obj *database.GanttPr
 
 // Project is the resolver for the project field.
 func (r *ganttTaskResolver) Project(ctx context.Context, obj *database.GanttTask) (*database.GanttProject, error) {
-	project, err := r.Repository.GetProject(ctx, obj.ProjectID)
+	project, ok := r.Cache.Project(obj.ProjectID)
+	if ok {
+		return project, nil
+		
+	}
+
+	p, err := r.Repository.GetProject(ctx, obj.ProjectID)
 	if err != nil {
 		return nil, err
 	}
 
-	return &project, err
+	project = &p
+	r.Cache.SetProject(project)
+
+	return project, err
 }
 
 // Activities is the resolver for the activities field.
@@ -117,7 +166,17 @@ func (r *ganttTeammemberResolver) Team(ctx context.Context, obj *database.GanttT
 
 // User is the resolver for the user field.
 func (r *ganttTeammemberResolver) User(ctx context.Context, obj *database.GanttTeammember) (*model.UserUser, error) {
+	user, ok := r.Cache.User(obj.UserID)
+	if ok {
+		return user, nil
+	}
+
 	user, err := r.Dataloaders.Retrieve(ctx).UserByID.Load(obj.UserID)
+	if err != nil {
+		return user, err
+	}
+
+	r.Cache.SetUser(user)
 	return user, err
 }
 
@@ -211,12 +270,20 @@ func (r *queryResolver) ProjectTeamMembers(ctx context.Context, project int) ([]
 
 // Project is the resolver for the project field.
 func (r *queryResolver) Project(ctx context.Context, id int) (*database.GanttProject, error) {
-	project, err := r.Repository.GetProject(ctx, int64(id))
-	if err != nil {
-		return nil, err
+	project, ok := r.Cache.Project(int64(id))
+	if ok {
+		return project, nil
 	}
 
-	return &project, err
+	p, err := r.Repository.GetProject(ctx, int64(id))
+	if err != nil{
+		return nil, err
+	}
+	
+	project = &p
+	r.Cache.SetProject(project)
+
+	return project, err
 }
 
 // Role is the resolver for the role field.
@@ -266,8 +333,19 @@ func (r *queryResolver) Me(ctx context.Context) (*model.UserUser, error) {
 		return nil, err
 	}
 
-	user, err := r.Dataloaders.Retrieve(ctx).UserByID.Load(userId)
+	user, ok := r.Cache.User(userId)
+	if ok {
+		return user, nil
+	}
+
+	user, err = r.Dataloaders.Retrieve(ctx).UserByID.Load(userId)
+	if err != nil {
+		return user, err
+	}
+
+	r.Cache.SetUser(user)
 	return user, err
+
 }
 
 // UserSearchUsers is the resolver for the userSearchUsers field.
