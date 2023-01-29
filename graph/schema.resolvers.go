@@ -100,7 +100,18 @@ func (r *ganttProjectResolver) ProjectManager(ctx context.Context, obj *database
 
 // Tasks is the resolver for the tasks field.
 func (r *ganttProjectResolver) Tasks(ctx context.Context, obj *database.GanttProject) ([]database.GanttTask, error) {
-	return r.Dataloaders.Retrieve(ctx).TasksByProjectID.Load(obj.ID)
+	tasks, ok := r.Cache.ProjectTasks(obj.ID)
+	if ok {
+		return tasks, nil
+	}
+
+	tasks, err := r.Dataloaders.Retrieve(ctx).TasksByProjectID.Load(obj.ID)
+	if err != nil {
+		return nil, err
+	}
+	
+	r.Cache.SetProjectTasks(tasks)
+	return tasks, err
 }
 
 // Roles is the resolver for the roles field.
@@ -115,7 +126,18 @@ func (r *ganttProjectResolver) Teams(ctx context.Context, obj *database.GanttPro
 
 // States is the resolver for the states field.
 func (r *ganttProjectResolver) States(ctx context.Context, obj *database.GanttProject) ([]database.GanttState, error) {
-	return r.Repository.GetProjectStates(ctx, obj.ID)
+	states, ok := r.Cache.ProjectStates(obj.ID)
+	if ok {
+		return states, nil
+	}
+	
+	states, err := r.Repository.GetProjectStates(ctx, obj.ID)
+	if err != nil {
+		return nil, err
+	}
+
+	r.Cache.SetProjectStates(states)
+	return states, err
 }
 
 // Project is the resolver for the project field.
@@ -139,7 +161,18 @@ func (r *ganttTaskResolver) Project(ctx context.Context, obj *database.GanttTask
 
 // Activities is the resolver for the activities field.
 func (r *ganttTaskResolver) Activities(ctx context.Context, obj *database.GanttTask) ([]database.GanttActivity, error) {
-	return r.Dataloaders.Retrieve(ctx).ActivitiesByTaskID.Load(obj.ID)
+	activities, ok := r.Cache.TaskActivities(obj.ID)
+	if ok {
+		return activities, nil
+	}
+
+	activities, err := r.Dataloaders.Retrieve(ctx).ActivitiesByTaskID.Load(obj.ID)
+	if err != nil {
+		return nil, err
+	}
+
+	r.Cache.SetTaskActivities(activities)
+	return activities, err
 }
 
 // Project is the resolver for the project field.

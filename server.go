@@ -82,10 +82,17 @@ func main() {
 
 	repo := database.NewRepository(db)
 	dl := dataloaders.NewRetriever()
-	cache, err := cache.NewLRU()
+	lruCache, err := cache.NewLRU(1024)
 	if err != nil {
 		panic(err)
 	}
+
+	redisDB, err := cache.NewRedisDB("127.0.0.1:2379", "", 0, lruCache)
+	if err != nil {
+		panic(err)
+	}
+
+	redisDB.ConsumeEvents()
 
 	srv := handler.NewDefaultServer(
 		graph.NewExecutableSchema(
@@ -93,7 +100,7 @@ func main() {
 				Resolvers: &graph.Resolver{
 					Repository:  repo,
 					Dataloaders: dl,
-					Cache: cache,
+					Cache:       lruCache,
 				},
 			},
 		),
