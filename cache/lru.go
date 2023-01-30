@@ -129,36 +129,33 @@ func (l *ganttLRU) User(id int32) (*model.UserUser, bool) {
 }
 
 func (l *ganttLRU) ProjectTasks(projectId int64) ([]database.GanttTask, bool) {
-	ids, ok := l.objects.Get(objectKey{taskListType, projectId})
+	objects, ok := l.objects.Get(objectKey{taskListType, projectId})
 	if !ok {
 		return nil, false
 	}
 
-	taskIds, ok := ids.([]int64)
-	if !ok {
-		fmt.Println("can't convert ids to list ")
-		return nil, false
-	}
-
-	tasks := make([]database.GanttTask, len(taskIds))
-
-	for i, id := range taskIds {
-		task, found := l.Task(id)
-		if !found {
-			
-		}
-
-		tasks[i] = *task
-	}
+	tasks, ok := objects.([]database.GanttTask)
 	return tasks, ok
 }
 
 func (l *ganttLRU) TaskActivities(taskId int64) ([]database.GanttActivity, bool) {
-	return nil, false
+	objects, ok := l.objects.Get(objectKey{activityListType, taskId})
+	if !ok {
+		return nil, false
+	}
+
+	activities, ok := objects.([]database.GanttActivity)
+	return activities, ok
 }
 
 func (l *ganttLRU) ProjectStates(projectId int64) ([]database.GanttState, bool) {
-	return nil, false
+	objects, ok := l.objects.Get(objectKey{stateListType, projectId})
+	if !ok {
+		return nil, false
+	}
+
+	states, ok := objects.([]database.GanttState)
+	return states, ok
 }
 
 func (l *ganttLRU) SetProject(o *database.GanttProject) {
@@ -210,48 +207,15 @@ func (l *ganttLRU) SetUser(o *model.UserUser) {
 }
 
 func (l *ganttLRU) SetProjectTasks(tasks []database.GanttTask) {
-	if len(tasks) == 0 {
-		return
-	}
-
-	ids := make([]int64, len(tasks))
-
-	for i, v := range tasks {
-		l.SetTask(&v)
-		ids[i] = v.ID
-	}
-
-	l.objects.Add(objectKey{taskListType, tasks[0].ProjectID}, ids)
+	l.objects.Add(objectKey{taskListType, tasks[0].ProjectID}, tasks)
 }
 
 func (l *ganttLRU) SetTaskActivities(activities []database.GanttActivity) {
-	if len(activities) == 0 {
-		return
-	}
-
-	ids := make([]int64, len(activities))
-
-	for i, v := range activities {
-		l.SetActivity(&v)
-		ids[i] = v.ID
-	}
-
-	l.objects.Add(objectKey{taskListType, activities[0].TaskID}, ids)
+	l.objects.Add(objectKey{taskListType, activities[0].TaskID}, activities)
 }
 
 func (l *ganttLRU) SetProjectStates(states []database.GanttState) {
-	if len(states) == 0 {
-		return
-	}
-
-	ids := make([]int64, len(states))
-
-	for i, v := range states {
-		l.SetState(&v)
-		ids[i] = v.ID
-	}
-
-	l.objects.Add(objectKey{taskListType, states[0].ProjectID}, ids)
+	l.objects.Add(objectKey{taskListType, states[0].ProjectID}, states)
 }
 
 func (l *ganttLRU) removeProject(id int64) {
