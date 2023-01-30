@@ -10,6 +10,14 @@ import (
 	"github.com/go-redis/redis"
 )
 
+var (
+	errCantConvertToProject  = errors.New("can't convert Messages's obj to GanttProject")
+	errCantconvertToTask     = errors.New("can't convert Messages's obj to GanttTask")
+	errCantConvertToActivity = errors.New("can't convert Messages's obj to GanttActivity")
+	errCantConvertToState    = errors.New("can't convert Messages's obj to GanttState")
+	errCantConvertToUser     = errors.New("can't convert Messages's obj to UserUser")
+)
+
 type redisMessage struct {
 	Event string
 	Type  string
@@ -77,35 +85,35 @@ func (db *redisDB) updateCache(m *redisMessage) error {
 	case "project":
 		obj, ok := m.Obj.(database.GanttProject)
 		if !ok {
-			return errors.New("can't convert Messages's obj to GanttProject")
+			return errCantConvertToProject
 		}
 		db.lru.SetProject(&obj)
 
 	case "task":
 		obj, ok := m.Obj.(database.GanttTask)
 		if !ok {
-			return errors.New("can't convert Messages's obj to GanttTask")
+			return errCantconvertToTask
 		}
 		db.lru.SetTask(&obj)
 
 	case "activity":
 		obj, ok := m.Obj.(database.GanttActivity)
 		if !ok {
-			return errors.New("can't convert Messages's obj to GanttActivity")
+			return errCantConvertToActivity
 		}
 		db.lru.SetActivity(&obj)
 
 	case "state":
 		obj, ok := m.Obj.(database.GanttState)
 		if !ok {
-			return errors.New("can't convert Messages's obj to GanttState")
+			return errCantConvertToState
 		}
 		db.lru.SetState(&obj)
 
 	case "user":
 		obj, ok := m.Obj.(model.UserUser)
 		if !ok {
-			return errors.New("can't convert Messages's obj to UserUser")
+			return errCantConvertToUser
 		}
 		db.lru.SetUser(&obj)
 	}
@@ -116,19 +124,77 @@ func (db *redisDB) deleteCache(m *redisMessage) error {
 	switch m.Type {
 	case "project":
 		db.lru.RemoveProject(m.Id)
+		db.lru.RemoveProjectStates(m.Id)
+		db.lru.RemoveProjectTasks(m.Id)
 
 	case "activity":
 		db.lru.RemoveActivity(m.Id)
 
+		obj, ok := m.Obj.(database.GanttActivity)
+		if !ok {
+			return errCantConvertToActivity
+		}
+
+		activities, found := db.lru.TaskActivities(obj.TaskID)
+		if !found {
+			return nil
+		}
+		new := listObjWithoutIndex(activities, func(i int) bool {return activities[i].ID == m.Id})
+		db.lru.SetTaskActivities(new)
+
 	case "task":
 		db.lru.RemoveTask(m.Id)
+		db.lru.RemoveTaskActivities(m.Id)
+
+		obj, ok := m.Obj.(database.GanttTask)
+		if !ok {
+			return errCantconvertToTask
+		}
+
+		tasks, found := db.lru.ProjectTasks(obj.ProjectID)
+		if !found {
+			return nil
+		}
+		new := listObjWithoutIndex(tasks, func(i int) bool {return tasks[i].ID == m.Id})
+		db.lru.SetProjectTasks(new)
 
 	case "state":
 		db.lru.RemoveState(m.Id)
+
+		obj, ok := m.Obj.(database.GanttState)
+		if !ok {
+			return errCantConvertToState
+		}
+
+		states, found := db.lru.ProjectStates(obj.ProjectID)
+		if !found {
+			return nil
+		}
+		new := listObjWithoutIndex(states, func(i int) bool {return states[i].ID == m.Id})
+		db.lru.SetProjectStates(new)
 
 	case "user":
 		db.lru.RemoveUser(int32(m.Id))
 	}
 
 	return nil
+}
+
+/* if index found, returns new slice without the element at the index,
+ else retruns objects
+*/
+func listObjWithoutIndex[T any](objects []T, f func(index int) bool) []T {
+	index := -1
+	for i := range objects {
+		if f(i){
+			index = i
+			break
+		}
+	}
+	
+	if index == -1 {
+		return objects
+	}
+
+	return append(objects[:index], objects[index+1:]...)
 }
