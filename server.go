@@ -87,7 +87,11 @@ func main() {
 		panic(err)
 	}
 
-	redisDB, err := cache.NewRedisDB("127.0.0.1:2379", "", 0, lruCache)
+	redisDB, err := cache.NewRedisDB(
+		os.Getenv("PUBSUB_ADDR"),
+		os.Getenv("PUBSUB_PASSWORD"),
+		0,
+		lruCache)
 	if err != nil {
 		panic(err)
 	}

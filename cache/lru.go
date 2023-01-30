@@ -15,7 +15,7 @@ type Cache interface {
 
 	Activity(id int64) (*database.GanttActivity, bool)
 
-	// Assigned(ctx context.Context, id int64) (database.GanttAssigned, bool)
+	Assigned(id int64) (*database.GanttAssigned, bool)
 
 	State(id int64) (*database.GanttState, bool)
 
@@ -27,13 +27,15 @@ type Cache interface {
 
 	ProjectStates(projectId int64) ([]database.GanttState, bool)
 
+	ActivityAssigneds(activityId int64) ([]database.GanttAssigned, bool)
+
 	SetProject(o *database.GanttProject)
 
 	SetTask(o *database.GanttTask)
 
 	SetActivity(o *database.GanttActivity)
 
-	// SetAssigned(o *database.GanttAssigned)
+	SetAssigned(o *database.GanttAssigned)
 
 	SetState(o *database.GanttState)
 
@@ -45,13 +47,15 @@ type Cache interface {
 
 	SetProjectStates([]database.GanttState)
 
+	SetActivityAssigneds([]database.GanttAssigned)
+
 	RemoveProject(id int64)
 
 	RemoveTask(id int64)
 
 	RemoveActivity(id int64)
 
-	// removeAssigned(id int64)
+	RemoveAssigned(id int64)
 
 	RemoveState(id int64)
 
@@ -62,6 +66,8 @@ type Cache interface {
 	RemoveTaskActivities(taskId int64)
 
 	RemoveProjectStates(projectId int64)
+
+	RemoveActivityAssigneds(activityId int64)
 }
 
 func NewLRU(cacheSize int) (*ganttLRU, error) {
@@ -89,9 +95,11 @@ const (
 	activityType
 	userType
 	stateType
+	assignedType
 	taskListType
 	activityListType
 	stateListType
+	assignedListType
 )
 
 type ganttLRU struct {
@@ -146,6 +154,15 @@ func (l *ganttLRU) User(id int32) (*model.UserUser, bool) {
 	return user, ok
 }
 
+func (l *ganttLRU) Assigned(id int64) (*database.GanttAssigned, bool) {
+	obj, ok := l.objects.Get(objectKey{assignedType, id})
+	if !ok {
+		return nil, false
+	}
+	assigned, ok := obj.(*database.GanttAssigned)
+	return assigned, ok
+}
+
 func (l *ganttLRU) ProjectTasks(projectId int64) ([]database.GanttTask, bool) {
 	objects, ok := l.objects.Get(objectKey{taskListType, projectId})
 	if !ok {
@@ -176,6 +193,16 @@ func (l *ganttLRU) ProjectStates(projectId int64) ([]database.GanttState, bool) 
 	return states, ok
 }
 
+func (l *ganttLRU) ActivityAssigneds(activityId int64) ([]database.GanttAssigned, bool) {
+	objects, ok := l.objects.Get(objectKey{assignedListType, activityId})
+	if !ok {
+		return nil, false
+	}
+
+	assigneds, ok := objects.([]database.GanttAssigned)
+	return assigneds, ok
+}
+
 func (l *ganttLRU) SetProject(o *database.GanttProject) {
 	if o == nil {
 		return
@@ -204,6 +231,12 @@ func (l *ganttLRU) SetActivity(o *database.GanttActivity) {
 }
 
 func (l *ganttLRU) SetAssigned(o *database.GanttAssigned) {
+	if o == nil {
+		return
+	}
+	fmt.Println("set assigned", o.ID)
+
+	l.objects.Add(objectKey{assignedType, o.ID}, o)
 }
 
 func (l *ganttLRU) SetState(o *database.GanttState) {
@@ -225,15 +258,39 @@ func (l *ganttLRU) SetUser(o *model.UserUser) {
 }
 
 func (l *ganttLRU) SetProjectTasks(tasks []database.GanttTask) {
+	if len(tasks) == 0 {
+		return
+	}
+
+	fmt.Println("set tasks:", tasks)
 	l.objects.Add(objectKey{taskListType, tasks[0].ProjectID}, tasks)
 }
 
 func (l *ganttLRU) SetTaskActivities(activities []database.GanttActivity) {
-	l.objects.Add(objectKey{taskListType, activities[0].TaskID}, activities)
+	if len(activities) == 0 {
+		return
+	}
+	
+	fmt.Println("set activities:", activities)
+	l.objects.Add(objectKey{activityListType, activities[0].TaskID}, activities)
 }
 
 func (l *ganttLRU) SetProjectStates(states []database.GanttState) {
-	l.objects.Add(objectKey{taskListType, states[0].ProjectID}, states)
+	if len(states) == 0 {
+		return
+	}
+	
+	fmt.Println("set states:", states)
+	l.objects.Add(objectKey{stateListType, states[0].ProjectID}, states)
+}
+
+func (l *ganttLRU) SetActivityAssigneds(assigneds []database.GanttAssigned) {
+	if len(assigneds) == 0 {
+		return
+	}
+	
+	fmt.Println("set assigneds:", assigneds)
+	l.objects.Add(objectKey{assignedListType, assigneds[0].ActivityID}, assigneds)
 }
 
 func (l *ganttLRU) RemoveProject(id int64) {
@@ -249,6 +306,7 @@ func (l *ganttLRU) RemoveActivity(id int64) {
 }
 
 func (l *ganttLRU) RemoveAssigned(id int64) {
+	l.objects.Remove(objectKey{assignedType, id})
 }
 
 func (l *ganttLRU) RemoveState(id int64) {
@@ -256,7 +314,7 @@ func (l *ganttLRU) RemoveState(id int64) {
 }
 
 func (l *ganttLRU) RemoveUser(id int32) {
-	l.objects.Remove(objectKey{stateType, int64(id)})
+	l.objects.Remove(objectKey{userType, int64(id)})
 }
 
 func (l *ganttLRU) RemoveProjectTasks(projectId int64) {
@@ -268,5 +326,9 @@ func (l *ganttLRU) RemoveTaskActivities(taskId int64) {
 }
 
 func (l *ganttLRU) RemoveProjectStates(projectId int64) {
-	l.objects.Get(objectKey{stateListType, projectId})
+	l.objects.Remove(objectKey{stateListType, projectId})
+}
+
+func (l *ganttLRU) RemoveActivityAssigneds(activityId int64) {
+	l.objects.Remove(objectKey{assignedListType, activityId})
 }

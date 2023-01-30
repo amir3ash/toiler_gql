@@ -14,7 +14,19 @@ import (
 
 // Assignees is the resolver for the assignees field.
 func (r *ganttActivityResolver) Assignees(ctx context.Context, obj *database.GanttActivity) ([]database.GanttAssigned, error) {
-	return r.Dataloaders.Retrieve(ctx).AssignedsByActivityID.Load(obj.ID)
+	assigneds, ok := r.Cache.ActivityAssigneds(obj.ID)
+	if ok {
+		return assigneds, nil
+	}
+
+
+	assigneds, err := r.Dataloaders.Retrieve(ctx).AssignedsByActivityID.Load(obj.ID)
+	if err != nil {
+		return nil, err
+	}
+
+	r.Cache.SetActivityAssigneds(assigneds)
+	return assigneds, err
 }
 
 // State is the resolver for the state field.
