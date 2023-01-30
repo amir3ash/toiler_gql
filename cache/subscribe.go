@@ -115,19 +115,19 @@ func (db *redisDB) updateCache(m *redisMessage) error {
 func (db *redisDB) deleteCache(m *redisMessage) error {
 	switch m.Type {
 	case "project":
-		db.lru.removeProject(m.Id)
+		db.lru.RemoveProject(m.Id)
 
 	case "activity":
-		db.lru.removeActivity(m.Id)
+		db.lru.RemoveActivity(m.Id)
 
 	case "task":
-		db.lru.removeTask(m.Id)
+		db.lru.RemoveTask(m.Id)
 
 	case "state":
-		db.lru.removeState(m.Id)
+		db.lru.RemoveState(m.Id)
 
 	case "user":
-		db.lru.removeUser(int32(m.Id))
+		db.lru.RemoveUser(int32(m.Id))
 	}
 
 	return nil

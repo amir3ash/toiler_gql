@@ -33,7 +33,7 @@ type Cache interface {
 
 	SetActivity(o *database.GanttActivity)
 
-	SetAssigned(o *database.GanttAssigned)
+	// SetAssigned(o *database.GanttAssigned)
 
 	SetState(o *database.GanttState)
 
@@ -44,6 +44,24 @@ type Cache interface {
 	SetTaskActivities([]database.GanttActivity)
 
 	SetProjectStates([]database.GanttState)
+
+	RemoveProject(id int64)
+
+	RemoveTask(id int64)
+
+	RemoveActivity(id int64)
+
+	// removeAssigned(id int64)
+
+	RemoveState(id int64)
+
+	RemoveUser(id int32)
+
+	RemoveProjectTasks(projectId int64)
+
+	RemoveTaskActivities(taskId int64)
+
+	RemoveProjectStates(projectId int64)
 }
 
 func NewLRU(cacheSize int) (*ganttLRU, error) {
@@ -218,27 +236,37 @@ func (l *ganttLRU) SetProjectStates(states []database.GanttState) {
 	l.objects.Add(objectKey{taskListType, states[0].ProjectID}, states)
 }
 
-func (l *ganttLRU) removeProject(id int64) {
+func (l *ganttLRU) RemoveProject(id int64) {
 	l.objects.Remove(objectKey{projectType, id})
 }
 
-func (l *ganttLRU) removeTask(id int64) {
+func (l *ganttLRU) RemoveTask(id int64) {
 	l.objects.Remove(objectKey{taskType, id})
 }
 
-func (l *ganttLRU) removeActivity(id int64) {
+func (l *ganttLRU) RemoveActivity(id int64) {
 	l.objects.Remove(objectKey{activityType, id})
 }
 
-func (l *ganttLRU) removeAssigned(id int64) {
+func (l *ganttLRU) RemoveAssigned(id int64) {
 }
 
-func (l *ganttLRU) removeState(id int64) {
+func (l *ganttLRU) RemoveState(id int64) {
 	l.objects.Remove(objectKey{stateType, id})
 }
 
-func (l *ganttLRU) removeUser(id int32) {
+func (l *ganttLRU) RemoveUser(id int32) {
 	l.objects.Remove(objectKey{stateType, int64(id)})
 }
 
-func addTaskToTaskList(task *database.GanttTask) bool
+func (l *ganttLRU) RemoveProjectTasks(projectId int64) {
+	l.objects.Remove(objectKey{taskListType, projectId})
+}
+
+func (l *ganttLRU) RemoveTaskActivities(taskId int64) {
+	l.objects.Remove(objectKey{activityListType, taskId})
+}
+
+func (l *ganttLRU) RemoveProjectStates(projectId int64) {
+	l.objects.Get(objectKey{stateListType, projectId})
+}
