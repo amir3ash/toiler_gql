@@ -1,7 +1,6 @@
 package cache
 
 import (
-	"fmt"
 	"toiler-graphql/database"
 	"toiler-graphql/graph/model"
 
@@ -208,7 +207,6 @@ func (l *ganttLRU) SetProject(o *database.GanttProject) {
 		return
 	}
 
-	fmt.Println("set p", o.ID)
 	l.objects.Add(objectKey{projectType, o.ID}, o)
 }
 
@@ -216,7 +214,6 @@ func (l *ganttLRU) SetTask(o *database.GanttTask) {
 	if o == nil {
 		return
 	}
-	fmt.Println("set task", o.ID)
 
 	l.objects.Add(objectKey{taskType, o.ID}, o)
 }
@@ -225,7 +222,6 @@ func (l *ganttLRU) SetActivity(o *database.GanttActivity) {
 	if o == nil {
 		return
 	}
-	fmt.Println("set activity", o.ID)
 
 	l.objects.Add(objectKey{activityType, o.ID}, o)
 }
@@ -234,7 +230,6 @@ func (l *ganttLRU) SetAssigned(o *database.GanttAssigned) {
 	if o == nil {
 		return
 	}
-	fmt.Println("set assigned", o.ID)
 
 	l.objects.Add(objectKey{assignedType, o.ID}, o)
 }
@@ -243,7 +238,6 @@ func (l *ganttLRU) SetState(o *database.GanttState) {
 	if o == nil {
 		return
 	}
-	fmt.Println("set state", o.ID)
 
 	l.objects.Add(objectKey{stateType, o.ID}, o)
 }
@@ -252,7 +246,6 @@ func (l *ganttLRU) SetUser(o *model.UserUser) {
 	if o == nil {
 		return
 	}
-	fmt.Println("set user", o.ID)
 
 	l.objects.Add(objectKey{userType, int64(o.ID)}, o)
 }
@@ -262,7 +255,6 @@ func (l *ganttLRU) SetProjectTasks(tasks []database.GanttTask) {
 		return
 	}
 
-	fmt.Println("set tasks:", tasks)
 	l.objects.Add(objectKey{taskListType, tasks[0].ProjectID}, tasks)
 }
 
@@ -270,8 +262,7 @@ func (l *ganttLRU) SetTaskActivities(activities []database.GanttActivity) {
 	if len(activities) == 0 {
 		return
 	}
-	
-	fmt.Println("set activities:", activities)
+
 	l.objects.Add(objectKey{activityListType, activities[0].TaskID}, activities)
 }
 
@@ -279,8 +270,7 @@ func (l *ganttLRU) SetProjectStates(states []database.GanttState) {
 	if len(states) == 0 {
 		return
 	}
-	
-	fmt.Println("set states:", states)
+
 	l.objects.Add(objectKey{stateListType, states[0].ProjectID}, states)
 }
 
@@ -288,8 +278,7 @@ func (l *ganttLRU) SetActivityAssigneds(assigneds []database.GanttAssigned) {
 	if len(assigneds) == 0 {
 		return
 	}
-	
-	fmt.Println("set assigneds:", assigneds)
+
 	l.objects.Add(objectKey{assignedListType, assigneds[0].ActivityID}, assigneds)
 }
 
