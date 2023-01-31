@@ -40,13 +40,13 @@ type Cache interface {
 
 	SetUser(o *model.UserUser)
 
-	SetProjectTasks([]database.GanttTask)
+	SetProjectTasks(projectId int64, tasks []database.GanttTask)
 
-	SetTaskActivities([]database.GanttActivity)
+	SetTaskActivities(taskId int64, activities []database.GanttActivity)
 
-	SetProjectStates([]database.GanttState)
+	SetProjectStates(projectId int64, states []database.GanttState)
 
-	SetActivityAssigneds([]database.GanttAssigned)
+	SetActivityAssigneds(activityId int64, assigneds []database.GanttAssigned)
 
 	RemoveProject(id int64)
 
@@ -250,36 +250,20 @@ func (l *ganttLRU) SetUser(o *model.UserUser) {
 	l.objects.Add(objectKey{userType, int64(o.ID)}, o)
 }
 
-func (l *ganttLRU) SetProjectTasks(tasks []database.GanttTask) {
-	if len(tasks) == 0 {
-		return
-	}
-
-	l.objects.Add(objectKey{taskListType, tasks[0].ProjectID}, tasks)
+func (l *ganttLRU) SetProjectTasks(projectId int64, tasks []database.GanttTask) {
+	l.objects.Add(objectKey{taskListType, projectId}, tasks)
 }
 
-func (l *ganttLRU) SetTaskActivities(activities []database.GanttActivity) {
-	if len(activities) == 0 {
-		return
-	}
-
-	l.objects.Add(objectKey{activityListType, activities[0].TaskID}, activities)
+func (l *ganttLRU) SetTaskActivities(taskId int64, activities []database.GanttActivity) {
+	l.objects.Add(objectKey{activityListType, taskId}, activities)
 }
 
-func (l *ganttLRU) SetProjectStates(states []database.GanttState) {
-	if len(states) == 0 {
-		return
-	}
-
-	l.objects.Add(objectKey{stateListType, states[0].ProjectID}, states)
+func (l *ganttLRU) SetProjectStates(projectId int64, states []database.GanttState) {
+	l.objects.Add(objectKey{stateListType, projectId}, states)
 }
 
-func (l *ganttLRU) SetActivityAssigneds(assigneds []database.GanttAssigned) {
-	if len(assigneds) == 0 {
-		return
-	}
-
-	l.objects.Add(objectKey{assignedListType, assigneds[0].ActivityID}, assigneds)
+func (l *ganttLRU) SetActivityAssigneds(activityId int64, assigneds []database.GanttAssigned) {
+	l.objects.Add(objectKey{assignedListType, activityId}, assigneds)
 }
 
 func (l *ganttLRU) RemoveProject(id int64) {

@@ -19,13 +19,12 @@ func (r *ganttActivityResolver) Assignees(ctx context.Context, obj *database.Gan
 		return assigneds, nil
 	}
 
-
 	assigneds, err := r.Dataloaders.Retrieve(ctx).AssignedsByActivityID.Load(obj.ID)
 	if err != nil {
 		return nil, err
 	}
 
-	r.Cache.SetActivityAssigneds(assigneds)
+	r.Cache.SetActivityAssigneds(obj.ID, assigneds)
 	return assigneds, err
 }
 
@@ -122,7 +121,7 @@ func (r *ganttProjectResolver) Tasks(ctx context.Context, obj *database.GanttPro
 		return nil, err
 	}
 	
-	r.Cache.SetProjectTasks(tasks)
+	r.Cache.SetProjectTasks(obj.ID, tasks)
 	return tasks, err
 }
 
@@ -148,7 +147,7 @@ func (r *ganttProjectResolver) States(ctx context.Context, obj *database.GanttPr
 		return nil, err
 	}
 
-	r.Cache.SetProjectStates(states)
+	r.Cache.SetProjectStates(obj.ID, states)
 	return states, err
 }
 
@@ -183,7 +182,7 @@ func (r *ganttTaskResolver) Activities(ctx context.Context, obj *database.GanttT
 		return nil, err
 	}
 
-	r.Cache.SetTaskActivities(activities)
+	r.Cache.SetTaskActivities(obj.ID, activities)
 	return activities, err
 }
 
