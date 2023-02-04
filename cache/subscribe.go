@@ -77,6 +77,7 @@ func (db *redisDB) deleteCache(m *redisMessage) error {
 	case "activity":
 		db.lru.RemoveActivity(m.Id)
 		db.lru.RemoveTaskActivities(m.ParentId)
+		db.lru.RemoveActivityAssigneds(m.Id)
 
 	case "task":
 		db.lru.RemoveTask(m.Id)
