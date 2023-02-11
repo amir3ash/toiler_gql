@@ -40,29 +40,25 @@ func (db *redisDB) ConsumeEvents() {
 
 func (db *redisDB) consume() {
 	subscriber := db.Client.Subscribe("changes")
-
+	ch := subscriber.Channel()
 	m := redisMessage{}
 
 	for {
-		msg, err := subscriber.ReceiveMessage()
-		if err != nil {
-			log.Default().Printf("err while recieving message: %v\n", err)
-		}
+		msg := <-ch
 
 		if err := json.Unmarshal([]byte(msg.Payload), &m); err != nil {
 			log.Default().Printf("err while unmarshalling message: %v\n", err)
 		}
 
 		switch m.Event {
-		case "added", "updated", "deleted":
-			err = db.deleteCache(&m)
+		case "updated", "added", "deleted":
+			err := db.deleteCache(&m)
+			if err != nil {
+				log.Default().Printf("error in consuming event: %v\n", err)
+			}
 
 		default:
 			log.Default().Println("event not detected:", m.Event)
-		}
-
-		if err != nil {
-			log.Default().Printf("error in consuming event: %v\n", err)
 		}
 	}
 }
