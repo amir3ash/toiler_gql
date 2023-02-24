@@ -17,7 +17,10 @@ type CustomClaims struct {
 }
 
 func (c *CustomClaims) Validate(ctx context.Context) error {
-	
+	if c.UserId <= 0 {
+		return jwtmiddleware.ErrJWTInvalid
+	}
+
 	return nil
 }
 

@@ -17,7 +17,7 @@ type redisMessage struct {
 
 type redisDB struct {
 	Client *redis.Client
-	lru    *ganttLRU
+	lru    removableCache
 }
 
 func NewRedisDB(redisAddr string, password string, database int, lru *ganttLRU) (*redisDB, error) {
@@ -35,12 +35,13 @@ func NewRedisDB(redisAddr string, password string, database int, lru *ganttLRU) 
 }
 
 func (db *redisDB) ConsumeEvents() {
-	go db.consume()
-}
-
-func (db *redisDB) consume() {
 	subscriber := db.Client.Subscribe("changes")
 	ch := subscriber.Channel()
+
+	go db.consume(ch)
+}
+
+func (db *redisDB) consume(ch <-chan *redis.Message) {
 	m := redisMessage{}
 
 	for {

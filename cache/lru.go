@@ -48,6 +48,10 @@ type Cache interface {
 
 	SetActivityAssigneds(activityId int64, assigneds []database.GanttAssigned)
 
+	removableCache
+}
+
+type removableCache interface {
 	RemoveProject(id int64)
 
 	RemoveTask(id int64)
