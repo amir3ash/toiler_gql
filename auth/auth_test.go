@@ -3,12 +3,9 @@ package auth
 import (
 	"net/http"
 	"net/http/httptest"
-	"os"
 	"testing"
 
 	"github.com/joho/godotenv"
-	"gopkg.in/square/go-jose.v2"
-	"gopkg.in/square/go-jose.v2/jwt"
 )
 
 func init() {
@@ -81,7 +78,7 @@ func TestXxx(t *testing.T) {
 			if err != nil {
 				t.Error(err)
 			}
-			if id != expectedUID{
+			if id != expectedUID {
 				t.Errorf("wanted userid: %d, but got: %d", expectedUID, id)
 			}
 		}
@@ -115,29 +112,9 @@ func TestXxx(t *testing.T) {
 }
 
 func genTokenforTesting(t *testing.T, userID int32) string {
-	t.Helper()
-
-	key := jose.SigningKey{
-		Algorithm: jose.HS256,
-		Key:       []byte(os.Getenv("JWT_SIGNING_KEY")),
-	}
-
-	signer, err := jose.NewSigner(key, (&jose.SignerOptions{}).WithType("JWT"))
+	token, err := GenToken(userID)
 	if err != nil {
-		t.Fatalf("could not build signer: %s", err.Error())
-	}
-
-	claims := jwt.Claims{
-		Issuer:   "localhost",
-		Audience: jwt.Audience{"toiler"},
-	}
-	customClaims := CustomClaims{
-		UserId: userID,
-	}
-
-	token, err := jwt.Signed(signer).Claims(claims).Claims(customClaims).CompactSerialize()
-	if err != nil {
-		t.Fatalf("could not build token: %s", err.Error())
+		t.Fatal(err)
 	}
 
 	return token

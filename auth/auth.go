@@ -3,12 +3,15 @@ package auth
 import (
 	"context"
 	"errors"
+	"fmt"
 	"log"
 	"net/http"
 	"os"
 
 	jwtmiddleware "github.com/auth0/go-jwt-middleware/v2"
 	"github.com/auth0/go-jwt-middleware/v2/validator"
+	"gopkg.in/square/go-jose.v2"
+	"gopkg.in/square/go-jose.v2/jwt"
 )
 
 type CustomClaims struct {
@@ -101,4 +104,33 @@ func GetUserId(ctx context.Context) (int32, error) {
 	}
 
 	return customClaims.UserId, nil
+}
+
+func GenToken(userID int32) (string, error) {
+	secret, _, issuer, audience := getSettings()
+
+	key := jose.SigningKey{
+		Algorithm: jose.HS256,
+		Key:       secret,
+	}
+
+	signer, err := jose.NewSigner(key, (&jose.SignerOptions{}).WithType("JWT"))
+	if err != nil {
+		return "", fmt.Errorf("could not build signer: %w", err)
+	}
+
+	claims := jwt.Claims{
+		Issuer:   issuer,
+		Audience: jwt.Audience{audience},
+	}
+	customClaims := CustomClaims{
+		UserId: userID,
+	}
+
+	token, err := jwt.Signed(signer).Claims(claims).Claims(customClaims).CompactSerialize()
+	if err != nil {
+		return "", fmt.Errorf("could not build token: %w", err)
+	}
+
+	return token, nil
 }

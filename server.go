@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"log"
 	"net/http"
@@ -63,12 +64,31 @@ func UserIdEndPoint() http.Handler {
 
 }
 
+func genOutputToken() (done bool) {
+	userIdFlag := flag.Int("user_id", 0, "generate jwt for user_id")
+	flag.Parse()
+
+	if userIdFlag != nil && *userIdFlag != 0 {
+		token, err := auth.GenToken(int32(*userIdFlag))
+		if err != nil {
+			panic(err)
+		}
+		fmt.Println(token)
+		return true
+	}
+	return
+}
+
 func main() {
 	godotenv.Load()
 
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = defaultPort
+	}
+
+	if genOutputToken(){
+		return
 	}
 
 	model.SetAvatarsPrefixPath(os.Getenv("AVATARS_S3_URL"))
